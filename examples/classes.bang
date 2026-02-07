@@ -1,0 +1,87 @@
+// Object-Oriented Programming in Banglang
+
+// Define a Person class
+class Manush {
+    kaj init(naam, boyosh) {
+        ei.naam = naam;
+        ei.boyosh = boyosh;
+    }
+
+    kaj porichoy() {
+        dekho("Amar naam", ei.naam, "ebong ami", ei.boyosh, "bochhor boyoshi");
+    }
+
+    kaj birthday() {
+        ei.boyosh = ei.boyosh + 1;
+        dekho(ei.naam, "er ekhon", ei.boyosh, "bochhor");
+    }
+}
+
+// Create instances
+dhoro rahim = notun Manush("Ankan", 25);
+dhoro karim = notun Manush("Karim", 30);
+
+rahim.porichoy();
+karim.porichoy();
+
+rahim.birthday();
+karim.birthday();
+
+// Define a Rectangle class
+class Rectangle {
+    kaj init(width, height) {
+        ei.width = width;
+        ei.height = height;
+    }
+
+    kaj area() {
+        ferao ei.width * ei.height;
+    }
+
+    kaj perimeter() {
+        ferao 2 * (ei.width + ei.height);
+    }
+
+    kaj display() {
+        dekho("Rectangle - Width:", ei.width, "Height:", ei.height);
+        dekho("Area:", ei.area());
+        dekho("Perimeter:", ei.perimeter());
+    }
+}
+
+dhoro rect = notun Rectangle(10, 5);
+rect.display();
+
+// Define a BankAccount class
+class BankAccount {
+    kaj init(accountHolder, balance) {
+        ei.accountHolder = accountHolder;
+        ei.balance = balance;
+    }
+
+    kaj deposit(amount) {
+        ei.balance = ei.balance + amount;
+        dekho("Deposited", amount, "Taka. New balance:", ei.balance);
+    }
+
+    kaj withdraw(amount) {
+        jodi (amount > ei.balance) {
+            dekho("Insufficient balance!");
+            ferao mittha;
+        }
+        ei.balance = ei.balance - amount;
+        dekho("Withdrew", amount, "Taka. Remaining balance:", ei.balance);
+        ferao sotti;
+    }
+
+    kaj checkBalance() {
+        dekho(ei.accountHolder, "er balance:", ei.balance, "Taka");
+    }
+}
+
+dhoro account = notun BankAccount("Ankan", 1000);
+account.checkBalance();
+account.deposit(500);
+account.withdraw(300);
+account.withdraw(2000);
+account.checkBalance();

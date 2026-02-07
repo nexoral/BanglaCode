@@ -1,0 +1,64 @@
+// Example: Error Handling in BanglaCode
+// This demonstrates try/catch/finally (chesta/dhoro_bhul/shesh)
+
+dekho("=== Error Handling Demo ===");
+dekho("");
+
+// Basic try/catch
+dekho("1. Basic try/catch:");
+chesta {
+    dekho("   Trying something risky...");
+    felo "Something went wrong!";
+    dekho("   This line will not execute");
+} dhoro_bhul (err) {
+    dekho("   Caught error:", err);
+}
+dekho("");
+
+// Try/catch with finally
+dekho("2. Try/catch with finally:");
+chesta {
+    dekho("   Opening resource...");
+    felo "Resource error!";
+} dhoro_bhul (err) {
+    dekho("   Handling error:", err);
+} shesh {
+    dekho("   Cleanup: Closing resource (always runs)");
+}
+dekho("");
+
+// Division example with error handling
+dekho("3. Safe division function:");
+kaj safeDivide(a, b) {
+    chesta {
+        jodi (b == 0) {
+            felo "Cannot divide by zero!";
+        }
+        ferao a / b;
+    } dhoro_bhul (err) {
+        dekho("   Error:", err);
+        ferao khali;
+    }
+}
+
+dekho("   10 / 2 =", safeDivide(10, 2));
+dekho("   10 / 0 =", safeDivide(10, 0));
+dekho("");
+
+// Nested try/catch
+dekho("4. Nested try/catch:");
+chesta {
+    dekho("   Outer try block");
+    chesta {
+        dekho("   Inner try block");
+        felo "Inner error!";
+    } dhoro_bhul (innerErr) {
+        dekho("   Inner catch:", innerErr);
+        felo "Rethrowing as outer error!";
+    }
+} dhoro_bhul (outerErr) {
+    dekho("   Outer catch:", outerErr);
+}
+dekho("");
+
+dekho("=== Error Handling Complete! ===");

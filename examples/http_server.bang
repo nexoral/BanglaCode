@@ -1,0 +1,35 @@
+// Example: HTTP Server in BanglaCode
+// This demonstrates how to create a web server like Node.js
+
+dekho("=== BanglaCode HTTP Server Example ===");
+dekho("");
+
+// Define the request handler
+kaj handleRequest(req, res) {
+    dekho("Received request:", req["method"], req["path"]);
+    
+    // Handle different routes
+    jodi (req["path"] == "/") {
+        res["body"] = "Welcome to BanglaCode Server! 🚀";
+        res["headers"]["Content-Type"] = "text/plain; charset=utf-8";
+    } nahole jodi (req["path"] == "/api/hello") {
+        res["body"] = "{\"message\": \"Namaskar from BanglaCode!\", \"status\": \"ok\"}";
+        res["headers"]["Content-Type"] = "application/json";
+    } nahole jodi (req["path"] == "/api/time") {
+        res["body"] = "{\"timestamp\": " + string(time()) + "}";
+        res["headers"]["Content-Type"] = "application/json";
+    } nahole {
+        res["status"] = 404;
+        res["body"] = "404 - Page Not Found";
+    }
+}
+
+dekho("Starting server on port 3000...");
+dekho("Try visiting:");
+dekho("  - http://localhost:3000/");
+dekho("  - http://localhost:3000/api/hello");
+dekho("  - http://localhost:3000/api/time");
+dekho("");
+
+// Start the HTTP server
+http_server(3000, handleRequest);

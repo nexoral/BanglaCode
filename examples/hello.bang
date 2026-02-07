@@ -1,0 +1,8 @@
+// Hello World in Banglang
+dekho("Hello, West Bengal!");
+dekho("Namaskar!");
+
+// Variables
+dhoro naam = "Ankan";
+dhoro boyosh = 25;
+dekho("Amar naam", naam, "ebong ami", boyosh, "bochhor boyoshi");

@@ -1,0 +1,48 @@
+// Math Utilities Module
+// This file can be imported using: ano "math_utils.bang";
+
+pathao kaj add(a, b) {
+    ferao a + b;
+}
+
+pathao kaj subtract(a, b) {
+    ferao a - b;
+}
+
+pathao kaj multiply(a, b) {
+    ferao a * b;
+}
+
+pathao kaj divide(a, b) {
+    jodi (b == 0) {
+        felo "Division by zero error!";
+    }
+    ferao a / b;
+}
+
+pathao kaj factorial(n) {
+    jodi (n <= 1) {
+        ferao 1;
+    }
+    ferao n * factorial(n - 1);
+}
+
+pathao kaj isPrime(n) {
+    jodi (n <= 1) {
+        ferao mittha;
+    }
+    jodi (n <= 3) {
+        ferao sotti;
+    }
+    jodi (n % 2 == 0) {
+        ferao mittha;
+    }
+    dhoro i = 3;
+    jotokkhon (i * i <= n) {
+        jodi (n % i == 0) {
+            ferao mittha;
+        }
+        i = i + 2;
+    }
+    ferao sotti;
+}

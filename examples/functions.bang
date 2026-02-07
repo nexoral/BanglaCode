@@ -1,0 +1,63 @@
+// Function examples in Banglang
+
+// Simple function
+kaj jogPhol(a, b) {
+    ferao a + b;
+}
+
+dhoro result = jogPhol(5, 3);
+dekho("5 + 3 =", result);
+
+// Function with conditionals
+kaj maximum(x, y) {
+    jodi (x > y) {
+        ferao x;
+    } nahole {
+        ferao y;
+    }
+}
+
+dekho("Max of 10 and 20:", maximum(10, 20));
+
+// Factorial using recursion
+kaj factorial(n) {
+    jodi (n <= 1) {
+        ferao 1;
+    }
+    ferao n * factorial(n - 1);
+}
+
+dekho("Factorial of 5:", factorial(5));
+
+// Fibonacci
+kaj fibonacci(n) {
+    jodi (n <= 1) {
+        ferao n;
+    }
+    ferao fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+dekho("Fibonacci of 10:", fibonacci(10));
+
+// Function that uses built-ins
+kaj printArray(arr) {
+    dekho("Array length:", length(arr));
+    ghuriye (dhoro i = 0; i < length(arr); i = i + 1) {
+        dekho("Element", i, "=", arr[i]);
+    }
+}
+
+dhoro numbers = [1, 2, 3, 4, 5];
+printArray(numbers);
+
+// Higher-order function
+kaj applyOperation(a, b, operation) {
+    ferao operation(a, b);
+}
+
+kaj gunPhol(x, y) {
+    ferao x * y;
+}
+
+dhoro product = applyOperation(4, 5, gunPhol);
+dekho("4 * 5 =", product);

@@ -1,0 +1,63 @@
+// Example: New Built-in Functions in BanglaCode
+// Demonstrates string, array, and utility functions
+
+dekho("=== BanglaCode Built-in Functions Demo ===");
+dekho("");
+
+// ===== STRING FUNCTIONS =====
+dekho("--- String Functions ---");
+
+dhoro text = "  Hello, BanglaCode World!  ";
+dekho("Original:", "'" + text + "'");
+dekho("trim():", "'" + trim(text) + "'");
+dekho("upper():", upper("hello"));
+dekho("lower():", lower("HELLO"));
+dekho("");
+
+dhoro sentence = "apple,banana,cherry,date";
+dekho("Original:", sentence);
+dhoro fruits = split(sentence, ",");
+dekho("split(','):", fruits);
+dekho("join(' | '):", join(fruits, " | "));
+dekho("");
+
+dhoro message = "Hello World";
+dekho("indexOf('World'):", indexOf(message, "World"));
+dekho("substring(0, 5):", substring(message, 0, 5));
+dekho("replace('World', 'BanglaCode'):", replace(message, "World", "BanglaCode"));
+dekho("");
+
+// ===== ARRAY FUNCTIONS =====
+dekho("--- Array Functions ---");
+
+dhoro numbers = [5, 2, 8, 1, 9, 3];
+dekho("Original:", numbers);
+dekho("sort():", sort(numbers));
+dekho("reverse():", reverse(numbers));
+dekho("slice(1, 4):", slice(numbers, 1, 4));
+dekho("includes(8):", includes(numbers, 8));
+dekho("includes(100):", includes(numbers, 100));
+dekho("");
+
+// ===== UTILITY FUNCTIONS =====
+dekho("--- Utility Functions ---");
+
+dekho("time():", time(), "ms");
+dekho("random():", random());
+dekho("random():", random());
+dekho("");
+
+// ===== FILE OPERATIONS =====
+dekho("--- File Operations ---");
+
+// Write a file
+dhoro content = "This is a test file created by BanglaCode!";
+writeFile("test_output.txt", content);
+dekho("File written: test_output.txt");
+
+// Read the file back
+dhoro fileContent = readFile("test_output.txt");
+dekho("File content:", fileContent);
+dekho("");
+
+dekho("=== Demo Complete! ===");

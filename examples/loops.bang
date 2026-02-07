@@ -1,0 +1,42 @@
+// While loop example
+dekho("While loop:");
+dhoro i = 0;
+jotokkhon (i < 5) {
+    dekho("Count:", i);
+    i = i + 1;
+}
+
+// For loop example
+dekho("\nFor loop:");
+ghuriye (dhoro j = 0; j < 5; j = j + 1) {
+    dekho("Number:", j);
+}
+
+// Nested loops
+dekho("\nMultiplication table:");
+ghuriye (dhoro x = 1; x <= 5; x = x + 1) {
+    ghuriye (dhoro y = 1; y <= 5; y = y + 1) {
+        dekho(x, "x", y, "=", x * y);
+    }
+}
+
+// Break and continue
+dekho("\nBreak example:");
+dhoro k = 0;
+jotokkhon (k < 10) {
+    jodi (k == 5) {
+        dekho("Breaking at", k);
+        thamo;
+    }
+    dekho("k =", k);
+    k = k + 1;
+}
+
+dekho("\nContinue example:");
+ghuriye (dhoro m = 0; m < 5; m = m + 1) {
+    jodi (m == 2) {
+        dekho("Skipping", m);
+        chharo;
+    }
+    dekho("m =", m);
+}

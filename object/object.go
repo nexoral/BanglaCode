@@ -1,0 +1,226 @@
+package object
+
+import (
+	"BanglaCode/ast"
+	"bytes"
+	"fmt"
+	"strings"
+)
+
+// ObjectType represents the type of an object
+type ObjectType string
+
+const (
+	NUMBER_OBJ    = "NUMBER"
+	STRING_OBJ    = "STRING"
+	BOOLEAN_OBJ   = "BOOLEAN"
+	NULL_OBJ      = "NULL"
+	RETURN_OBJ    = "RETURN"
+	ERROR_OBJ     = "ERROR"
+	FUNCTION_OBJ  = "FUNCTION"
+	BUILTIN_OBJ   = "BUILTIN"
+	ARRAY_OBJ     = "ARRAY"
+	MAP_OBJ       = "MAP"
+	CLASS_OBJ     = "CLASS"
+	INSTANCE_OBJ  = "INSTANCE"
+	BREAK_OBJ     = "BREAK"
+	CONTINUE_OBJ  = "CONTINUE"
+	EXCEPTION_OBJ = "EXCEPTION"
+	MODULE_OBJ    = "MODULE"
+)
+
+// Object represents any runtime value
+type Object interface {
+	Type() ObjectType
+	Inspect() string
+}
+
+// Number represents a numeric value (int or float)
+type Number struct {
+	Value float64
+}
+
+func (n *Number) Type() ObjectType { return NUMBER_OBJ }
+func (n *Number) Inspect() string  { return fmt.Sprintf("%g", n.Value) }
+
+// String represents a string value
+type String struct {
+	Value string
+}
+
+func (s *String) Type() ObjectType { return STRING_OBJ }
+func (s *String) Inspect() string  { return s.Value }
+
+// Boolean represents a boolean value
+type Boolean struct {
+	Value bool
+}
+
+func (b *Boolean) Type() ObjectType { return BOOLEAN_OBJ }
+func (b *Boolean) Inspect() string  { return fmt.Sprintf("%t", b.Value) }
+
+// Null represents a null value (khali)
+type Null struct{}
+
+func (n *Null) Type() ObjectType { return NULL_OBJ }
+func (n *Null) Inspect() string  { return "khali" }
+
+// ReturnValue wraps a value for return statements
+type ReturnValue struct {
+	Value Object
+}
+
+func (rv *ReturnValue) Type() ObjectType { return RETURN_OBJ }
+func (rv *ReturnValue) Inspect() string  { return rv.Value.Inspect() }
+
+// Error represents a runtime error
+type Error struct {
+	Message string
+}
+
+func (e *Error) Type() ObjectType { return ERROR_OBJ }
+func (e *Error) Inspect() string  { return "Error: " + e.Message }
+
+// Function represents a user-defined function
+type Function struct {
+	Parameters []*ast.Identifier
+	Body       *ast.BlockStatement
+	Env        *Environment
+	Name       string
+}
+
+func (f *Function) Type() ObjectType { return FUNCTION_OBJ }
+func (f *Function) Inspect() string {
+	var out bytes.Buffer
+	params := []string{}
+	for _, p := range f.Parameters {
+		params = append(params, p.String())
+	}
+	out.WriteString("kaj")
+	if f.Name != "" {
+		out.WriteString(" " + f.Name)
+	}
+	out.WriteString("(")
+	out.WriteString(strings.Join(params, ", "))
+	out.WriteString(") {\n")
+	out.WriteString(f.Body.String())
+	out.WriteString("\n}")
+	return out.String()
+}
+
+// BuiltinFunction represents a built-in function
+type BuiltinFunction func(args ...Object) Object
+
+// Builtin wraps a built-in function
+type Builtin struct {
+	Fn BuiltinFunction
+}
+
+func (b *Builtin) Type() ObjectType { return BUILTIN_OBJ }
+func (b *Builtin) Inspect() string  { return "builtin function" }
+
+// Array represents an array/list
+type Array struct {
+	Elements []Object
+}
+
+func (a *Array) Type() ObjectType { return ARRAY_OBJ }
+func (a *Array) Inspect() string {
+	var out bytes.Buffer
+	elements := []string{}
+	for _, e := range a.Elements {
+		elements = append(elements, e.Inspect())
+	}
+	out.WriteString("[")
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString("]")
+	return out.String()
+}
+
+// Map represents a hash map/object
+type Map struct {
+	Pairs map[string]Object
+}
+
+func (m *Map) Type() ObjectType { return MAP_OBJ }
+func (m *Map) Inspect() string {
+	var out bytes.Buffer
+	pairs := []string{}
+	for key, value := range m.Pairs {
+		pairs = append(pairs, fmt.Sprintf("%s: %s", key, value.Inspect()))
+	}
+	out.WriteString("{")
+	out.WriteString(strings.Join(pairs, ", "))
+	out.WriteString("}")
+	return out.String()
+}
+
+// Class represents a class definition
+type Class struct {
+	Name    string
+	Methods map[string]*Function
+}
+
+func (c *Class) Type() ObjectType { return CLASS_OBJ }
+func (c *Class) Inspect() string  { return "class " + c.Name }
+
+// Instance represents an instance of a class
+type Instance struct {
+	Class      *Class
+	Properties map[string]Object
+}
+
+func (i *Instance) Type() ObjectType { return INSTANCE_OBJ }
+func (i *Instance) Inspect() string  { return "instance of " + i.Class.Name }
+
+// Break represents a break statement
+type Break struct{}
+
+func (b *Break) Type() ObjectType { return BREAK_OBJ }
+func (b *Break) Inspect() string  { return "break" }
+
+// Continue represents a continue statement
+type Continue struct{}
+
+func (c *Continue) Type() ObjectType { return CONTINUE_OBJ }
+func (c *Continue) Inspect() string  { return "continue" }
+
+// Exception represents a thrown exception
+type Exception struct {
+	Message string
+	Value   Object
+}
+
+func (e *Exception) Type() ObjectType { return EXCEPTION_OBJ }
+func (e *Exception) Inspect() string {
+	if e.Value != nil {
+		return "Exception: " + e.Value.Inspect()
+	}
+	return "Exception: " + e.Message
+}
+
+// Module represents an imported module
+type Module struct {
+	Name    string
+	Exports map[string]Object
+}
+
+func (m *Module) Type() ObjectType { return MODULE_OBJ }
+func (m *Module) Inspect() string  { return "module " + m.Name }
+
+// Singleton objects for common values
+var (
+	NULL     = &Null{}
+	TRUE     = &Boolean{Value: true}
+	FALSE    = &Boolean{Value: false}
+	BREAK    = &Break{}
+	CONTINUE = &Continue{}
+)
+
+// NativeBoolToBooleanObject converts a native bool to a Boolean object
+func NativeBoolToBooleanObject(input bool) *Boolean {
+	if input {
+		return TRUE
+	}
+	return FALSE
+}
