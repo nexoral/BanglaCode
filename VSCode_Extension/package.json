@@ -2,12 +2,22 @@
   "name": "banglacode",
   "displayName": "BanglaCode",
   "description": "Language support for BanglaCode - Bengali Programming Language created by Ankan from West Bengal, India",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "publisher": "AnkanSaha",
   "author": {
     "name": "AnkanSaha"
   },
   "license": "MIT",
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexoral/BanglaCode.git",
+    "directory": "VSCode_Extension"
+  },
+  "bugs": {
+    "url": "https://github.com/nexoral/BanglaCode/issues"
+  },
+  "homepage": "https://github.com/nexoral/BanglaCode#readme",
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -15,19 +25,29 @@
     "Programming Languages",
     "Snippets"
   ],
-  
   "keywords": [
     "banglacode",
     "bengali",
     "banglish",
+    "bangla",
+    "বাংলা",
     "programming language",
     "west bengal",
-    "india"
+    "india",
+    "syntax highlighting",
+    "language support",
+    "bengali programming",
+    "native language coding",
+    "indian programming language",
+    "regional language",
+    "code snippets",
+    "autocomplete",
+    "intellisense",
+    "bengali keywords",
+    "বাংলা কোড",
+    "south asian languages"
   ],
   "main": "./extension.js",
-  "activationEvents": [
-    "onLanguage:banglacode"
-  ],
   "contributes": {
     "languages": [
       {
@@ -63,7 +83,7 @@
   },
   "scripts": {
     "vscode:prepublish": "echo 'Ready to publish'",
-    "package": "npx @vscode/vsce package --allow-missing-repository"
+    "package": "npx @vscode/vsce package"
   },
   "devDependencies": {
     "@types/vscode": "^1.74.0",
