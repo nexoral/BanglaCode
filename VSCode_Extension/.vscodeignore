@@ -1,0 +1,6 @@
+.vscode/**
+node_modules/**
+*.vsix
+.gitignore
+package-lock.json
+ICON_NOTE.txt

@@ -2,14 +2,10 @@
 
 **BanglaCode** is a Bengali-syntax programming language extension for Visual Studio Code. Created by **Ankan** from **West Bengal, India**.
 
-![BanglaCode](images/icon.svg)
-
 ## Features
 
 ### ✨ Syntax Highlighting
 Full syntax highlighting for all BanglaCode keywords, built-in functions, strings, numbers, and comments.
-
-![Syntax Highlighting](https://via.placeholder.com/600x300?text=Syntax+Highlighting)
 
 ### 🔧 IntelliSense & Code Completion
 - **Keywords**: `dhoro`, `jodi`, `kaj`, `ferao`, etc.

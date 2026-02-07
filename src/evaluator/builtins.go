@@ -3,6 +3,7 @@ package evaluator
 import (
 "BanglaCode/src/object"
 "bufio"
+"encoding/json"
 "fmt"
 "io"
 "math"
@@ -691,4 +692,174 @@ result.Pairs["body"] = &object.String{Value: string(body)}
 return result
 },
 },
+// JSON Parse - json_poro (JSON পড়ো - read JSON)
+"json_poro": {
+Fn: func(args ...object.Object) object.Object {
+if len(args) != 1 {
+return newError("wrong number of arguments. got=%d, want=1", len(args))
+}
+if args[0].Type() != object.STRING_OBJ {
+return newError("argument to `json_poro` must be STRING, got %s", args[0].Type())
+}
+jsonStr := args[0].(*object.String).Value
+return parseJSON(jsonStr)
+},
+},
+// JSON Stringify - json_banao (JSON বানাও - make JSON)
+"json_banao": {
+Fn: func(args ...object.Object) object.Object {
+if len(args) != 1 {
+return newError("wrong number of arguments. got=%d, want=1", len(args))
+}
+return &object.String{Value: stringifyJSON(args[0])}
+},
+},
+// Simple HTTP response helper - uttor (উত্তর - reply/response)
+"uttor": {
+Fn: func(args ...object.Object) object.Object {
+if len(args) < 2 || len(args) > 4 {
+return newError("wrong number of arguments. got=%d, want=2-4 (res, body, [status], [contentType])", len(args))
+}
+if args[0].Type() != object.MAP_OBJ {
+return newError("first argument to `uttor` must be response MAP, got %s", args[0].Type())
+}
+resMap := args[0].(*object.Map)
+
+// Set body
+resMap.Pairs["body"] = args[1]
+
+// Set status (optional, default 200)
+if len(args) >= 3 {
+if args[2].Type() != object.NUMBER_OBJ {
+return newError("third argument to `uttor` must be NUMBER (status), got %s", args[2].Type())
+}
+resMap.Pairs["status"] = args[2]
+}
+
+// Set content-type (optional)
+if len(args) >= 4 {
+if args[3].Type() != object.STRING_OBJ {
+return newError("fourth argument to `uttor` must be STRING (contentType), got %s", args[3].Type())
+}
+if headersObj, ok := resMap.Pairs["headers"]; ok {
+if headers, ok := headersObj.(*object.Map); ok {
+headers.Pairs["Content-Type"] = args[3]
+}
+}
+}
+
+return resMap
+},
+},
+// JSON response helper - json_uttor (JSON উত্তর - JSON reply)
+"json_uttor": {
+Fn: func(args ...object.Object) object.Object {
+if len(args) < 2 || len(args) > 3 {
+return newError("wrong number of arguments. got=%d, want=2-3 (res, data, [status])", len(args))
+}
+if args[0].Type() != object.MAP_OBJ {
+return newError("first argument to `json_uttor` must be response MAP, got %s", args[0].Type())
+}
+resMap := args[0].(*object.Map)
+
+// Convert data to JSON string
+jsonStr := stringifyJSON(args[1])
+resMap.Pairs["body"] = &object.String{Value: jsonStr}
+
+// Set status (optional, default 200)
+if len(args) >= 3 {
+if args[2].Type() != object.NUMBER_OBJ {
+return newError("third argument to `json_uttor` must be NUMBER (status), got %s", args[2].Type())
+}
+resMap.Pairs["status"] = args[2]
+}
+
+// Set content-type to JSON
+if headersObj, ok := resMap.Pairs["headers"]; ok {
+if headers, ok := headersObj.(*object.Map); ok {
+headers.Pairs["Content-Type"] = &object.String{Value: "application/json; charset=utf-8"}
+}
+}
+
+return resMap
+},
+},
+}
+
+// parseJSON converts a JSON string to BanglaCode objects
+func parseJSON(jsonStr string) object.Object {
+var data interface{}
+if err := json.Unmarshal([]byte(jsonStr), &data); err != nil {
+return newError("JSON parse error: %s", err.Error())
+}
+return jsonToObject(data)
+}
+
+// jsonToObject recursively converts Go values to BanglaCode objects
+func jsonToObject(data interface{}) object.Object {
+switch v := data.(type) {
+case nil:
+return object.NULL
+case bool:
+if v {
+return object.TRUE
+}
+return object.FALSE
+case float64:
+return &object.Number{Value: v}
+case string:
+return &object.String{Value: v}
+case []interface{}:
+elements := make([]object.Object, len(v))
+for i, item := range v {
+elements[i] = jsonToObject(item)
+}
+return &object.Array{Elements: elements}
+case map[string]interface{}:
+pairs := make(map[string]object.Object)
+for key, val := range v {
+pairs[key] = jsonToObject(val)
+}
+return &object.Map{Pairs: pairs}
+default:
+return newError("unsupported JSON type")
+}
+}
+
+// stringifyJSON converts a BanglaCode object to JSON string
+func stringifyJSON(obj object.Object) string {
+data := objectToJSON(obj)
+bytes, err := json.Marshal(data)
+if err != nil {
+return "{}"
+}
+return string(bytes)
+}
+
+// objectToJSON recursively converts BanglaCode objects to Go values
+func objectToJSON(obj object.Object) interface{} {
+switch v := obj.(type) {
+case *object.Null:
+return nil
+case *object.Boolean:
+return v.Value
+case *object.Number:
+return v.Value
+case *object.String:
+return v.Value
+case *object.Array:
+arr := make([]interface{}, len(v.Elements))
+for i, el := range v.Elements {
+arr[i] = objectToJSON(el)
+}
+return arr
+case *object.Map:
+m := make(map[string]interface{})
+for key, val := range v.Pairs {
+m[key] = objectToJSON(val)
+}
+return m
+default:
+return obj.Inspect()
+}
 }

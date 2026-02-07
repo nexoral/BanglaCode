@@ -137,7 +137,11 @@
         },
         {
           "name": "support.function.http.banglacode",
-          "match": "\\b(server_chalu|anun)\\b"
+          "match": "\\b(server_chalu|anun|uttor|json_uttor)\\b"
+        },
+        {
+          "name": "support.function.json.banglacode",
+          "match": "\\b(json_poro|json_banao)\\b"
         }
       ]
     },

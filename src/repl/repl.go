@@ -103,6 +103,14 @@ Utility Functions (সহায়ক):
   server_chalu(port, handler) - সার্ভার চালু - HTTP server
   anun(url)        - আনুন - HTTP GET
 
+JSON Functions (JSON):
+  json_poro(str)   - JSON পড়ো - parse JSON string to object
+  json_banao(obj)  - JSON বানাও - convert object to JSON string
+
+HTTP Response Helpers (সার্ভার উত্তর):
+  uttor(res, body, [status], [contentType]) - উত্তর - simple response
+  json_uttor(res, data, [status])           - JSON উত্তর - JSON response
+
 REPL Commands:
   help         - show this help
   clear/cls    - clear screen

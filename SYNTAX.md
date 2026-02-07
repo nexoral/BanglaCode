@@ -505,7 +505,7 @@ BanglaCode can create HTTP servers like Node.js, making it easy to build web app
 
 ```banglacode
 kaj handleRequest(req, res) {
-    res["body"] = "Hello from BanglaCode!";
+    uttor(res, "Hello from BanglaCode!");
 }
 
 server_chalu(3000, handleRequest);
@@ -520,12 +520,22 @@ The request handler receives a `req` object with:
 - `req["headers"]` - Request headers
 - `req["body"]` - Request body
 
-### Response Object
+### Response Helpers
 
-Set response properties:
-- `res["status"]` - HTTP status code (default: 200)
-- `res["body"]` - Response body
-- `res["headers"]` - Response headers
+BanglaCode provides simple helper functions for sending responses:
+
+#### uttor() - Simple Response
+```banglacode
+uttor(res, body);                    // 200 OK with text body
+uttor(res, body, 201);               // Custom status code
+uttor(res, body, 200, "text/html");  // Custom content-type
+```
+
+#### json_uttor() - JSON Response
+```banglacode
+json_uttor(res, data);       // 200 OK with JSON body (auto Content-Type)
+json_uttor(res, data, 201);  // Custom status code
+```
 
 ### Full Server Example
 
@@ -534,14 +544,11 @@ kaj handleRequest(req, res) {
     dekho("Request:", req["method"], req["path"]);
     
     jodi (req["path"] == "/") {
-        res["body"] = "Welcome to BanglaCode Server!";
-        res["headers"]["Content-Type"] = "text/plain";
+        uttor(res, "Welcome to BanglaCode Server!");
     } nahole jodi (req["path"] == "/api/hello") {
-        res["body"] = "{\"message\": \"Namaskar!\"}";
-        res["headers"]["Content-Type"] = "application/json";
+        json_uttor(res, {"message": "Namaskar!"});
     } nahole {
-        res["status"] = 404;
-        res["body"] = "Not Found";
+        json_uttor(res, {"error": "Not Found"}, 404);
     }
 }
 
@@ -556,6 +563,43 @@ Make HTTP requests:
 dhoro response = anun("https://api.example.com/data");
 dekho("Status:", response["status"]);
 dekho("Body:", response["body"]);
+
+// Parse JSON response
+dhoro data = json_poro(response["body"]);
+dekho("Parsed data:", data);
+```
+
+## JSON Functions
+
+BanglaCode provides built-in functions for working with JSON data.
+
+### json_poro() - Parse JSON
+Convert a JSON string to a BanglaCode object:
+
+```banglacode
+dhoro jsonStr = "{\"naam\": \"Ankan\", \"boyosh\": 25, \"skills\": [\"Go\", \"JavaScript\"]}";
+dhoro data = json_poro(jsonStr);
+
+dekho(data["naam"]);      // Output: Ankan
+dekho(data["boyosh"]);    // Output: 25
+dekho(data["skills"][0]); // Output: Go
+```
+
+### json_banao() - Create JSON String
+Convert a BanglaCode object to a JSON string:
+
+```banglacode
+dhoro person = {
+    "naam": "Ankan",
+    "city": "Kolkata",
+    "active": sotti
+};
+dhoro jsonStr = json_banao(person);
+dekho(jsonStr);  // Output: {"active":true,"city":"Kolkata","naam":"Ankan"}
+
+// Works with arrays too
+dhoro arr = [1, 2, 3, "hello"];
+dekho(json_banao(arr));  // Output: [1,2,3,"hello"]
 ```
 
 ## Arrays

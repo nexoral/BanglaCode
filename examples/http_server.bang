@@ -1,5 +1,6 @@
 // Example: HTTP Server in BanglaCode
 // Using server_chalu (সার্ভার চালু) builtin
+// Now with simpler response helpers: uttor() and json_uttor()
 
 dekho("Starting HTTP Server...");
 
@@ -7,19 +8,31 @@ kaj samlaoRequest(req, res) {
     dekho("Request ashechhe:", req["method"], req["path"]);
     
     jodi (req["path"] == "/") {
-        res["body"] = "Namaskar! BanglaCode server e swagat!";
-        res["headers"]["Content-Type"] = "text/plain; charset=utf-8";
+        // Simple text response - much easier!
+        uttor(res, "Namaskar! BanglaCode server e swagat!");
     } nahole jodi (req["path"] == "/api/info") {
-        res["body"] = "{\"name\": \"BanglaCode\", \"version\": \"2.0.0\", \"creator\": \"Ankan\", \"origin\": \"West Bengal, India\"}";
-        res["headers"]["Content-Type"] = "application/json";
+        // JSON response - automatic Content-Type header
+        dhoro info = {
+            "name": "BanglaCode",
+            "version": "2.0.0",
+            "creator": "Ankan",
+            "origin": "West Bengal, India"
+        };
+        json_uttor(res, info);
     } nahole jodi (req["path"] == "/api/time") {
-        res["body"] = "{\"timestamp\": " + lipi(somoy()) + "}";
-        res["headers"]["Content-Type"] = "application/json";
+        // JSON response with dynamic data
+        json_uttor(res, {"timestamp": somoy()});
+    } nahole jodi (req["path"] == "/api/parse") {
+        // JSON parsing example
+        dhoro jsonStr = "{\"naam\": \"Ankan\", \"boyosh\": 25}";
+        dhoro parsed = json_poro(jsonStr);
+        dekho("Parsed naam:", parsed["naam"]);
+        json_uttor(res, parsed);
     } nahole {
-        res["status"] = 404;
-        res["body"] = "Page not found!";
+        // 404 with status code
+        json_uttor(res, {"error": "Page not found!"}, 404);
     }
 }
 
 // Start server on port 3000
-server_chalu(3000, samlaoRequest());
+server_chalu(3000, samlaoRequest);

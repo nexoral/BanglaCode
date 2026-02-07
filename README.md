@@ -166,10 +166,26 @@ chesta {
 ### HTTP Server
 ```banglacode
 kaj handleRequest(req, res) {
-    res["body"] = "Hello from BanglaCode!";
+    // Simple text response
+    uttor(res, "Hello from BanglaCode!");
+    
+    // Or JSON response (auto Content-Type)
+    json_uttor(res, {"message": "Namaskar!"});
 }
 
 server_chalu(3000, handleRequest);
+```
+
+### JSON Functions
+```banglacode
+// Parse JSON string to object
+dhoro data = json_poro("{\"naam\": \"Ankan\", \"boyosh\": 25}");
+dekho(data["naam"]);  // Output: Ankan
+
+// Convert object to JSON string
+dhoro obj = {"city": "Kolkata", "country": "India"};
+dhoro jsonStr = json_banao(obj);
+dekho(jsonStr);  // Output: {"city":"Kolkata","country":"India"}
 ```
 
 ## Keywords Reference
@@ -257,6 +273,12 @@ server_chalu(3000, handleRequest);
 ### HTTP Functions (ওয়েব সম্পর্কিত)
 - `server_chalu(port, handler)` - সার্ভার চালু - Start HTTP server
 - `anun(url)` - আনুন - Make HTTP GET request
+- `uttor(res, body, [status], [contentType])` - উত্তর - Send simple response
+- `json_uttor(res, data, [status])` - JSON উত্তর - Send JSON response
+
+### JSON Functions (JSON সম্পর্কিত)
+- `json_poro(str)` - JSON পড়ো - Parse JSON string to object
+- `json_banao(obj)` - JSON বানাও - Convert object to JSON string
 
 ## Examples
 

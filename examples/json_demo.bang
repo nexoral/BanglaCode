@@ -1,0 +1,48 @@
+// JSON Demo - Testing json_poro and json_banao functions
+
+dekho("=== JSON Demo ===");
+dekho("");
+
+// Create an object and convert to JSON
+dhoro person = {
+    "naam": "Ankan",
+    "boyosh": 25,
+    "city": "Kolkata",
+    "skills": ["Go", "JavaScript", "Python"]
+};
+
+dekho("Original object:");
+dekho(person);
+dekho("");
+
+// Convert to JSON string
+dhoro jsonStr = json_banao(person);
+dekho("JSON string:");
+dekho(jsonStr);
+dekho("");
+
+// Parse JSON string back to object
+dhoro parsed = json_poro(jsonStr);
+dekho("Parsed back:");
+dekho("Naam:", parsed["naam"]);
+dekho("Boyosh:", parsed["boyosh"]);
+dekho("First skill:", parsed["skills"][0]);
+dekho("");
+
+// Test with array
+dhoro numbers = [1, 2, 3, 4, 5];
+dekho("Array to JSON:", json_banao(numbers));
+dekho("");
+
+// Test with nested object
+dhoro nested = {
+    "user": {
+        "id": 1,
+        "name": "Test"
+    },
+    "active": sotti
+};
+dekho("Nested JSON:", json_banao(nested));
+
+dekho("");
+dekho("=== JSON Demo Complete ===");

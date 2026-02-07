@@ -203,16 +203,66 @@
       "\tdekho(\"Request:\", req[\"method\"], req[\"path\"]);",
       "\t",
       "\tjodi (req[\"path\"] == \"/\") {",
-      "\t\tres[\"body\"] = \"${1:Hello from BanglaCode!}\";",
+      "\t\tuttor(res, \"${1:Hello from BanglaCode!}\");",
       "\t} nahole {",
-      "\t\tres[\"status\"] = 404;",
-      "\t\tres[\"body\"] = \"Not Found\";",
+      "\t\tuttor(res, \"Not Found\", 404);",
       "\t}",
       "}",
       "",
       "server_chalu(${2:3000}, handleRequest);"
     ],
     "description": "HTTP server (সার্ভার চালু)"
+  },
+  "HTTP JSON Response": {
+    "prefix": "json-uttor",
+    "body": [
+      "json_uttor(res, ${1:data});"
+    ],
+    "description": "Send JSON response (JSON উত্তর)"
+  },
+  "HTTP Simple Response": {
+    "prefix": "uttor",
+    "body": [
+      "uttor(res, \"${1:message}\");"
+    ],
+    "description": "Send simple response (উত্তর)"
+  },
+  "JSON Parse": {
+    "prefix": "json_poro",
+    "body": [
+      "dhoro ${1:data} = json_poro(${2:jsonString});"
+    ],
+    "description": "Parse JSON string (JSON পড়ো)"
+  },
+  "JSON Stringify": {
+    "prefix": "json_banao",
+    "body": [
+      "dhoro ${1:jsonStr} = json_banao(${2:object});"
+    ],
+    "description": "Convert to JSON string (JSON বানাও)"
+  },
+  "HTTP API Server": {
+    "prefix": "api-server",
+    "body": [
+      "kaj handleAPI(req, res) {",
+      "\tdekho(\"Request:\", req[\"method\"], req[\"path\"]);",
+      "\t",
+      "\tjodi (req[\"path\"] == \"/\") {",
+      "\t\tuttor(res, \"${1:BanglaCode API Server}\");",
+      "\t} nahole jodi (req[\"path\"] == \"/api/data\") {",
+      "\t\tdhoro data = {",
+      "\t\t\t\"message\": \"Namaskar!\",",
+      "\t\t\t\"status\": \"success\"",
+      "\t\t};",
+      "\t\tjson_uttor(res, data);",
+      "\t} nahole {",
+      "\t\tjson_uttor(res, {\"error\": \"Not Found\"}, 404);",
+      "\t}",
+      "}",
+      "",
+      "server_chalu(${2:3000}, handleAPI);"
+    ],
+    "description": "HTTP API server with JSON responses"
   },
   "HTTP GET": {
     "prefix": "anun",
