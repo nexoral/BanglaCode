@@ -1,7 +1,7 @@
 package ast
 
 import (
-	"BanglaCode/lexer"
+	"BanglaCode/src/lexer"
 	"bytes"
 	"strings"
 )

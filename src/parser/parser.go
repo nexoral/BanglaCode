@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"BanglaCode/ast"
-	"BanglaCode/lexer"
+	"BanglaCode/src/ast"
+	"BanglaCode/src/lexer"
 	"fmt"
 	"strconv"
 )

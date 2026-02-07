@@ -1,7 +1,7 @@
 package object
 
 import (
-	"BanglaCode/ast"
+	"BanglaCode/src/ast"
 	"bytes"
 	"fmt"
 	"strings"

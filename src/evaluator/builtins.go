@@ -1,7 +1,7 @@
 package evaluator
 
 import (
-	"BanglaCode/object"
+	"BanglaCode/src/object"
 	"bufio"
 	"fmt"
 	"io"

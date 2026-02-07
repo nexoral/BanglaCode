@@ -1,10 +1,10 @@
 package repl
 
 import (
-	"BanglaCode/evaluator"
-	"BanglaCode/lexer"
-	"BanglaCode/object"
-	"BanglaCode/parser"
+	"BanglaCode/src/evaluator"
+	"BanglaCode/src/lexer"
+	"BanglaCode/src/object"
+	"BanglaCode/src/parser"
 	"bufio"
 	"fmt"
 	"io"

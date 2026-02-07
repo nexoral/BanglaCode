@@ -1,11 +1,11 @@
 package main
 
 import (
-	"BanglaCode/evaluator"
-	"BanglaCode/lexer"
-	"BanglaCode/object"
-	"BanglaCode/parser"
-	"BanglaCode/repl"
+	"BanglaCode/src/evaluator"
+	"BanglaCode/src/lexer"
+	"BanglaCode/src/object"
+	"BanglaCode/src/parser"
+	"BanglaCode/src/repl"
 	"fmt"
 	"os"
 	"os/user"

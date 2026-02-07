@@ -1,10 +1,10 @@
 package evaluator
 
 import (
-	"BanglaCode/ast"
-	"BanglaCode/lexer"
-	"BanglaCode/object"
-	"BanglaCode/parser"
+	"BanglaCode/src/ast"
+	"BanglaCode/src/lexer"
+	"BanglaCode/src/object"
+	"BanglaCode/src/parser"
 	"fmt"
 	"math"
 	"os"
