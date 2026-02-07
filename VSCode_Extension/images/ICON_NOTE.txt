@@ -1,0 +1,1 @@
+Note: Convert icon.svg to icon.png for VS Code marketplace publishing

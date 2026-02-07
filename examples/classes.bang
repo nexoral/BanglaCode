@@ -1,6 +1,5 @@
-// Object-Oriented Programming in Banglang
+// Object-Oriented Programming in BanglaCode
 
-// Define a Person class
 class Manush {
     kaj init(naam, boyosh) {
         ei.naam = naam;
@@ -18,14 +17,14 @@ class Manush {
 }
 
 // Create instances
-dhoro rahim = notun Manush("Ankan", 25);
-dhoro karim = notun Manush("Karim", 30);
+dhoro Ankan = notun Manush("Ankan", 25);
+dhoro Saha = notun Manush("Saha", 30);
 
-rahim.porichoy();
-karim.porichoy();
+Ankan.porichoy();
+Saha.porichoy();
 
-rahim.birthday();
-karim.birthday();
+Ankan.birthday();
+Saha.birthday();
 
 // Define a Rectangle class
 class Rectangle {

@@ -3,7 +3,7 @@
 
 dekho("Starting HTTP Server...");
 
-kaj handleRequest(req, res) {
+kaj samlaoRequest(req, res) {
     dekho("Request ashechhe:", req["method"], req["path"]);
     
     jodi (req["path"] == "/") {
@@ -22,4 +22,4 @@ kaj handleRequest(req, res) {
 }
 
 // Start server on port 3000
-server_chalu(3000, handleRequest);
+server_chalu(3000, samlaoRequest());

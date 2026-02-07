@@ -1,0 +1,298 @@
+{
+  "Variable Declaration": {
+    "prefix": "dhoro",
+    "body": [
+      "dhoro ${1:name} = ${2:value};"
+    ],
+    "description": "Declare a variable (ধরো)"
+  },
+  "If Statement": {
+    "prefix": "jodi",
+    "body": [
+      "jodi (${1:condition}) {",
+      "\t${2:// code}",
+      "}"
+    ],
+    "description": "If condition (যদি)"
+  },
+  "If-Else Statement": {
+    "prefix": "jodi-nahole",
+    "body": [
+      "jodi (${1:condition}) {",
+      "\t${2:// if true}",
+      "} nahole {",
+      "\t${3:// if false}",
+      "}"
+    ],
+    "description": "If-else condition (যদি-নাহলে)"
+  },
+  "While Loop": {
+    "prefix": "jotokkhon",
+    "body": [
+      "jotokkhon (${1:condition}) {",
+      "\t${2:// code}",
+      "}"
+    ],
+    "description": "While loop (যতক্ষণ)"
+  },
+  "For Loop": {
+    "prefix": "ghuriye",
+    "body": [
+      "ghuriye (dhoro ${1:i} = ${2:0}; ${1:i} < ${3:10}; ${1:i} = ${1:i} + 1) {",
+      "\t${4:// code}",
+      "}"
+    ],
+    "description": "For loop (ঘুরিয়ে)"
+  },
+  "Function": {
+    "prefix": "kaj",
+    "body": [
+      "kaj ${1:name}(${2:params}) {",
+      "\t${3:// code}",
+      "\tferao ${4:result};",
+      "}"
+    ],
+    "description": "Function definition (কাজ)"
+  },
+  "Function No Return": {
+    "prefix": "kaj-void",
+    "body": [
+      "kaj ${1:name}(${2:params}) {",
+      "\t${3:// code}",
+      "}"
+    ],
+    "description": "Function without return"
+  },
+  "Class": {
+    "prefix": "class",
+    "body": [
+      "class ${1:ClassName} {",
+      "\tkaj init(${2:params}) {",
+      "\t\tei.${3:property} = ${3:property};",
+      "\t}",
+      "\t",
+      "\tkaj ${4:method}() {",
+      "\t\t${5:// code}",
+      "\t}",
+      "}"
+    ],
+    "description": "Class definition (ক্লাস)"
+  },
+  "New Instance": {
+    "prefix": "notun",
+    "body": [
+      "dhoro ${1:instance} = notun ${2:ClassName}(${3:args});"
+    ],
+    "description": "Create new instance (নতুন)"
+  },
+  "Print": {
+    "prefix": "dekho",
+    "body": [
+      "dekho(${1:value});"
+    ],
+    "description": "Print output (দেখো)"
+  },
+  "Print Variable": {
+    "prefix": "dekhov",
+    "body": [
+      "dekho(\"${1:label}:\", ${2:variable});"
+    ],
+    "description": "Print labeled variable"
+  },
+  "Try-Catch": {
+    "prefix": "chesta",
+    "body": [
+      "chesta {",
+      "\t${1:// try code}",
+      "} dhoro_bhul (${2:err}) {",
+      "\tdekho(\"Error:\", ${2:err});",
+      "}"
+    ],
+    "description": "Try-catch block (চেষ্টা)"
+  },
+  "Try-Catch-Finally": {
+    "prefix": "chesta-shesh",
+    "body": [
+      "chesta {",
+      "\t${1:// try code}",
+      "} dhoro_bhul (${2:err}) {",
+      "\tdekho(\"Error:\", ${2:err});",
+      "} shesh {",
+      "\t${3:// finally code}",
+      "}"
+    ],
+    "description": "Try-catch-finally block (চেষ্টা-শেষ)"
+  },
+  "Throw Error": {
+    "prefix": "felo",
+    "body": [
+      "felo \"${1:error message}\";"
+    ],
+    "description": "Throw error (ফেলো)"
+  },
+  "Import Module": {
+    "prefix": "ano",
+    "body": [
+      "ano \"${1:module.bang}\";"
+    ],
+    "description": "Import module (আনো)"
+  },
+  "Export Function": {
+    "prefix": "pathao-kaj",
+    "body": [
+      "pathao kaj ${1:name}(${2:params}) {",
+      "\t${3:// code}",
+      "\tferao ${4:result};",
+      "}"
+    ],
+    "description": "Export function (পাঠাও)"
+  },
+  "Export Class": {
+    "prefix": "pathao-class",
+    "body": [
+      "pathao class ${1:ClassName} {",
+      "\tkaj init(${2:params}) {",
+      "\t\tei.${3:property} = ${3:property};",
+      "\t}",
+      "}"
+    ],
+    "description": "Export class (পাঠাও)"
+  },
+  "Array": {
+    "prefix": "array",
+    "body": [
+      "dhoro ${1:arr} = [${2:items}];"
+    ],
+    "description": "Create array (তালিকা)"
+  },
+  "Map/Object": {
+    "prefix": "map",
+    "body": [
+      "dhoro ${1:obj} = {",
+      "\t\"${2:key}\": ${3:value}",
+      "};"
+    ],
+    "description": "Create map/object (মানচিত্র)"
+  },
+  "Array Iterate": {
+    "prefix": "array-ghuri",
+    "body": [
+      "ghuriye (dhoro ${1:i} = 0; ${1:i} < dorghyo(${2:arr}); ${1:i} = ${1:i} + 1) {",
+      "\tdhoro ${3:item} = ${2:arr}[${1:i}];",
+      "\t${4:// code}",
+      "}"
+    ],
+    "description": "Iterate over array"
+  },
+  "Map Iterate": {
+    "prefix": "map-ghuri",
+    "body": [
+      "dhoro ${1:keys} = chabi(${2:obj});",
+      "ghuriye (dhoro ${3:i} = 0; ${3:i} < dorghyo(${1:keys}); ${3:i} = ${3:i} + 1) {",
+      "\tdhoro ${4:key} = ${1:keys}[${3:i}];",
+      "\tdhoro ${5:value} = ${2:obj}[${4:key}];",
+      "\t${6:// code}",
+      "}"
+    ],
+    "description": "Iterate over map keys"
+  },
+  "HTTP Server": {
+    "prefix": "server",
+    "body": [
+      "kaj handleRequest(req, res) {",
+      "\tdekho(\"Request:\", req[\"method\"], req[\"path\"]);",
+      "\t",
+      "\tjodi (req[\"path\"] == \"/\") {",
+      "\t\tres[\"body\"] = \"${1:Hello from BanglaCode!}\";",
+      "\t} nahole {",
+      "\t\tres[\"status\"] = 404;",
+      "\t\tres[\"body\"] = \"Not Found\";",
+      "\t}",
+      "}",
+      "",
+      "server_chalu(${2:3000}, handleRequest);"
+    ],
+    "description": "HTTP server (সার্ভার চালু)"
+  },
+  "HTTP GET": {
+    "prefix": "anun",
+    "body": [
+      "dhoro ${1:response} = anun(\"${2:url}\");",
+      "dekho(\"Status:\", ${1:response}[\"status\"]);",
+      "dekho(\"Body:\", ${1:response}[\"body\"]);"
+    ],
+    "description": "HTTP GET request (আনুন)"
+  },
+  "Read File": {
+    "prefix": "poro",
+    "body": [
+      "dhoro ${1:content} = poro(\"${2:filename}\");"
+    ],
+    "description": "Read file (পড়ো)"
+  },
+  "Write File": {
+    "prefix": "lekho",
+    "body": [
+      "lekho(\"${1:filename}\", ${2:content});"
+    ],
+    "description": "Write file (লেখো)"
+  },
+  "User Input": {
+    "prefix": "nao",
+    "body": [
+      "dhoro ${1:input} = nao(\"${2:Enter value: }\");"
+    ],
+    "description": "Get user input (নাও)"
+  },
+  "Sleep": {
+    "prefix": "ghum",
+    "body": [
+      "ghum(${1:1000});"
+    ],
+    "description": "Sleep milliseconds (ঘুম)"
+  },
+  "Current Time": {
+    "prefix": "somoy",
+    "body": [
+      "dhoro ${1:time} = somoy();"
+    ],
+    "description": "Get current timestamp (সময়)"
+  },
+  "Math Square Root": {
+    "prefix": "borgomul",
+    "body": [
+      "borgomul(${1:number})"
+    ],
+    "description": "Square root (বর্গমূল)"
+  },
+  "Math Power": {
+    "prefix": "ghat",
+    "body": [
+      "ghat(${1:base}, ${2:exp})"
+    ],
+    "description": "Power (ঘাত)"
+  },
+  "Random Number": {
+    "prefix": "lotto",
+    "body": [
+      "lotto()"
+    ],
+    "description": "Random 0-1 (লটো)"
+  },
+  "Main Template": {
+    "prefix": "main",
+    "body": [
+      "// BanglaCode Program",
+      "// Created by: ${1:Ankan}",
+      "",
+      "dekho(\"${2:Hello, West Bengal!}\");",
+      "",
+      "kaj main() {",
+      "\t${3:// Your code here}",
+      "}",
+      "",
+      "main();"
+    ],
+    "description": "Main program template"
+  }
+}

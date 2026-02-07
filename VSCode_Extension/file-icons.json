@@ -1,0 +1,16 @@
+{
+  "iconDefinitions": {
+    "banglacode-file": {
+      "iconPath": "./images/bang-icon.svg"
+    }
+  },
+  "fileExtensions": {
+    "bang": "banglacode-file"
+  },
+  "fileNames": {},
+  "folderNames": {},
+  "folderNamesExpanded": {},
+  "languageIds": {
+    "banglacode": "banglacode-file"
+  }
+}

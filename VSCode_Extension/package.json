@@ -1,0 +1,83 @@
+{
+  "name": "banglacode",
+  "displayName": "BanglaCode",
+  "description": "Language support for BanglaCode - Bengali Programming Language created by Ankan from West Bengal, India",
+  "version": "1.0.0",
+  "publisher": "ankan",
+  "author": {
+    "name": "Ankan",
+    "email": "ankan@example.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ankan/banglacode"
+  },
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "keywords": [
+    "banglacode",
+    "bengali",
+    "banglish",
+    "programming language",
+    "west bengal"
+  ],
+  "icon": "images/icon.png",
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:banglacode"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "banglacode",
+        "aliases": [
+          "BanglaCode",
+          "banglacode",
+          "bang"
+        ],
+        "extensions": [
+          ".bang"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./images/bang-icon.svg",
+          "dark": "./images/bang-icon.svg"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "banglacode",
+        "scopeName": "source.banglacode",
+        "path": "./syntaxes/banglacode.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "banglacode",
+        "path": "./snippets/banglacode.json"
+      }
+    ],
+    "iconThemes": [
+      {
+        "id": "banglacode-icons",
+        "label": "BanglaCode Icons",
+        "path": "./file-icons.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "echo 'Ready to publish'",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "vsce": "^2.15.0"
+  }
+}
