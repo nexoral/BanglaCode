@@ -1,0 +1,138 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(cat VERSION)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Build for Windows
+        run: |
+          GOOS=windows GOARCH=amd64 go build -o dist/windows/banglacode.exe .
+          cd dist/windows && zip -r ../banglacode-windows-amd64.zip banglacode.exe
+
+      - name: Build for macOS (Intel)
+        run: |
+          GOOS=darwin GOARCH=amd64 go build -o dist/macos-intel/banglacode .
+          cd dist/macos-intel && zip -r ../banglacode-macos-amd64.zip banglacode
+
+      - name: Build for macOS (Apple Silicon)
+        run: |
+          GOOS=darwin GOARCH=arm64 go build -o dist/macos-arm/banglacode .
+          cd dist/macos-arm && zip -r ../banglacode-macos-arm64.zip banglacode
+
+      - name: Build for Linux
+        run: |
+          GOOS=linux GOARCH=amd64 go build -o dist/linux/banglacode .
+
+      - name: Install xpack
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/nexoral/xpack/main/Scripts/installer.sh | sudo bash -
+
+      - name: Create Linux packages with xpack
+        run: |
+          VERSION=$(cat VERSION)
+          cd dist/linux
+          xpack -i ./banglacode -app banglacode -arch amd64 -v $VERSION
+          tar -czvf ../banglacode-linux-amd64.tar.gz banglacode
+          mv dist/*.deb ../banglacode-linux-amd64.deb || true
+          mv dist/*.rpm ../banglacode-linux-amd64.rpm || true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          path: |
+            dist/banglacode-windows-amd64.zip
+            dist/banglacode-macos-amd64.zip
+            dist/banglacode-macos-arm64.zip
+            dist/banglacode-linux-amd64.tar.gz
+            dist/banglacode-linux-amd64.deb
+            dist/banglacode-linux-amd64.rpm
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-artifacts
+          path: dist/
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(cat VERSION)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check if release exists
+        id: check_release
+        run: |
+          VERSION=$(cat VERSION)
+          if gh release view "v$VERSION" &>/dev/null; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        if: steps.check_release.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: BanglaCode v${{ steps.version.outputs.version }}
+          body: |
+            ## BanglaCode v${{ steps.version.outputs.version }}
+
+            ### Downloads
+
+            **Windows:**
+            - `banglacode-windows-amd64.zip` - Windows 64-bit
+
+            **macOS:**
+            - `banglacode-macos-amd64.zip` - macOS Intel
+            - `banglacode-macos-arm64.zip` - macOS Apple Silicon
+
+            **Linux:**
+            - `banglacode-linux-amd64.deb` - Debian/Ubuntu
+            - `banglacode-linux-amd64.rpm` - Fedora/RHEL
+            - `banglacode-linux-amd64.tar.gz` - Generic Linux
+          files: |
+            dist/banglacode-windows-amd64.zip
+            dist/banglacode-macos-amd64.zip
+            dist/banglacode-macos-arm64.zip
+            dist/banglacode-linux-amd64.tar.gz
+            dist/banglacode-linux-amd64.deb
+            dist/banglacode-linux-amd64.rpm
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
