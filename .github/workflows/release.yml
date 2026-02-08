@@ -68,7 +68,7 @@ jobs:
           cd dist/linux
           xpack -i ./banglacode -app banglacode -arch amd64 -v $VERSION
           mv dist/*.deb ../banglacode-linux-amd64.deb
-          mv dist/*.tgz ../banglacode-linux-amd64.tgz
+          tar -czvf ../banglacode-linux-amd64.tgz banglacode
 
       - name: Create RPM package with fpm
         run: |
