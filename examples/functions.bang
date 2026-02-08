@@ -4,7 +4,7 @@
 kaj jogPhol(a, b) {
     ferao a + b;
 }
-
+jogPhol(2, 3);
 dhoro result = jogPhol(5, 3);
 dekho("5 + 3 =", result);
 

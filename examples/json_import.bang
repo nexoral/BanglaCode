@@ -1,0 +1,15 @@
+// Example: Importing JSON files in BanglaCode
+
+ano "./config.json" hisabe config;
+
+dekho("=== JSON Import Demo ===");
+dekho("");
+dekho("Name:", config.name);
+dekho("Version:", config.version);
+dekho("Author:", config.author.name);
+dekho("Location:", config.author.location);
+dekho("Features:", config.features);
+dekho("Is Active:", config.isActive);
+dekho("Max Users:", config.maxUsers);
+dekho("");
+dekho("=== JSON Import Successful! ===");

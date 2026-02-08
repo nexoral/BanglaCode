@@ -2,26 +2,26 @@
 // This demonstrates the import/export system
 
 // Import the math utilities module
-ano "math_utils.bang";
+ano "./math_utils.bang" hisabe math;
 
 dekho("=== Module System Demo ===");
 dekho("");
 
 // Use imported functions
-dekho("Addition: 5 + 3 =", add(5, 3));
-dekho("Subtraction: 10 - 4 =", subtract(10, 4));
-dekho("Multiplication: 6 * 7 =", multiply(6, 7));
-dekho("Division: 20 / 4 =", divide(20, 4));
+dekho("Addition: 5 + 3 =", math.add(5, 3, 2));
+dekho("Subtraction: 10 - 4 =", math.subtract(10, 4));
+dekho("Multiplication: 6 * 7 =", math.multiply(6, 7));
+dekho("Division: 20 / 4 =", math.divide(20, 4));
 dekho("");
 
 // Calculate factorial
-dekho("Factorial of 5 =", factorial(5));
-dekho("Factorial of 10 =", factorial(10));
+dekho("Factorial of 5 =", math.factorial(5));
+dekho("Factorial of 10 =", math.factorial(10));
 dekho("");
 
 // Check prime numbers
-dekho("Is 17 prime?", isPrime(17));
-dekho("Is 20 prime?", isPrime(20));
+dekho("Is 17 prime?", math.isPrime(17));
+dekho("Is 20 prime?", math.isPrime(20));
 dekho("");
 
 dekho("=== Module Import Successful! ===");

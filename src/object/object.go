@@ -76,10 +76,17 @@ func (rv *ReturnValue) Inspect() string  { return rv.Value.Inspect() }
 // Error represents a runtime error
 type Error struct {
 	Message string
+	Line    int
+	Column  int
 }
 
 func (e *Error) Type() ObjectType { return ERROR_OBJ }
-func (e *Error) Inspect() string  { return "Error: " + e.Message }
+func (e *Error) Inspect() string {
+	if e.Line > 0 {
+		return fmt.Sprintf("Error [line %d, col %d]: %s", e.Line, e.Column, e.Message)
+	}
+	return "Error: " + e.Message
+}
 
 // Function represents a user-defined function
 type Function struct {
@@ -162,7 +169,7 @@ type Class struct {
 }
 
 func (c *Class) Type() ObjectType { return CLASS_OBJ }
-func (c *Class) Inspect() string  { return "class " + c.Name }
+func (c *Class) Inspect() string  { return "sreni " + c.Name }
 
 // Instance represents an instance of a class
 type Instance struct {
@@ -171,19 +178,19 @@ type Instance struct {
 }
 
 func (i *Instance) Type() ObjectType { return INSTANCE_OBJ }
-func (i *Instance) Inspect() string  { return "instance of " + i.Class.Name }
+func (i *Instance) Inspect() string  { return i.Class.Name + " er udahoron" }
 
 // Break represents a break statement
 type Break struct{}
 
 func (b *Break) Type() ObjectType { return BREAK_OBJ }
-func (b *Break) Inspect() string  { return "break" }
+func (b *Break) Inspect() string  { return "thamo" }
 
 // Continue represents a continue statement
 type Continue struct{}
 
 func (c *Continue) Type() ObjectType { return CONTINUE_OBJ }
-func (c *Continue) Inspect() string  { return "continue" }
+func (c *Continue) Inspect() string  { return "chharo" }
 
 // Exception represents a thrown exception
 type Exception struct {

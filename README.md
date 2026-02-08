@@ -122,8 +122,8 @@ dekho("5 + 3 =", result);  // Output: 5 + 3 = 8
 
 ### Classes
 ```banglacode
-class Manush {
-    kaj init(naam, boyosh) {
+sreni Manush {
+    shuru(naam, boyosh) {
         ei.naam = naam;
         ei.boyosh = boyosh;
     }
@@ -199,7 +199,8 @@ dekho(jsonStr);  // Output: {"city":"Kolkata","country":"India"}
 | `ghuriye` | for | `ghuriye (dhoro i = 0; i < 5; i = i + 1) { }` |
 | `kaj` | function | `kaj add(a, b) { }` |
 | `ferao` | return | `ferao result;` |
-| `class` | class | `class Person { }` |
+| `sreni` | class | `sreni Person { }` |
+| `shuru` | constructor | `shuru() { }` |
 | `notun` | new | `notun Person()` |
 | `sotti` | true | `dhoro flag = sotti;` |
 | `mittha` | false | `dhoro flag = mittha;` |
@@ -211,6 +212,7 @@ dekho(jsonStr);  // Output: {"city":"Kolkata","country":"India"}
 | `chharo` | continue | `chharo;` |
 | `ei` | this | `ei.naam = "Ankan";` |
 | `ano` | import | `ano "module.bang";` |
+| `hisabe` | as (alias) | `ano "x.bang" hisabe y;` |
 | `pathao` | export | `pathao kaj fn() { }` |
 | `chesta` | try | `chesta { }` |
 | `dhoro_bhul` | catch | `dhoro_bhul (e) { }` |
@@ -308,8 +310,9 @@ Start the REPL to test code interactively:
 ```
 
 In the REPL:
-- Type `help` to see keywords and functions
-- Type `exit` or press Ctrl+C to quit
+- Type `sahajjo` (or `help`) to see keywords and functions
+- Type `baire` (or `exit`) or press Ctrl+C to quit
+- Type `mochho` (or `clear`) to clear the screen
 - Multi-line input is supported for functions and classes
 
 ## Project Structure
@@ -349,6 +352,21 @@ BanglaCode/
 | Concurrency | Go goroutines | GIL limited |
 
 *BanglaCode is 3-4x faster than Python for most operations.*
+
+## Error Messages
+
+BanglaCode provides helpful error messages with line and column numbers:
+
+```
+Error [line 5, col 10]: variable 'naam' is not defined
+Error [line 8, col 15]: function 'jogPhol' expects 2 argument(s) but got 3
+Error [line 12, col 5]: 'add' is not defined or is null
+```
+
+Errors include:
+- **Undefined variables**: Shows variable name and exact position
+- **Wrong argument count**: Shows function name, expected vs actual count
+- **Undefined functions**: Clear message about function not being defined
 
 ## Language Design Philosophy
 
@@ -395,7 +413,7 @@ BanglaCode was inspired by:
 
 ## Version
 
-Current Version: **2.0.0**
+Current Version: **2.1.0**
 
 ---
 

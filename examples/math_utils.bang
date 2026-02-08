@@ -1,18 +1,28 @@
 // Math Utilities Module
 // This file can be imported using: ano "math_utils.bang";
 
-pathao kaj add(a, b) {
-    ferao a + b;
+// @comment Adds two numbers and returns the result
+// @comment Parameters: a (first number), b (second number), c (third number)
+// @comment Example: add(5, 3, 2) returns 10
+pathao kaj add(a, b, c) {
+    ferao a + b + c;
 }
 
+// @comment Subtracts second number from first
+// @comment Example: subtract(10, 4) returns 6
 pathao kaj subtract(a, b) {
     ferao a - b;
 }
 
+// @comment Multiplies two numbers
+// @comment Example: multiply(6, 7) returns 42
 pathao kaj multiply(a, b) {
     ferao a * b;
 }
 
+// @comment Divides first number by second
+// @comment Throws error if divisor is zero
+// @comment Example: divide(20, 4) returns 5
 pathao kaj divide(a, b) {
     jodi (b == 0) {
         felo "Division by zero error!";
@@ -20,6 +30,9 @@ pathao kaj divide(a, b) {
     ferao a / b;
 }
 
+// @comment Calculates factorial of a number
+// @comment Uses recursion: n! = n * (n-1)!
+// @comment Example: factorial(5) returns 120
 pathao kaj factorial(n) {
     jodi (n <= 1) {
         ferao 1;
@@ -27,6 +40,9 @@ pathao kaj factorial(n) {
     ferao n * factorial(n - 1);
 }
 
+// @comment Checks if a number is prime
+// @comment Returns sotti (true) if prime, mittha (false) otherwise
+// @comment Example: isPrime(17) returns sotti
 pathao kaj isPrime(n) {
     jodi (n <= 1) {
         ferao mittha;

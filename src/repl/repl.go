@@ -25,9 +25,9 @@ const BANNER = `
 
 Welcome to BanglaCode - Bengali Programming Language
 Created by Ankan from West Bengal, India
-Type 'exit' or Ctrl+C to quit
-Type 'help' for a list of keywords
-Type 'clear' to clear screen
+Type 'baire' or Ctrl+C to quit (বাইরে - exit)
+Type 'sahajjo' for a list of keywords (সাহায্য - help)
+Type 'mochho' to clear screen (মোছো - clear)
 `
 
 const HELP = `
@@ -39,8 +39,9 @@ BanglaCode Keywords (কীওয়ার্ড):
   ghuriye      - for loop
   kaj          - function definition
   ferao        - return statement
-  class        - class definition
+  sreni        - শ্রেণী - class definition
   notun        - new instance
+  shuru        - শুরু - constructor method
   sotti        - true
   mittha       - false
   khali        - null
@@ -51,6 +52,7 @@ BanglaCode Keywords (কীওয়ার্ড):
   chharo       - continue
   ano          - import module
   pathao       - export function/class
+  hisabe       - হিসাবে - import alias (as)
   chesta       - try block
   dhoro_bhul   - catch block
   shesh        - finally block
@@ -111,15 +113,22 @@ HTTP Response Helpers (সার্ভার উত্তর):
   uttor(res, body, [status], [contentType]) - উত্তর - simple response
   json_uttor(res, data, [status])           - JSON উত্তর - JSON response
 
-REPL Commands:
-  help         - show this help
-  clear/cls    - clear screen
-  exit/quit    - exit REPL
+REPL Commands (REPL কমান্ড):
+  sahajjo      - সাহায্য - show this help
+  mochho       - মোছো - clear screen
+  baire        - বাইরে - exit REPL
 
 Example:
   >> dhoro naam = "Ankan"
   >> dekho("Namaskar", naam)
   Namaskar Ankan
+
+  >> sreni Manush {
+  ..     kaj shuru(naam) { ei.naam = naam; }
+  .. }
+  >> dhoro m = notun Manush("Rana")
+  >> dekho(m.naam)
+  Rana
 `
 
 // Start begins the REPL
@@ -139,18 +148,18 @@ func Start(in io.Reader, out io.Writer) {
 
 		line := scanner.Text()
 
-		// Handle special commands
-		if line == "exit" || line == "quit" {
-			fmt.Fprintln(out, "Dhonnobad! (Thank you!)")
+		// Handle special commands (Banglish and English aliases)
+		if line == "baire" || line == "exit" || line == "quit" {
+			fmt.Fprintln(out, "Dhonnobad! Abar dekha hobe! (Thank you! See you again!)")
 			return
 		}
 
-		if line == "help" {
+		if line == "sahajjo" || line == "help" {
 			fmt.Fprint(out, HELP)
 			continue
 		}
 
-		if line == "clear" || line == "cls" {
+		if line == "mochho" || line == "clear" || line == "cls" {
 			// Clear screen using ANSI escape codes
 			fmt.Fprint(out, "\033[2J\033[H")
 			continue

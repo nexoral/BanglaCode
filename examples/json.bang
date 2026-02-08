@@ -1,0 +1,17 @@
+dhoro json = {
+  name: "BanglaCode",
+  version: "1.0.0",
+  features: ["easy syntax", "Bangla keywords", "modularity"],
+  author: {
+    name: "Ankan",
+    location: "Bangladesh"
+  }
+}
+
+dekho("=== JSON Example in BanglaCode ===");
+dekho("Name:", json.name);
+dekho("Version:", json.version);
+dekho("Features:", json.features);
+dekho("Author:", json.author.name);
+dekho("Location:", json.author.location);
+dekho(json_banao(json));

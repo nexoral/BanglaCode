@@ -1,0 +1,11 @@
+{
+  "name": "BanglaCode",
+  "version": "1.0.0",
+  "author": {
+    "name": "Ankan",
+    "location": "Bangladesh"
+  },
+  "features": ["easy syntax", "Bangla keywords", "modularity"],
+  "isActive": true,
+  "maxUsers": 100
+}

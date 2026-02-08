@@ -1,15 +1,19 @@
 // Object-Oriented Programming in BanglaCode
 
-class Manush {
-    kaj init(naam, boyosh) {
+// @comment Represents a person with name and age
+// @comment Use: dhoro person = notun Manush("name", age);
+sreni Manush {
+    shuru(naam, boyosh) {
         ei.naam = naam;
         ei.boyosh = boyosh;
     }
 
+    // @comment Prints a self-introduction
     kaj porichoy() {
         dekho("Amar naam", ei.naam, "ebong ami", ei.boyosh, "bochhor boyoshi");
     }
 
+    // @comment Celebrates birthday and increments age
     kaj birthday() {
         ei.boyosh = ei.boyosh + 1;
         dekho(ei.naam, "er ekhon", ei.boyosh, "bochhor");
@@ -27,8 +31,8 @@ Ankan.birthday();
 Saha.birthday();
 
 // Define a Rectangle class
-class Rectangle {
-    kaj init(width, height) {
+sreni Rectangle {
+    shuru(width, height) {
         ei.width = width;
         ei.height = height;
     }
@@ -52,8 +56,8 @@ dhoro rect = notun Rectangle(10, 5);
 rect.display();
 
 // Define a BankAccount class
-class BankAccount {
-    kaj init(accountHolder, balance) {
+sreni BankAccount {
+    shuru(accountHolder, balance) {
         ei.accountHolder = accountHolder;
         ei.balance = balance;
     }

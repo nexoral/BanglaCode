@@ -68,7 +68,8 @@ const (
 	GHURIYE     = "GHURIYE"     // for
 	KAJ         = "KAJ"         // function
 	FERAO       = "FERAO"       // return
-	CLASS       = "CLASS"       // class
+	SRENI       = "SRENI"       // class (শ্রেণী)
+	SHURU       = "SHURU"       // constructor (শুরু)
 	NOTUN       = "NOTUN"       // new
 	SOTTI       = "SOTTI"       // true
 	MITTHA      = "MITTHA"      // false
@@ -80,6 +81,7 @@ const (
 	CHHARO      = "CHHARO"      // continue
 	ANO         = "ANO"         // import (আনো - bring)
 	PATHAO      = "PATHAO"      // export (পাঠাও - send)
+	HISABE      = "HISABE"      // as (হিসাবে - as/alias)
 	CHESTA      = "CHESTA"      // try
 	DHORO_BHUL  = "DHORO_BHUL"  // catch
 	SHESH       = "SHESH"       // finally
@@ -95,7 +97,8 @@ var keywords = map[string]TokenType{
 	"ghuriye":   GHURIYE,
 	"kaj":       KAJ,
 	"ferao":     FERAO,
-	"class":     CLASS,
+	"sreni":     SRENI,
+	"shuru":     SHURU,
 	"notun":     NOTUN,
 	"sotti":     SOTTI,
 	"mittha":    MITTHA,
@@ -107,6 +110,7 @@ var keywords = map[string]TokenType{
 	"chharo":     CHHARO,
 	"ano":        ANO,
 	"pathao":     PATHAO,
+	"hisabe":     HISABE,
 	"chesta":     CHESTA,
 	"dhoro_bhul": DHORO_BHUL,
 	"shesh":      SHESH,

@@ -48,3 +48,8 @@ func (e *Environment) Update(name string, val Object) Object {
 	e.store[name] = val
 	return val
 }
+
+// All returns all variables in the current scope (not including outer scopes)
+func (e *Environment) All() map[string]Object {
+	return e.store
+}

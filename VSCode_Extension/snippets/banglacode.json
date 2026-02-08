@@ -64,10 +64,10 @@
     "description": "Function without return"
   },
   "Class": {
-    "prefix": "class",
+    "prefix": "sreni",
     "body": [
-      "class ${1:ClassName} {",
-      "\tkaj init(${2:params}) {",
+      "sreni ${1:ClassName} {",
+      "\tshuru(${2:params}) {",
       "\t\tei.${3:property} = ${3:property};",
       "\t}",
       "\t",
@@ -76,7 +76,7 @@
       "\t}",
       "}"
     ],
-    "description": "Class definition (ক্লাস)"
+    "description": "Class definition (শ্রেণী)"
   },
   "New Instance": {
     "prefix": "notun",
@@ -137,6 +137,13 @@
     ],
     "description": "Import module (আনো)"
   },
+  "Import Module with Alias": {
+    "prefix": "ano-hisabe",
+    "body": [
+      "ano \"${1:module.bang}\" hisabe ${2:alias};"
+    ],
+    "description": "Import module with alias (আনো হিসাবে)"
+  },
   "Export Function": {
     "prefix": "pathao-kaj",
     "body": [
@@ -148,15 +155,15 @@
     "description": "Export function (পাঠাও)"
   },
   "Export Class": {
-    "prefix": "pathao-class",
+    "prefix": "pathao-sreni",
     "body": [
-      "pathao class ${1:ClassName} {",
-      "\tkaj init(${2:params}) {",
+      "pathao sreni ${1:ClassName} {",
+      "\tshuru(${2:params}) {",
       "\t\tei.${3:property} = ${3:property};",
       "\t}",
       "}"
     ],
-    "description": "Export class (পাঠাও)"
+    "description": "Export class (পাঠাও শ্রেণী)"
   },
   "Array": {
     "prefix": "array",
@@ -329,6 +336,15 @@
     ],
     "description": "Random 0-1 (লটো)"
   },
+  "Constructor Method": {
+    "prefix": "shuru",
+    "body": [
+      "shuru(${1:params}) {",
+      "\tei.${2:property} = ${2:property};",
+      "}"
+    ],
+    "description": "Constructor method (শুরু)"
+  },
   "Main Template": {
     "prefix": "main",
     "body": [
@@ -344,5 +360,42 @@
       "main();"
     ],
     "description": "Main program template"
+  },
+  "Documentation Comment": {
+    "prefix": "@comment",
+    "body": [
+      "// @comment ${1:Description of function/class}"
+    ],
+    "description": "Add documentation comment (shown on hover)"
+  },
+  "Documented Function": {
+    "prefix": "kaj-doc",
+    "body": [
+      "// @comment ${1:What this function does}",
+      "// @comment Example: ${2:functionName}(${3:args})",
+      "kaj ${2:functionName}(${4:params}) {",
+      "\t${5:// code}",
+      "\tferao ${6:result};",
+      "}"
+    ],
+    "description": "Function with documentation"
+  },
+  "Documented Class": {
+    "prefix": "sreni-doc",
+    "body": [
+      "// @comment ${1:Description of this class}",
+      "// @comment Use: dhoro obj = notun ${2:ClassName}(${3:args});",
+      "sreni ${2:ClassName} {",
+      "\tshuru(${3:params}) {",
+      "\t\tei.${4:property} = ${4:property};",
+      "\t}",
+      "\t",
+      "\t// @comment ${5:Method description}",
+      "\tkaj ${6:methodName}() {",
+      "\t\t${7:// code}",
+      "\t}",
+      "}"
+    ],
+    "description": "Class with documentation"
   }
 }

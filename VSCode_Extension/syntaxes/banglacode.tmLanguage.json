@@ -3,6 +3,7 @@
   "name": "BanglaCode",
   "patterns": [
     { "include": "#comments" },
+    { "include": "#imports" },
     { "include": "#strings" },
     { "include": "#numbers" },
     { "include": "#keywords" },
@@ -15,8 +16,26 @@
     { "include": "#punctuation" }
   ],
   "repository": {
+    "imports": {
+      "patterns": [
+        {
+          "name": "meta.import.banglacode",
+          "match": "(ano)\\s+(\"[^\"]+\")(?:\\s+(hisabe)\\s+([a-zA-Z_][a-zA-Z0-9_]*))?",
+          "captures": {
+            "1": { "name": "keyword.control.import.banglacode" },
+            "2": { "name": "string.quoted.module-path.banglacode" },
+            "3": { "name": "keyword.control.as.banglacode" },
+            "4": { "name": "variable.other.alias.banglacode" }
+          }
+        }
+      ]
+    },
     "comments": {
       "patterns": [
+        {
+          "name": "comment.block.documentation.banglacode",
+          "match": "//\\s*@comment\\s+.*$"
+        },
         {
           "name": "comment.line.double-slash.banglacode",
           "match": "//.*$"
@@ -61,11 +80,11 @@
       "patterns": [
         {
           "name": "keyword.control.banglacode",
-          "match": "\\b(dhoro|jodi|nahole|jotokkhon|ghuriye|kaj|ferao|thamo|chharo|ano|pathao|chesta|dhoro_bhul|shesh|felo)\\b"
+          "match": "\\b(dhoro|jodi|nahole|jotokkhon|ghuriye|kaj|ferao|thamo|chharo|ano|pathao|hisabe|chesta|dhoro_bhul|shesh|felo)\\b"
         },
         {
           "name": "keyword.other.banglacode",
-          "match": "\\b(class|notun|ei)\\b"
+          "match": "\\b(sreni|notun|ei|shuru)\\b"
         },
         {
           "name": "constant.language.banglacode",
@@ -157,7 +176,7 @@
       "patterns": [
         {
           "name": "entity.name.class.banglacode",
-          "match": "(?<=class\\s+)[a-zA-Z_][a-zA-Z0-9_]*"
+          "match": "(?<=sreni\\s+)[a-zA-Z_][a-zA-Z0-9_]*"
         },
         {
           "name": "entity.name.class.banglacode",

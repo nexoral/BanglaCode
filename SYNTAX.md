@@ -83,7 +83,8 @@ BanglaCode uses Banglish keywords that are intuitive for Bengali speakers:
 | `ghuriye` | rotate/turn | for |
 | `kaj` | work/function | function |
 | `ferao` | return | return |
-| `class` | class | class |
+| `sreni` | class/category | class |
+| `shuru` | start/begin | init (constructor) |
 | `notun` | new | new |
 | `sotti` | truth | true |
 | `mittha` | false | false |
@@ -96,6 +97,7 @@ BanglaCode uses Banglish keywords that are intuitive for Bengali speakers:
 | `dekho` | see/show | print |
 | `ei` | this | this |
 | `ano` | import | import |
+| `hisabe` | as | as (import alias) |
 | `pathao` | export | export |
 | `chesta` | try | try |
 | `dhoro_bhul` | catch error | catch |
@@ -319,8 +321,8 @@ dekho("5! =", factorial(5));  // Output: 5! = 120
 
 ### Defining Classes
 ```banglacode
-class Manush {
-    kaj init(naam, boyosh) {
+sreni Manush {
+    shuru(naam, boyosh) {
         ei.naam = naam;
         ei.boyosh = boyosh;
     }
@@ -351,8 +353,8 @@ dekho(person.boyosh);  // Output: 26
 
 ### Complete Class Example
 ```banglacode
-class Rectangle {
-    kaj init(width, height) {
+sreni Rectangle {
+    shuru(width, height) {
         ei.width = width;
         ei.height = height;
     }
@@ -390,8 +392,8 @@ pathao kaj multiply(a, b) {
     ferao a * b;
 }
 
-pathao class Calculator {
-    kaj init() {
+pathao sreni Calculator {
+    shuru() {
         ei.result = 0;
     }
     
@@ -424,7 +426,7 @@ dekho(calc.result);    // Output: 15
 
 ```banglacode
 // Import as namespace (like Python's import x as y)
-ano "math_utils.bang" as math;
+ano "math_utils.bang" hisabe math;
 
 dekho(math["add"](5, 3));  // Output: 8
 ```
@@ -641,31 +643,58 @@ ghuriye (dhoro i = 0; i < dorghyo(fruits); i = i + 1) {
 
 ## Maps/Objects
 
-### Creating Maps
+### Creating Maps (JS-like Syntax)
 ```banglacode
+// Keys can be identifiers (JS-like) or strings
 dhoro person = {
-    "naam": "Ankan",
-    "boyosh": 25,
-    "city": "Kolkata"
+    naam: "Ankan",
+    boyosh: 25,
+    city: "Kolkata",
+    isActive: sotti
+};
+
+// Nested objects
+dhoro config = {
+    app: "BanglaCode",
+    version: "1.0.0",
+    author: {
+        name: "Ankan",
+        location: "West Bengal"
+    },
+    features: ["easy syntax", "Bangla keywords", "modularity"]
 };
 ```
 
 ### Accessing Values
 ```banglacode
-dekho(person["naam"]);  // Output: Ankan
+// Dot notation (recommended)
+dekho(person.naam);     // Output: Ankan
+dekho(config.author.name);  // Output: Ankan
+
+// Bracket notation
 dekho(person["city"]);  // Output: Kolkata
+```
+
+### Importing JSON Files
+```banglacode
+// Import JSON files directly
+ano "./config.json" hisabe config;
+
+dekho(config.name);         // Access properties
+dekho(config.author.name);  // Access nested properties
+dekho(config.features);     // Access arrays
 ```
 
 ### Modifying Values
 ```banglacode
-person["boyosh"] = 26;
-person["country"] = "West Bengal";
+person.boyosh = 26;
+person.country = "India";
 ```
 
 ### Getting Keys
 ```banglacode
 dhoro sobChabi = chabi(person);
-dekho(sobChabi);  // Output: ["naam", "boyosh", "city", "country"]
+dekho(sobChabi);  // Output: ["naam", "boyosh", "city", "isActive", "country"]
 ```
 
 ### Iterating Over Maps
@@ -830,6 +859,39 @@ Use `//` for single-line comments:
 dekho("Hello");  // This is also a comment
 ```
 
+### Documentation Comments with @comment
+
+Use `// @comment` to add documentation that appears in VSCode hover:
+
+```banglacode
+// @comment Adds two numbers and returns the result
+// @comment Example: add(5, 3) returns 8
+kaj add(a, b) {
+    ferao a + b;
+}
+
+// @comment Represents a person with name and age
+// @comment Use: dhoro p = notun Person("name", age);
+sreni Person {
+    shuru(naam) {
+        ei.naam = naam;
+    }
+    
+    // @comment Returns a greeting message
+    kaj greet() {
+        ferao "Hello " + ei.naam;
+    }
+}
+```
+
+When you hover over `add` or `Person` anywhere in your code (or imported modules), VSCode will show the documentation.
+
+**Features:**
+- Multiple `@comment` lines are combined
+- Works with functions, classes, and methods
+- Shown when hovering on imported functions too
+- Ignored by the interpreter (treated as regular comments)
+
 ## Examples
 
 ### Example 1: Hello World
@@ -880,33 +942,33 @@ ghuriye (dhoro i = 0; i < 10; i = i + 1) {
 
 ### Example 4: Student Grade System
 ```banglacode
-class Student {
-    kaj init(naam, roll) {
+sreni Student {
+    shuru(naam, roll) {
         ei.naam = naam;
         ei.roll = roll;
         ei.marks = [];
     }
 
     kaj addMark(subject, mark) {
-        push(ei.marks, {"subject": subject, "mark": mark});
+        dhokao(ei.marks, {"subject": subject, "mark": mark});
     }
 
     kaj calculateAverage() {
-        jodi (length(ei.marks) == 0) {
+        jodi (dorghyo(ei.marks) == 0) {
             ferao 0;
         }
         dhoro total = 0;
-        ghuriye (dhoro i = 0; i < length(ei.marks); i = i + 1) {
+        ghuriye (dhoro i = 0; i < dorghyo(ei.marks); i = i + 1) {
             total = total + ei.marks[i]["mark"];
         }
-        ferao total / length(ei.marks);
+        ferao total / dorghyo(ei.marks);
     }
 
     kaj displayReport() {
         dekho("Student Name:", ei.naam);
         dekho("Roll:", ei.roll);
         dekho("Marks:");
-        ghuriye (dhoro i = 0; i < length(ei.marks); i = i + 1) {
+        ghuriye (dhoro i = 0; i < dorghyo(ei.marks); i = i + 1) {
             dhoro m = ei.marks[i];
             dekho("  ", m["subject"], ":", m["mark"]);
         }
@@ -994,8 +1056,9 @@ Use `.bang` extension for BanglaCode source files:
 
 ## Getting Help
 
-- In REPL, type `help` to see available keywords and functions
-- Type `exit` or press Ctrl+C to quit REPL
+- In REPL, type `sahajjo` (or `help`) to see available keywords and functions
+- Type `baire` (or `exit`) or press Ctrl+C to quit REPL
+- Type `mochho` (or `clear`) to clear the screen
 - Check the `examples/` directory for more code samples
 
 ## Contributing

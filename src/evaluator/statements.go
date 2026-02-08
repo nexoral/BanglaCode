@@ -1,0 +1,176 @@
+package evaluator
+
+import (
+	"BanglaCode/src/ast"
+	"BanglaCode/src/object"
+)
+
+// evalProgram evaluates a complete program
+func evalProgram(stmts []ast.Statement, env *object.Environment) object.Object {
+	var result object.Object
+
+	for _, statement := range stmts {
+		result = Eval(statement, env)
+
+		switch result := result.(type) {
+		case *object.ReturnValue:
+			return result.Value
+		case *object.Error:
+			return result
+		}
+	}
+
+	return result
+}
+
+// evalBlockStatement evaluates a block of statements
+func evalBlockStatement(block *ast.BlockStatement, env *object.Environment) object.Object {
+	var result object.Object
+
+	for _, statement := range block.Statements {
+		result = Eval(statement, env)
+
+		if result != nil {
+			rt := result.Type()
+			if rt == object.RETURN_OBJ || rt == object.ERROR_OBJ ||
+				rt == object.BREAK_OBJ || rt == object.CONTINUE_OBJ ||
+				rt == object.EXCEPTION_OBJ {
+				return result
+			}
+		}
+	}
+
+	return result
+}
+
+// evalIfStatement evaluates if/else statements
+func evalIfStatement(ie *ast.IfStatement, env *object.Environment) object.Object {
+	condition := Eval(ie.Condition, env)
+	if isError(condition) {
+		return condition
+	}
+
+	if isTruthy(condition) {
+		return Eval(ie.Consequence, env)
+	} else if ie.Alternative != nil {
+		return Eval(ie.Alternative, env)
+	}
+
+	return object.NULL
+}
+
+// evalWhileStatement evaluates while loops
+func evalWhileStatement(ws *ast.WhileStatement, env *object.Environment) object.Object {
+	for {
+		condition := Eval(ws.Condition, env)
+		if isError(condition) {
+			return condition
+		}
+
+		if !isTruthy(condition) {
+			break
+		}
+
+		result := Eval(ws.Body, env)
+
+		if result != nil {
+			switch result.Type() {
+			case object.RETURN_OBJ:
+				return result
+			case object.ERROR_OBJ:
+				return result
+			case object.BREAK_OBJ:
+				return object.NULL
+			case object.CONTINUE_OBJ:
+				continue
+			case object.EXCEPTION_OBJ:
+				return result
+			}
+		}
+	}
+
+	return object.NULL
+}
+
+// evalForStatement evaluates for loops
+func evalForStatement(fs *ast.ForStatement, env *object.Environment) object.Object {
+	// Create new scope for loop
+	loopEnv := object.NewEnclosedEnvironment(env)
+
+	// Initialize
+	if fs.Init != nil {
+		result := Eval(fs.Init, loopEnv)
+		if isError(result) {
+			return result
+		}
+	}
+
+	for {
+		// Check condition
+		if fs.Condition != nil {
+			condition := Eval(fs.Condition, loopEnv)
+			if isError(condition) {
+				return condition
+			}
+			if !isTruthy(condition) {
+				break
+			}
+		}
+
+		// Execute body
+		result := Eval(fs.Body, loopEnv)
+
+		if result != nil {
+			switch result.Type() {
+			case object.RETURN_OBJ:
+				return result
+			case object.ERROR_OBJ:
+				return result
+			case object.BREAK_OBJ:
+				return object.NULL
+			case object.CONTINUE_OBJ:
+				// Continue to update step
+			case object.EXCEPTION_OBJ:
+				return result
+			}
+		}
+
+		// Update
+		if fs.Update != nil {
+			result := Eval(fs.Update, loopEnv)
+			if isError(result) {
+				return result
+			}
+		}
+	}
+
+	return object.NULL
+}
+
+// evalIdentifier evaluates variable references
+func evalIdentifier(node *ast.Identifier, env *object.Environment) object.Object {
+	if val, ok := env.Get(node.Value); ok {
+		return val
+	}
+
+	if builtin, ok := builtins[node.Value]; ok {
+		return builtin
+	}
+
+	return newErrorAt(node.Token.Line, node.Token.Column, "variable '%s' is not defined", node.Value)
+}
+
+// evalExpressions evaluates a list of expressions
+func evalExpressions(exps []ast.Expression, env *object.Environment) []object.Object {
+	var result []object.Object
+
+	for _, e := range exps {
+		evaluated := Eval(e, env)
+		if isError(evaluated) {
+			return []object.Object{evaluated}
+		}
+		result = append(result, evaluated)
+	}
+
+	return result
+}
