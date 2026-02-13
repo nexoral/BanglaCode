@@ -149,9 +149,41 @@ Extension/
 └── extension.js                          # Extension activation logic
 ```
 
+### Documentation Website (MANDATORY)
+When adding **any new feature** (keyword, built-in function, syntax, control flow), you **MUST** also update the Documentation website in `Documentation/` folder:
+
+| Feature Type | Files to Update |
+|--------------|-----------------|
+| New keyword/syntax | `Documentation/app/docs/syntax/page.tsx` |
+| New built-in function | `Documentation/app/docs/functions/page.tsx` |
+| New control flow (if/while/for) | `Documentation/app/docs/control-flow/page.tsx` |
+| New OOP feature (class/method) | `Documentation/app/docs/oop/page.tsx` |
+| New example code | `Documentation/app/playground/examples.ts` |
+| New documentation section | `Documentation/lib/docs-config.ts` (navigation config) |
+
+**Documentation folder structure:**
+```
+Documentation/
+├── app/
+│   ├── docs/
+│   │   ├── syntax/page.tsx          # Syntax documentation
+│   │   ├── functions/page.tsx       # Built-in functions documentation
+│   │   ├── control-flow/page.tsx    # Control flow documentation
+│   │   ├── oop/page.tsx             # OOP documentation
+│   │   └── installation/page.tsx    # Installation guide
+│   └── playground/
+│       ├── page.tsx                 # Interactive playground
+│       └── examples.ts              # Code examples for playground
+├── lib/
+│   └── docs-config.ts               # Documentation navigation config
+└── components/                      # Shared UI components
+```
+
 **Checklist for every new feature:**
 1. ✅ Implement in interpreter (`src/`)
 2. ✅ Write tests in `test/`
 3. ✅ Add syntax highlighting in `Extension/syntaxes/banglacode.tmLanguage.json`
 4. ✅ Add snippet in `Extension/snippets/banglacode.json`
-5. ✅ Update documentation (README.md, SYNTAX.md)
+5. ✅ Update Documentation website (`Documentation/app/docs/`)
+6. ✅ Add playground examples if applicable (`Documentation/app/playground/examples.ts`)
+7. ✅ Update README.md and SYNTAX.md
