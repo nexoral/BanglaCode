@@ -30,11 +30,15 @@ export default function DocsLayout({
             prose-a:text-primary prose-a:no-underline hover:prose-a:underline
             prose-code:text-primary prose-code:bg-secondary/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
             prose-pre:bg-[#1e1e1e] prose-pre:border prose-pre:border-border
-            prose-table:border prose-table:border-border
-            prose-th:bg-secondary prose-th:px-4 prose-th:py-2
-            prose-td:px-4 prose-td:py-2 prose-td:border-t prose-td:border-border
             prose-li:text-muted-foreground
             prose-strong:text-foreground
+            [&_table]:w-full [&_table]:border-collapse [&_table]:my-6 [&_table]:rounded-lg [&_table]:overflow-hidden [&_table]:border [&_table]:border-border
+            [&_thead]:bg-secondary/80
+            [&_th]:px-4 [&_th]:py-3 [&_th]:text-left [&_th]:font-semibold [&_th]:text-foreground [&_th]:border-b [&_th]:border-border
+            [&_td]:px-4 [&_td]:py-3 [&_td]:text-muted-foreground [&_td]:border-b [&_td]:border-border
+            [&_tr]:transition-colors [&_tbody_tr:hover]:bg-secondary/30
+            [&_tr:last-child_td]:border-b-0
+            [&_td_code]:text-sm [&_td_code]:bg-secondary/50 [&_td_code]:px-1.5 [&_td_code]:py-0.5 [&_td_code]:rounded [&_td_code]:text-primary
           ">
             {children}
           </article>

@@ -11,56 +11,128 @@ interface CodeBlockProps {
   showLineNumbers?: boolean;
 }
 
-// BanglaCode syntax highlighting
+// BanglaCode syntax highlighting using token-based approach
 function highlightBanglaCode(code: string): string {
   // Keywords
-  const keywords = [
+  const keywords = new Set([
     "dhoro", "jodi", "nahole", "jotokkhon", "ghuriye", "kaj", "ferao",
     "sreni", "shuru", "notun", "sotti", "mittha", "khali", "ebong", "ba", "na",
-    "thamo", "chharo", "ano", "pathao", "hisabe", "chesta", "dhoro_bhul", "shesh", "felo"
-  ];
+    "thamo", "chharo", "ano", "pathao", "hisabe", "chesta", "dhoro_bhul", "shesh", "felo", "ei"
+  ]);
 
   // Built-in functions
-  const builtins = [
+  const builtins = new Set([
     "dekho", "nao", "dhoron", "lipi", "sonkha", "dorghyo", "dhokao", "berKoro",
     "kato", "ulto", "ache", "saja", "boroHater", "chotoHater", "bhag", "joro",
     "chhanto", "khojo", "angsho", "bodlo", "borgomul", "ghat", "niche", "upore",
     "kache", "niratek", "choto", "boro", "chabi", "poro", "lekho", "somoy",
     "lotto", "ghum", "bondho", "server_chalu", "anun", "uttor", "json_uttor",
     "json_poro", "json_banao"
-  ];
+  ]);
 
-  let highlighted = code
-    // Escape HTML
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
+  const result: string[] = [];
+  let i = 0;
+
+  while (i < code.length) {
     // Comments
-    .replace(/(\/\/[^\n]*)/g, '<span class="text-gray-500">$1</span>')
+    if (code[i] === '/' && code[i + 1] === '/') {
+      let comment = '';
+      while (i < code.length && code[i] !== '\n') {
+        comment += code[i] === '<' ? '&lt;' : code[i] === '>' ? '&gt;' : code[i] === '&' ? '&amp;' : code[i];
+        i++;
+      }
+      result.push(`<span class="text-gray-500">${comment}</span>`);
+      continue;
+    }
+
     // Strings
-    .replace(/("(?:[^"\\]|\\.)*")/g, '<span class="text-green-400">$1</span>')
-    .replace(/('(?:[^'\\]|\\.)*')/g, '<span class="text-green-400">$1</span>')
+    if (code[i] === '"' || code[i] === "'") {
+      const quote = code[i];
+      let str = quote;
+      i++;
+      while (i < code.length && code[i] !== quote) {
+        if (code[i] === '\\' && i + 1 < code.length) {
+          str += code[i] + code[i + 1];
+          i += 2;
+        } else {
+          str += code[i] === '<' ? '&lt;' : code[i] === '>' ? '&gt;' : code[i] === '&' ? '&amp;' : code[i];
+          i++;
+        }
+      }
+      if (i < code.length) {
+        str += quote;
+        i++;
+      }
+      result.push(`<span class="text-green-400">${str}</span>`);
+      continue;
+    }
+
     // Numbers
-    .replace(/\b(\d+\.?\d*)\b/g, '<span class="text-orange-400">$1</span>');
+    if (/[0-9]/.test(code[i])) {
+      let num = '';
+      while (i < code.length && /[0-9.]/.test(code[i])) {
+        num += code[i];
+        i++;
+      }
+      result.push(`<span class="text-orange-400">${num}</span>`);
+      continue;
+    }
 
-  // Keywords (must come after string highlighting)
-  keywords.forEach(kw => {
-    const regex = new RegExp(`\\b(${kw})\\b(?![^<]*>)`, "g");
-    highlighted = highlighted.replace(regex, '<span class="text-purple-400 font-semibold">$1</span>');
-  });
+    // Identifiers (keywords, builtins, variables)
+    if (/[a-zA-Z_]/.test(code[i])) {
+      let ident = '';
+      while (i < code.length && /[a-zA-Z0-9_]/.test(code[i])) {
+        ident += code[i];
+        i++;
+      }
+      
+      // Check if followed by ( for function call
+      let j = i;
+      while (j < code.length && /\s/.test(code[j])) j++;
+      const isCall = code[j] === '(';
 
-  // Built-in functions
-  builtins.forEach(fn => {
-    const regex = new RegExp(`\\b(${fn})\\s*\\(`, "g");
-    highlighted = highlighted.replace(regex, '<span class="text-blue-400">$1</span>(');
-  });
+      if (keywords.has(ident)) {
+        result.push(`<span class="text-purple-400 font-semibold">${ident}</span>`);
+      } else if (builtins.has(ident) && isCall) {
+        result.push(`<span class="text-blue-400">${ident}</span>`);
+      } else {
+        result.push(ident);
+      }
+      continue;
+    }
 
-  // Operators
-  highlighted = highlighted
-    .replace(/(\+\=|\-\=|\*\=|\/\=|\=\=|\!\=|\&lt;\=|\&gt;\=|\+|\-|\*|\/|\%|\&lt;|\&gt;)/g,
-      '<span class="text-yellow-400">$1</span>');
+    // Operators
+    const twoChar = code.slice(i, i + 2);
+    const operators = ['+=', '-=', '*=', '/=', '==', '!=', '<=', '>=', '&&', '||'];
+    if (operators.includes(twoChar)) {
+      const escaped = twoChar.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      result.push(`<span class="text-yellow-400">${escaped}</span>`);
+      i += 2;
+      continue;
+    }
 
-  return highlighted;
+    const singleOps = ['+', '-', '*', '/', '%', '<', '>', '=', '!'];
+    if (singleOps.includes(code[i])) {
+      const escaped = code[i] === '<' ? '&lt;' : code[i] === '>' ? '&gt;' : code[i];
+      result.push(`<span class="text-yellow-400">${escaped}</span>`);
+      i++;
+      continue;
+    }
+
+    // Everything else (whitespace, punctuation, etc.)
+    if (code[i] === '<') {
+      result.push('&lt;');
+    } else if (code[i] === '>') {
+      result.push('&gt;');
+    } else if (code[i] === '&') {
+      result.push('&amp;');
+    } else {
+      result.push(code[i]);
+    }
+    i++;
+  }
+
+  return result.join('');
 }
 
 export default function CodeBlock({ code, language = "banglacode", filename, showLineNumbers = true }: CodeBlockProps) {

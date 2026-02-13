@@ -19,76 +19,76 @@ export default function DataTypes() {
 
       <h2>Type Overview</h2>
 
-      <div className="overflow-x-auto my-6">
-        <table>
-          <thead>
+      <div className="overflow-x-auto my-6 rounded-lg border border-border">
+        <table className="min-w-full">
+          <thead className="bg-secondary/80">
             <tr>
-              <th>Type</th>
-              <th>Description</th>
-              <th>Example</th>
-              <th><code>dhoron()</code> Returns</th>
+              <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Type</th>
+              <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Description</th>
+              <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Example</th>
+              <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap"><code>dhoron()</code> Returns</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td><strong>Number (Integer)</strong></td>
-              <td>Whole numbers</td>
-              <td><code>42</code>, <code>-5</code></td>
-              <td><code>&quot;int&quot;</code></td>
+          <tbody className="divide-y divide-border">
+            <tr className="hover:bg-secondary/30 transition-colors">
+              <td className="px-4 py-3 text-muted-foreground"><strong className="text-foreground">Number (Integer)</strong></td>
+              <td className="px-4 py-3 text-muted-foreground">Whole numbers</td>
+              <td className="px-4 py-3 text-muted-foreground"><code>42</code>, <code>-5</code></td>
+              <td className="px-4 py-3 text-muted-foreground"><code>&quot;int&quot;</code></td>
             </tr>
-            <tr>
-              <td><strong>Number (Float)</strong></td>
-              <td>Decimal numbers</td>
-              <td><code>3.14</code>, <code>-0.5</code></td>
-              <td><code>&quot;float&quot;</code></td>
+            <tr className="hover:bg-secondary/30 transition-colors">
+              <td className="px-4 py-3 text-muted-foreground"><strong className="text-foreground">Number (Float)</strong></td>
+              <td className="px-4 py-3 text-muted-foreground">Decimal numbers</td>
+              <td className="px-4 py-3 text-muted-foreground"><code>3.14</code>, <code>-0.5</code></td>
+              <td className="px-4 py-3 text-muted-foreground"><code>&quot;float&quot;</code></td>
             </tr>
-            <tr>
-              <td><strong>String</strong></td>
-              <td>Text</td>
-              <td><code>&quot;hello&quot;</code></td>
-              <td><code>&quot;string&quot;</code></td>
+            <tr className="hover:bg-secondary/30 transition-colors">
+              <td className="px-4 py-3 text-muted-foreground"><strong className="text-foreground">String</strong></td>
+              <td className="px-4 py-3 text-muted-foreground">Text</td>
+              <td className="px-4 py-3 text-muted-foreground"><code>&quot;hello&quot;</code></td>
+              <td className="px-4 py-3 text-muted-foreground"><code>&quot;string&quot;</code></td>
             </tr>
-            <tr>
-              <td><strong>Boolean</strong></td>
-              <td>True/False</td>
-              <td><code>sotti</code>, <code>mittha</code></td>
-              <td><code>&quot;boolean&quot;</code></td>
+            <tr className="hover:bg-secondary/30 transition-colors">
+              <td className="px-4 py-3 text-muted-foreground"><strong className="text-foreground">Boolean</strong></td>
+              <td className="px-4 py-3 text-muted-foreground">True/False</td>
+              <td className="px-4 py-3 text-muted-foreground"><code>sotti</code>, <code>mittha</code></td>
+              <td className="px-4 py-3 text-muted-foreground"><code>&quot;boolean&quot;</code></td>
             </tr>
-            <tr>
-              <td><strong>Null</strong></td>
-              <td>No value</td>
-              <td><code>khali</code></td>
-              <td><code>&quot;null&quot;</code></td>
+            <tr className="hover:bg-secondary/30 transition-colors">
+              <td className="px-4 py-3 text-muted-foreground"><strong className="text-foreground">Null</strong></td>
+              <td className="px-4 py-3 text-muted-foreground">No value</td>
+              <td className="px-4 py-3 text-muted-foreground"><code>khali</code></td>
+              <td className="px-4 py-3 text-muted-foreground"><code>&quot;null&quot;</code></td>
             </tr>
-            <tr>
-              <td><strong>Array</strong></td>
-              <td>Ordered list</td>
-              <td><code>[1, 2, 3]</code></td>
-              <td><code>&quot;array&quot;</code></td>
+            <tr className="hover:bg-secondary/30 transition-colors">
+              <td className="px-4 py-3 text-muted-foreground"><strong className="text-foreground">Array</strong></td>
+              <td className="px-4 py-3 text-muted-foreground">Ordered list</td>
+              <td className="px-4 py-3 text-muted-foreground"><code>[1, 2, 3]</code></td>
+              <td className="px-4 py-3 text-muted-foreground"><code>&quot;array&quot;</code></td>
             </tr>
-            <tr>
-              <td><strong>Map</strong></td>
-              <td>Key-value pairs</td>
-              <td><code>{`{x: 1, y: 2}`}</code></td>
-              <td><code>&quot;map&quot;</code></td>
+            <tr className="hover:bg-secondary/30 transition-colors">
+              <td className="px-4 py-3 text-muted-foreground"><strong className="text-foreground">Map</strong></td>
+              <td className="px-4 py-3 text-muted-foreground">Key-value pairs</td>
+              <td className="px-4 py-3 text-muted-foreground"><code>{`{x: 1, y: 2}`}</code></td>
+              <td className="px-4 py-3 text-muted-foreground"><code>&quot;map&quot;</code></td>
             </tr>
-            <tr>
-              <td><strong>Function</strong></td>
-              <td>Callable</td>
-              <td><code>kaj(x) {`{}`}</code></td>
-              <td><code>&quot;function&quot;</code></td>
+            <tr className="hover:bg-secondary/30 transition-colors">
+              <td className="px-4 py-3 text-muted-foreground"><strong className="text-foreground">Function</strong></td>
+              <td className="px-4 py-3 text-muted-foreground">Callable</td>
+              <td className="px-4 py-3 text-muted-foreground"><code>kaj(x) {`{}`}</code></td>
+              <td className="px-4 py-3 text-muted-foreground"><code>&quot;function&quot;</code></td>
             </tr>
-            <tr>
-              <td><strong>Class</strong></td>
-              <td>Blueprint</td>
-              <td><code>sreni X {`{}`}</code></td>
-              <td><code>&quot;class&quot;</code></td>
+            <tr className="hover:bg-secondary/30 transition-colors">
+              <td className="px-4 py-3 text-muted-foreground"><strong className="text-foreground">Class</strong></td>
+              <td className="px-4 py-3 text-muted-foreground">Blueprint</td>
+              <td className="px-4 py-3 text-muted-foreground"><code>sreni X {`{}`}</code></td>
+              <td className="px-4 py-3 text-muted-foreground"><code>&quot;class&quot;</code></td>
             </tr>
-            <tr>
-              <td><strong>Instance</strong></td>
-              <td>Object instance</td>
-              <td><code>notun X()</code></td>
-              <td><code>&quot;instance&quot;</code></td>
+            <tr className="hover:bg-secondary/30 transition-colors">
+              <td className="px-4 py-3 text-muted-foreground"><strong className="text-foreground">Instance</strong></td>
+              <td className="px-4 py-3 text-muted-foreground">Object instance</td>
+              <td className="px-4 py-3 text-muted-foreground"><code>notun X()</code></td>
+              <td className="px-4 py-3 text-muted-foreground"><code>&quot;instance&quot;</code></td>
             </tr>
           </tbody>
         </table>
