@@ -1,66 +1,195 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Code, Terminal, Sparkles } from "lucide-react";
+import CodeBlock from "@/components/CodeBlock";
+import DocNavigation from "@/components/DocNavigation";
 
 export default function Introduction() {
   return (
-    <div className="space-y-6">
+    <div>
+      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+        <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
+          Getting Started
+        </span>
+      </div>
+
       <h1>Introduction to BanglaCode</h1>
-      <p className="lead text-xl text-muted-foreground">
-        A programming language that speaks your language.
+
+      <p className="lead text-xl text-muted-foreground mt-4">
+        BanglaCode is a Bengali-syntax programming language that makes coding accessible
+        to Bengali speakers. Write code using familiar Bengali words in English script (Banglish).
       </p>
 
-      <div className="p-4 bg-secondary/50 rounded-lg border border-border">
-        <p className="font-medium text-primary mb-2">Notice</p>
-        <p className="text-sm text-muted-foreground">
-          BanglaCode is currently in <strong>Beta</strong>. Syntax and features may evolve.
-        </p>
+      <div className="grid sm:grid-cols-3 gap-4 my-8">
+        <div className="p-4 rounded-lg border border-border bg-secondary/20">
+          <Code className="w-8 h-8 text-primary mb-2" />
+          <h3 className="font-semibold mb-1">Bengali Syntax</h3>
+          <p className="text-sm text-muted-foreground">
+            Use Bengali keywords like <code>dhoro</code>, <code>jodi</code>, <code>kaj</code>
+          </p>
+        </div>
+        <div className="p-4 rounded-lg border border-border bg-secondary/20">
+          <Terminal className="w-8 h-8 text-primary mb-2" />
+          <h3 className="font-semibold mb-1">Full-Featured</h3>
+          <p className="text-sm text-muted-foreground">
+            OOP, modules, error handling, HTTP servers
+          </p>
+        </div>
+        <div className="p-4 rounded-lg border border-border bg-secondary/20">
+          <Sparkles className="w-8 h-8 text-primary mb-2" />
+          <h3 className="font-semibold mb-1">Easy to Learn</h3>
+          <p className="text-sm text-muted-foreground">
+            Intuitive syntax for Bengali speakers
+          </p>
+        </div>
       </div>
 
       <h2>What is BanglaCode?</h2>
+
       <p>
-        BanglaCode is an interpreted programming language constructed with Bengali keywords.
-        It is designed to help native Bengali speakers, especially students in West Bengal and Bangladesh,
-        grasp core programming concepts without the initial barrier of English fluency.
+        BanglaCode is a <strong>tree-walking interpreter</strong> written in Go that allows you to write
+        programs using Bengali keywords. The language uses <strong>Banglish</strong> (Bengali words written
+        in English/Latin script) to make it easy to type on any keyboard while remaining familiar to
+        Bengali speakers.
       </p>
 
-      <h2>Design Philosophy</h2>
-      <ul className="list-disc pl-6 space-y-2">
-        <li><strong>Native Syntax:</strong> Uses Banglish (Bengali in English script) for keywords to make them memorable.</li>
-        <li><strong>Strict but Simple:</strong> semantic similarities to C and Java to ensure skills are transferable.</li>
-        <li><strong>Modern Features:</strong> Supports Objects, Maps, and First-class functions.</li>
+      <h3>Design Philosophy</h3>
+
+      <ul>
+        <li><strong>Accessibility</strong> - Lower the barrier for Bengali speakers to learn programming</li>
+        <li><strong>Completeness</strong> - Full programming language features, not just a toy</li>
+        <li><strong>Familiarity</strong> - Keywords match natural Bengali expressions</li>
+        <li><strong>Simplicity</strong> - Clean, minimal syntax without unnecessary complexity</li>
       </ul>
 
-      <h2>Code Example</h2>
-      <div className="relative rounded-lg overflow-hidden border border-border bg-[#1e1e1e]">
-        <div className="flex items-center px-4 py-2 bg-[#2d2d2d] border-b border-border">
-          <div className="flex gap-2">
-            <div className="w-3 h-3 rounded-full bg-red-500" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500" />
-            <div className="w-3 h-3 rounded-full bg-green-500" />
-          </div>
-          <span className="ml-4 text-xs text-muted-foreground">hello.bang</span>
-        </div>
-        <div className="p-4 font-mono text-sm overflow-x-auto">
-          <pre><code><span className="text-purple-400">kaj</span> <span className="text-yellow-200">greet</span>(name) &#123;
-            <span className="text-blue-400">jodi</span> (name == <span className="text-green-400">"World"</span>) &#123;
-            <span className="text-yellow-200">dekho</span>(<span className="text-green-400">"Namaskar Prithibi!"</span>);
-            &#125; <span className="text-blue-400">nahole</span> &#123;
-            <span className="text-yellow-200">dekho</span>(<span className="text-green-400">"Nomoshkar "</span> + name);
-            &#125;
-            &#125;
+      <h2>Quick Example</h2>
 
-            greet(<span className="text-green-400">"Bangla"</span>);</code></pre>
-        </div>
+      <p>Here&apos;s a simple BanglaCode program that demonstrates the core syntax:</p>
+
+      <CodeBlock
+        filename="hello.bang"
+        code={`// Variable declaration
+dhoro naam = "Ankan";
+dhoro boyosh = 25;
+
+// Print output
+dekho("Namaskar! Amar naam", naam);
+
+// Conditional
+jodi (boyosh >= 18) {
+    dekho(naam, "is an adult");
+} nahole {
+    dekho(naam, "is a minor");
+}
+
+// Loop
+ghuriye (dhoro i = 1; i <= 5; i = i + 1) {
+    dekho("Count:", i);
+}
+
+// Function
+kaj square(n) {
+    ferao n * n;
+}
+
+dekho("5 squared =", square(5));`}
+      />
+
+      <h2>Language Features</h2>
+
+      <p>BanglaCode is a complete programming language with:</p>
+
+      <div className="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>27 Bengali Keywords</strong></td>
+              <td>All control flow and declarations in Bengali</td>
+            </tr>
+            <tr>
+              <td><strong>50+ Built-in Functions</strong></td>
+              <td>String, array, math, file I/O, HTTP, and more</td>
+            </tr>
+            <tr>
+              <td><strong>Object-Oriented</strong></td>
+              <td>Classes, constructors, methods, instances</td>
+            </tr>
+            <tr>
+              <td><strong>Module System</strong></td>
+              <td>Import/export with namespace support</td>
+            </tr>
+            <tr>
+              <td><strong>Error Handling</strong></td>
+              <td>Try-catch-finally with throw</td>
+            </tr>
+            <tr>
+              <td><strong>HTTP Server</strong></td>
+              <td>Build web applications</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <div className="pt-8">
+      <h2>Architecture</h2>
+
+      <p>
+        The interpreter follows a classic pipeline architecture:
+      </p>
+
+      <div className="p-4 rounded-lg bg-secondary/30 border border-border font-mono text-sm my-4">
+        Source Code → <span className="text-primary">Lexer</span> → Tokens →{" "}
+        <span className="text-primary">Parser</span> → AST →{" "}
+        <span className="text-primary">Evaluator</span> → Result
+      </div>
+
+      <ol>
+        <li><strong>Lexer</strong> - Tokenizes source code, recognizes Bengali keywords</li>
+        <li><strong>Parser</strong> - Builds Abstract Syntax Tree using Pratt parsing</li>
+        <li><strong>Evaluator</strong> - Tree-walking interpreter executes the AST</li>
+      </ol>
+
+      <h2>File Extension</h2>
+
+      <p>
+        BanglaCode source files use the <code>.bang</code> extension. For example:
+        <code>hello.bang</code>, <code>calculator.bang</code>, <code>server.bang</code>.
+      </p>
+
+      <h2>Next Steps</h2>
+
+      <p>Ready to start coding in Bengali? Follow these guides:</p>
+
+      <div className="grid sm:grid-cols-2 gap-4 my-6">
         <Link
           href="/docs/installation"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+          className="group p-4 rounded-lg border border-border hover:border-primary/50 hover:bg-secondary/30 transition-colors"
         >
-          Next: Installation <ArrowRight className="w-4 h-4" />
+          <h4 className="font-medium group-hover:text-primary transition-colors flex items-center gap-2">
+            Installation <ArrowRight className="w-4 h-4" />
+          </h4>
+          <p className="text-sm text-muted-foreground mt-1">
+            Build and install the BanglaCode interpreter
+          </p>
+        </Link>
+        <Link
+          href="/docs/quick-start"
+          className="group p-4 rounded-lg border border-border hover:border-primary/50 hover:bg-secondary/30 transition-colors"
+        >
+          <h4 className="font-medium group-hover:text-primary transition-colors flex items-center gap-2">
+            Quick Start <ArrowRight className="w-4 h-4" />
+          </h4>
+          <p className="text-sm text-muted-foreground mt-1">
+            Write your first BanglaCode program
+          </p>
         </Link>
       </div>
+
+      <DocNavigation currentPath="/docs" />
     </div>
   );
 }

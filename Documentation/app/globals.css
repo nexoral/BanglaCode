@@ -78,3 +78,53 @@ body {
     max-width: 1400px;
   }
 }
+
+/* Global table styles for documentation */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+}
+
+.prose thead {
+  background-color: hsl(var(--secondary) / 0.8);
+}
+
+.prose th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  white-space: nowrap;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.prose td {
+  padding: 0.75rem 1rem;
+  color: hsl(var(--muted-foreground));
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.prose tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.prose tbody tr:hover {
+  background-color: hsl(var(--secondary) / 0.3);
+}
+
+.prose td code,
+.prose th code {
+  font-size: 0.875rem;
+  background-color: hsl(var(--secondary) / 0.5);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  color: hsl(var(--primary));
+}
+
+.prose td strong {
+  color: hsl(var(--foreground));
+}

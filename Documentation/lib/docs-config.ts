@@ -1,32 +1,104 @@
-import { Book, Code, Terminal, GraduationCap, Server, AlertTriangle, Layers } from "lucide-react";
+import {
+  Book,
+  Code,
+  GitBranch,
+  FunctionSquare,
+  GraduationCap,
+  List,
+  FileText
+} from "lucide-react";
 
-export const DOCS_CONFIG = [
+export interface DocItem {
+  name: string;
+  href: string;
+  description?: string;
+}
+
+export interface DocSection {
+  section: string;
+  icon: React.ComponentType<{ className?: string }>;
+  items: DocItem[];
+}
+
+export const DOCS_CONFIG: DocSection[] = [
   {
     section: "Getting Started",
     icon: Book,
     items: [
-      { name: "Introduction", href: "/docs" },
-      { name: "Installation", href: "/docs/installation" },
-      { name: "Quick Start", href: "/docs/quick-start" },
+      { name: "Introduction", href: "/docs", description: "What is BanglaCode?" },
+      { name: "Installation", href: "/docs/installation", description: "How to install BanglaCode" },
+      { name: "Quick Start", href: "/docs/quick-start", description: "Write your first program" },
     ],
   },
   {
-    section: "Core Concepts",
-    icon: Layers,
+    section: "Language Basics",
+    icon: Code,
     items: [
-      { name: "Syntax & Variables", href: "/docs/syntax" },
-      { name: "Control Flow", href: "/docs/control-flow" },
-      { name: "Functions", href: "/docs/functions" },
-      { name: "OOP (Classes)", href: "/docs/oop" },
+      { name: "Keywords", href: "/docs/keywords", description: "All Bengali keywords" },
+      { name: "Variables", href: "/docs/variables", description: "Declaring and using variables" },
+      { name: "Data Types", href: "/docs/data-types", description: "Numbers, strings, booleans, etc." },
+      { name: "Operators", href: "/docs/operators", description: "Arithmetic, comparison, logical" },
+    ],
+  },
+  {
+    section: "Control Flow",
+    icon: GitBranch,
+    items: [
+      { name: "Conditionals", href: "/docs/conditionals", description: "If-else statements" },
+      { name: "Loops", href: "/docs/loops", description: "While and for loops" },
+      { name: "Break & Continue", href: "/docs/break-continue", description: "Loop control statements" },
+    ],
+  },
+  {
+    section: "Functions & OOP",
+    icon: FunctionSquare,
+    items: [
+      { name: "Functions", href: "/docs/functions", description: "Defining and calling functions" },
+      { name: "Classes", href: "/docs/classes", description: "Object-oriented programming" },
+      { name: "Methods", href: "/docs/methods", description: "Class methods and this" },
+    ],
+  },
+  {
+    section: "Data Structures",
+    icon: List,
+    items: [
+      { name: "Arrays", href: "/docs/arrays", description: "Working with arrays" },
+      { name: "Maps", href: "/docs/maps", description: "Key-value collections" },
     ],
   },
   {
     section: "Advanced",
     icon: GraduationCap,
     items: [
-      { name: "Modules", href: "/docs/modules" },
-      { name: "Error Handling", href: "/docs/error-handling" },
-      { name: "HTTP Server", href: "/docs/http-server" },
-    ]
-  }
+      { name: "Modules", href: "/docs/modules", description: "Import and export" },
+      { name: "Error Handling", href: "/docs/error-handling", description: "Try-catch-finally" },
+      { name: "File I/O", href: "/docs/file-io", description: "Reading and writing files" },
+      { name: "HTTP Server", href: "/docs/http-server", description: "Building web servers" },
+    ],
+  },
+  {
+    section: "Reference",
+    icon: FileText,
+    items: [
+      { name: "Built-in Functions", href: "/docs/builtins", description: "All 50+ built-in functions" },
+      { name: "Operator Precedence", href: "/docs/precedence", description: "Order of operations" },
+      { name: "Examples", href: "/docs/examples", description: "Complete code examples" },
+    ],
+  },
 ];
+
+// Flatten all docs for navigation
+export function getAllDocs(): DocItem[] {
+  return DOCS_CONFIG.flatMap(section => section.items);
+}
+
+// Get previous and next docs for navigation
+export function getNavigation(currentHref: string): { prev: DocItem | null; next: DocItem | null } {
+  const allDocs = getAllDocs();
+  const currentIndex = allDocs.findIndex(doc => doc.href === currentHref);
+
+  return {
+    prev: currentIndex > 0 ? allDocs[currentIndex - 1] : null,
+    next: currentIndex < allDocs.length - 1 ? allDocs[currentIndex + 1] : null,
+  };
+}
