@@ -57,8 +57,9 @@ const (
 	RPAREN   = ")"
 	LBRACE   = "{"
 	RBRACE   = "}"
-	LBRACKET = "["
-	RBRACKET = "]"
+	LBRACKET  = "["
+	RBRACKET  = "]"
+	DOTDOTDOT = "..."
 
 	// Keywords (Banglish)
 	DHORO      = "DHORO"      // variable declaration (let/var)

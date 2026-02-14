@@ -690,3 +690,63 @@ func testStringObject(t *testing.T, obj object.Object, expected string) bool {
 	}
 	return true
 }
+
+func testArrayObject(t *testing.T, obj object.Object, expected []float64, testNum int) bool {
+	t.Helper()
+	arr, ok := obj.(*object.Array)
+	if !ok {
+		t.Errorf("test[%d]: object is not Array. got=%T (%+v)", testNum, obj, obj)
+		return false
+	}
+
+	if len(arr.Elements) != len(expected) {
+		t.Errorf("test[%d]: wrong array length. expected=%d, got=%d",
+			testNum, len(expected), len(arr.Elements))
+		return false
+	}
+
+	for j, expectedVal := range expected {
+		num, ok := arr.Elements[j].(*object.Number)
+		if !ok {
+			t.Errorf("test[%d]: element[%d] is not Number. got=%T",
+				testNum, j, arr.Elements[j])
+			return false
+		}
+		if num.Value != expectedVal {
+			t.Errorf("test[%d]: element[%d] has wrong value. got=%f, want=%f",
+				testNum, j, num.Value, expectedVal)
+			return false
+		}
+	}
+	return true
+}
+
+func testErrorObject(t *testing.T, obj object.Object, expectedSubstr string, testNum int) bool {
+	t.Helper()
+	errObj, ok := obj.(*object.Error)
+	if !ok {
+		t.Errorf("test[%d]: expected error, got %T (%+v)", testNum, obj, obj)
+		return false
+	}
+
+	if len(errObj.Message) < len(expectedSubstr) {
+		t.Errorf("test[%d]: error message too short. got=%q, want substring=%q",
+			testNum, errObj.Message, expectedSubstr)
+		return false
+	}
+
+	// Check if error contains expected substring
+	found := false
+	for i := 0; i <= len(errObj.Message)-len(expectedSubstr); i++ {
+		if errObj.Message[i:i+len(expectedSubstr)] == expectedSubstr {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("test[%d]: error message %q doesn't contain %q",
+			testNum, errObj.Message, expectedSubstr)
+		return false
+	}
+	return true
+}

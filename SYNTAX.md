@@ -337,6 +337,59 @@ kaj calculate(x, y, z) {
 dekho(calculate(2, 3, 4));  // Output: 20
 ```
 
+### Rest Parameters (Variadic Functions)
+Use `...` to collect any number of arguments into an array:
+
+```banglacode
+kaj sum(...numbers) {
+    dhoro total = 0;
+    ghuriye (dhoro i = 0; i < dorghyo(numbers); i = i + 1) {
+        total = total + numbers[i];
+    }
+    ferao total;
+}
+
+dekho(sum(1, 2, 3));        // Output: 6
+dekho(sum(1, 2, 3, 4, 5));  // Output: 15
+dekho(sum());               // Output: 0
+```
+
+### Mixed Parameters with Rest
+```banglacode
+kaj greetAll(greeting, ...names) {
+    ghuriye (dhoro i = 0; i < dorghyo(names); i = i + 1) {
+        dekho(greeting, names[i]);
+    }
+}
+
+greetAll("Hello", "Alice", "Bob", "Charlie");
+// Output:
+// Hello Alice
+// Hello Bob
+// Hello Charlie
+```
+
+### Spread Operator
+Use `...` to expand an array into individual elements:
+
+```banglacode
+// Spread in function calls
+dhoro nums = [1, 2, 3, 4, 5];
+dekho(sum(...nums));  // Output: 15
+
+// Combine with regular arguments
+dekho(sum(10, ...nums));  // Output: 25
+
+// Spread in array literals
+dhoro arr1 = [1, 2];
+dhoro arr2 = [3, 4];
+dhoro combined = [...arr1, ...arr2];  // [1, 2, 3, 4]
+
+// Spread with dekho
+dhoro items = ["apple", "banana"];
+dekho(...items);  // Output: apple banana
+```
+
 ### Recursive Functions
 ```banglacode
 kaj factorial(n) {

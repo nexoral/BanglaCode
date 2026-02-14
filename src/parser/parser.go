@@ -50,6 +50,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(lexer.LBRACE, p.parseMapLiteral)
 	p.registerPrefix(lexer.KAJ, p.parseFunctionLiteral)
 	p.registerPrefix(lexer.NOTUN, p.parseNewExpression)
+	p.registerPrefix(lexer.DOTDOTDOT, p.parseSpreadElement)
 
 	// Register infix parse functions
 	p.registerInfix(lexer.PLUS, p.parseBinaryExpression)

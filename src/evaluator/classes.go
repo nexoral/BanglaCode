@@ -98,15 +98,28 @@ func applyFunction(fn object.Object, args []object.Object, env *object.Environme
 func applyFunctionWithPosition(fn object.Object, args []object.Object, env *object.Environment, line, col int, callExpr ast.Expression) object.Object {
 	switch fn := fn.(type) {
 	case *object.Function:
-		// Check argument count
-		expected := len(fn.Parameters)
+		// Check argument count (considering rest parameter)
+		minParams := len(fn.Parameters)
 		actual := len(args)
-		if actual != expected {
-			funcName := fn.Name
-			if funcName == "" {
-				funcName = "anonymous function"
+
+		if fn.RestParameter == nil {
+			// No rest parameter: exact match required
+			if actual != minParams {
+				funcName := fn.Name
+				if funcName == "" {
+					funcName = "anonymous function"
+				}
+				return newErrorAt(line, col, "function '%s' expects %d argument(s) but got %d", funcName, minParams, actual)
 			}
-			return newErrorAt(line, col, "function '%s' expects %d argument(s) but got %d", funcName, expected, actual)
+		} else {
+			// Has rest parameter: at least minParams required
+			if actual < minParams {
+				funcName := fn.Name
+				if funcName == "" {
+					funcName = "anonymous function"
+				}
+				return newErrorAt(line, col, "function '%s' expects at least %d argument(s) but got %d", funcName, minParams, actual)
+			}
 		}
 		extendedEnv := extendFunctionEnv(fn, args)
 		evaluated := Eval(fn.Body, extendedEnv)
@@ -132,10 +145,20 @@ func applyFunctionWithPosition(fn object.Object, args []object.Object, env *obje
 func extendFunctionEnv(fn *object.Function, args []object.Object) *object.Environment {
 	env := object.NewEnclosedEnvironment(fn.Env)
 
+	// Bind regular parameters
 	for paramIdx, param := range fn.Parameters {
 		if paramIdx < len(args) {
 			env.Set(param.Value, args[paramIdx])
 		}
+	}
+
+	// Bind rest parameter if present
+	if fn.RestParameter != nil {
+		restArgs := []object.Object{}
+		if len(args) > len(fn.Parameters) {
+			restArgs = args[len(fn.Parameters):]
+		}
+		env.Set(fn.RestParameter.Value, &object.Array{Elements: restArgs})
 	}
 
 	// Check if we need to bind 'ei' (this)

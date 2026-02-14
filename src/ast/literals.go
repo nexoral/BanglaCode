@@ -89,10 +89,11 @@ func (ml *MapLiteral) String() string {
 
 // FunctionLiteral represents: kaj(a, b) { ... }
 type FunctionLiteral struct {
-	Token      lexer.Token // the KAJ token
-	Name       *Identifier // optional function name
-	Parameters []*Identifier
-	Body       *BlockStatement
+	Token         lexer.Token // the KAJ token
+	Name          *Identifier // optional function name
+	Parameters    []*Identifier
+	RestParameter *Identifier // optional rest parameter (...args)
+	Body          *BlockStatement
 }
 
 func (fl *FunctionLiteral) expressionNode()      {}
@@ -102,6 +103,9 @@ func (fl *FunctionLiteral) String() string {
 	params := []string{}
 	for _, p := range fl.Parameters {
 		params = append(params, p.String())
+	}
+	if fl.RestParameter != nil {
+		params = append(params, "..."+fl.RestParameter.String())
 	}
 	// Constructor shuru() is output without kaj prefix
 	if fl.Name != nil && fl.Name.Value == "shuru" {

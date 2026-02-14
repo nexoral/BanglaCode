@@ -155,6 +155,10 @@
     "operators": {
       "patterns": [
         {
+          "name": "keyword.operator.spread.js",
+          "match": "\\.\\.\\."
+        },
+        {
           "name": "keyword.operator.comparison.js",
           "match": "(==|!=|<=|>=|<|>)"
         },
