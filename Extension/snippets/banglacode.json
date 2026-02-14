@@ -77,6 +77,44 @@
     ],
     "description": "Function without return"
   },
+  "Function with Rest Parameter": {
+    "prefix": "kaj-rest",
+    "body": [
+      "kaj ${1:name}(...${2:args}) {",
+      "\tghuriye (dhoro i = 0; i < dorghyo(${2:args}); i = i + 1) {",
+      "\t\t${3:// process each argument}",
+      "\t}",
+      "}"
+    ],
+    "description": "Function with rest parameter (...args)"
+  },
+  "Variadic Sum Function": {
+    "prefix": "kaj-sum",
+    "body": [
+      "kaj ${1:sum}(...${2:numbers}) {",
+      "\tdhoro total = 0;",
+      "\tghuriye (dhoro i = 0; i < dorghyo(${2:numbers}); i = i + 1) {",
+      "\t\ttotal = total + ${2:numbers}[i];",
+      "\t}",
+      "\tferao total;",
+      "}"
+    ],
+    "description": "Variadic sum function using rest parameter"
+  },
+  "Spread Array": {
+    "prefix": "spread",
+    "body": [
+      "...${1:array}"
+    ],
+    "description": "Spread operator to expand array"
+  },
+  "Combine Arrays with Spread": {
+    "prefix": "spread-combine",
+    "body": [
+      "dhoro ${1:combined} = [...${2:arr1}, ...${3:arr2}];"
+    ],
+    "description": "Combine arrays using spread operator"
+  },
   "Class": {
     "prefix": "sreni",
     "body": [

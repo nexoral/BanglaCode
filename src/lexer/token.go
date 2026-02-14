@@ -53,12 +53,13 @@ const (
 	COLON     = ":"
 	DOT       = "."
 
-	LPAREN   = "("
-	RPAREN   = ")"
-	LBRACE   = "{"
-	RBRACE   = "}"
-	LBRACKET = "["
-	RBRACKET = "]"
+	LPAREN    = "("
+	RPAREN    = ")"
+	LBRACE    = "{"
+	RBRACE    = "}"
+	LBRACKET  = "["
+	RBRACKET  = "]"
+	DOTDOTDOT = "..."
 
 	// Keywords (Banglish)
 	DHORO      = "DHORO"      // variable declaration (let/var)

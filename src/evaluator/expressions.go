@@ -396,3 +396,19 @@ func evalMapLiteral(node *ast.MapLiteral, env *object.Environment) object.Object
 
 	return &object.Map{Pairs: pairs}
 }
+
+// evalSpreadElement evaluates spread expression (returns a marker for special handling)
+func evalSpreadElement(node *ast.SpreadElement, env *object.Environment) object.Object {
+	// Evaluate the argument
+	evaluated := Eval(node.Argument, env)
+	if isError(evaluated) {
+		return evaluated
+	}
+
+	// Spread must be used with arrays
+	if _, ok := evaluated.(*object.Array); !ok {
+		return newError("spread operator requires an array, got %s", evaluated.Type())
+	}
+
+	return evaluated
+}

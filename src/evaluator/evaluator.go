@@ -166,7 +166,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		if node.Name != nil {
 			name = node.Name.Value
 		}
-		fn := &object.Function{Parameters: params, Env: env, Body: body, Name: name}
+		fn := &object.Function{Parameters: params, RestParameter: node.RestParameter, Env: env, Body: body, Name: name}
 		if name != "" {
 			env.Set(name, fn)
 		}
@@ -174,6 +174,9 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 	case *ast.NewExpression:
 		return evalNewExpression(node, env)
+
+	case *ast.SpreadElement:
+		return evalSpreadElement(node, env)
 	}
 
 	return nil

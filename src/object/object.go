@@ -90,10 +90,11 @@ func (e *Error) Inspect() string {
 
 // Function represents a user-defined function
 type Function struct {
-	Parameters []*ast.Identifier
-	Body       *ast.BlockStatement
-	Env        *Environment
-	Name       string
+	Parameters    []*ast.Identifier
+	RestParameter *ast.Identifier // optional rest parameter (...args)
+	Body          *ast.BlockStatement
+	Env           *Environment
+	Name          string
 }
 
 func (f *Function) Type() ObjectType { return FUNCTION_OBJ }
@@ -102,6 +103,9 @@ func (f *Function) Inspect() string {
 	params := []string{}
 	for _, p := range f.Parameters {
 		params = append(params, p.String())
+	}
+	if f.RestParameter != nil {
+		params = append(params, "..."+f.RestParameter.String())
 	}
 	out.WriteString("kaj")
 	if f.Name != "" {

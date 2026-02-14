@@ -153,7 +153,15 @@ func (l *Lexer) NextToken() Token {
 	case ':':
 		tok = NewToken(COLON, string(l.ch), l.line, l.column)
 	case '.':
-		tok = NewToken(DOT, string(l.ch), l.line, l.column)
+		if l.peekChar() == '.' && l.readPosition+1 < len(l.input) && l.input[l.readPosition+1] == '.' {
+			line := l.line
+			column := l.column
+			l.readChar() // consume second '.'
+			l.readChar() // consume third '.'
+			tok = NewToken(DOTDOTDOT, "...", line, column)
+		} else {
+			tok = NewToken(DOT, string(l.ch), l.line, l.column)
+		}
 	case '(':
 		tok = NewToken(LPAREN, string(l.ch), l.line, l.column)
 	case ')':

@@ -142,3 +142,18 @@ func (ne *NewExpression) String() string {
 	out.WriteString(")")
 	return out.String()
 }
+
+// SpreadElement represents ...expression (spread operator)
+type SpreadElement struct {
+	Token    lexer.Token // the '...' token
+	Argument Expression
+}
+
+func (se *SpreadElement) expressionNode()      {}
+func (se *SpreadElement) TokenLiteral() string { return se.Token.Literal }
+func (se *SpreadElement) String() string {
+	var out bytes.Buffer
+	out.WriteString("...")
+	out.WriteString(se.Argument.String())
+	return out.String()
+}

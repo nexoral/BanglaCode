@@ -274,6 +274,76 @@ greet("Rahim", "Hello");     // Hello, Rahim
 greet("Karim", khali);       // Namaskar, Karim`}
       />
 
+      <h2>Rest Parameters</h2>
+
+      <p>
+        Use <code>...</code> (spread/rest operator) to collect remaining arguments into an array:
+      </p>
+
+      <CodeBlock
+        code={`// Variadic function with rest parameter
+kaj sum(...numbers) {
+    dhoro total = 0;
+    ghuriye (dhoro i = 0; i < dorghyo(numbers); i = i + 1) {
+        total = total + numbers[i];
+    }
+    ferao total;
+}
+
+dekho(sum(1, 2, 3));           // 6
+dekho(sum(1, 2, 3, 4, 5));     // 15
+dekho(sum());                   // 0
+
+// Mixed regular parameters with rest
+kaj greetAll(greeting, ...names) {
+    ghuriye (dhoro i = 0; i < dorghyo(names); i = i + 1) {
+        dekho(greeting, names[i]);
+    }
+}
+
+greetAll("Hello", "Alice", "Bob", "Charlie");
+// Hello Alice
+// Hello Bob
+// Hello Charlie`}
+      />
+
+      <h2>Spread Operator</h2>
+
+      <p>
+        Use <code>...</code> to expand arrays in function calls or array literals:
+      </p>
+
+      <CodeBlock
+        code={`// Spread in function calls
+kaj sum(...numbers) {
+    dhoro total = 0;
+    ghuriye (dhoro i = 0; i < dorghyo(numbers); i = i + 1) {
+        total = total + numbers[i];
+    }
+    ferao total;
+}
+
+dhoro nums = [1, 2, 3, 4, 5];
+dekho(sum(...nums));  // 15
+
+// Combine with regular arguments
+dekho(sum(10, ...nums, 20));  // 10 + 1 + 2 + 3 + 4 + 5 + 20 = 45
+
+// Spread in array literals
+dhoro arr1 = [1, 2];
+dhoro arr2 = [3, 4];
+dhoro combined = [...arr1, ...arr2];  // [1, 2, 3, 4]
+dhoro withExtra = [0, ...arr1, 99];   // [0, 1, 2, 99]
+
+// Clone an array
+dhoro original = [1, 2, 3];
+dhoro copy = [...original];
+
+// Spread with dekho
+dhoro items = ["apple", "banana", "cherry"];
+dekho(...items);  // apple banana cherry`}
+      />
+
       <h2>Callback Pattern</h2>
 
       <CodeBlock

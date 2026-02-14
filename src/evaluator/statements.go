@@ -160,16 +160,30 @@ func evalIdentifier(node *ast.Identifier, env *object.Environment) object.Object
 	return newErrorAt(node.Token.Line, node.Token.Column, "variable '%s' is not defined", node.Value)
 }
 
-// evalExpressions evaluates a list of expressions
+// evalExpressions evaluates a list of expressions, handling spread elements
 func evalExpressions(exps []ast.Expression, env *object.Environment) []object.Object {
 	var result []object.Object
 
 	for _, e := range exps {
-		evaluated := Eval(e, env)
-		if isError(evaluated) {
-			return []object.Object{evaluated}
+		// Check for spread element
+		if spread, ok := e.(*ast.SpreadElement); ok {
+			evaluated := Eval(spread.Argument, env)
+			if isError(evaluated) {
+				return []object.Object{evaluated}
+			}
+			// Spread must be an array
+			if arr, ok := evaluated.(*object.Array); ok {
+				result = append(result, arr.Elements...)
+			} else {
+				return []object.Object{newError("spread operator requires an array, got %s", evaluated.Type())}
+			}
+		} else {
+			evaluated := Eval(e, env)
+			if isError(evaluated) {
+				return []object.Object{evaluated}
+			}
+			result = append(result, evaluated)
 		}
-		result = append(result, evaluated)
 	}
 
 	return result

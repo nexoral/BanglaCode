@@ -108,36 +108,305 @@ jobs:
 
       - name: Install packaging tools
         run: |
-          sudo apt-get update && sudo apt-get install -y ruby ruby-dev rubygems rpm -qq &
+          sudo apt-get update && sudo apt-get install -y ruby ruby-dev rubygems rpm zip -qq &
           curl -fsSL https://raw.githubusercontent.com/nexoral/xpack/main/Scripts/installer.sh | sudo bash - &
           wait
           sudo gem install fpm --no-document
 
       - name: Build all platforms
         run: |
-          mkdir -p dist/{windows-amd64,windows-386,macos-intel,macos-arm,linux}
-          GOOS=windows GOARCH=amd64 go build -o dist/windows-amd64/banglacode.exe . &
-          GOOS=windows GOARCH=386 go build -o dist/windows-386/banglacode.exe . &
-          GOOS=darwin GOARCH=amd64 go build -o dist/macos-intel/banglacode . &
-          GOOS=darwin GOARCH=arm64 go build -o dist/macos-arm/banglacode . &
-          GOOS=linux GOARCH=amd64 go build -o dist/linux/banglacode . &
+          VERSION=${{ needs.version-check.outputs.version }}
+          
+          # Create directory structure for all platforms
+          mkdir -p dist/{windows-amd64,windows-386,windows-arm64,macos-amd64,macos-arm64,linux-amd64,linux-386,linux-arm64,linux-arm,freebsd-amd64,freebsd-386,openbsd-amd64,netbsd-amd64}
+          
+          # Windows builds
+          echo "Building Windows binaries..."
+          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/windows-amd64/banglacode.exe . &
+          GOOS=windows GOARCH=386 go build -ldflags="-s -w" -o dist/windows-386/banglacode.exe . &
+          GOOS=windows GOARCH=arm64 go build -ldflags="-s -w" -o dist/windows-arm64/banglacode.exe . &
+          
+          # macOS builds
+          echo "Building macOS binaries..."
+          GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o dist/macos-amd64/banglacode . &
+          GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o dist/macos-arm64/banglacode . &
+          
+          # Linux builds (multiple architectures)
+          echo "Building Linux binaries..."
+          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o dist/linux-amd64/banglacode . &
+          GOOS=linux GOARCH=386 go build -ldflags="-s -w" -o dist/linux-386/banglacode . &
+          GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o dist/linux-arm64/banglacode . &
+          GOOS=linux GOARCH=arm GOARM=7 go build -ldflags="-s -w" -o dist/linux-arm/banglacode . &
+          
+          # BSD builds
+          echo "Building BSD binaries..."
+          GOOS=freebsd GOARCH=amd64 go build -ldflags="-s -w" -o dist/freebsd-amd64/banglacode . &
+          GOOS=freebsd GOARCH=386 go build -ldflags="-s -w" -o dist/freebsd-386/banglacode . &
+          GOOS=openbsd GOARCH=amd64 go build -ldflags="-s -w" -o dist/openbsd-amd64/banglacode . &
+          GOOS=netbsd GOARCH=amd64 go build -ldflags="-s -w" -o dist/netbsd-amd64/banglacode . &
+          
           wait
+          echo "All binaries built successfully!"
+
+      - name: Create install scripts
+        run: |
+          VERSION=${{ needs.version-check.outputs.version }}
+          
+          # Create universal install script for Unix-like systems
+          cat > dist/install.sh << 'INSTALL_SCRIPT'
+          #!/bin/bash
+          set -e
+          
+          # BanglaCode Installer Script
+          # Usage: curl -fsSL https://raw.githubusercontent.com/AKN414-IND/BanglaCode/main/Scripts/install.sh | bash
+          
+          REPO="AKN414-IND/BanglaCode"
+          INSTALL_DIR="/usr/local/bin"
+          
+          # Colors for output
+          RED='\033[0;31m'
+          GREEN='\033[0;32m'
+          YELLOW='\033[1;33m'
+          BLUE='\033[0;34m'
+          NC='\033[0m' # No Color
+          
+          echo -e "${BLUE}🚀 BanglaCode Installer${NC}"
+          echo "========================"
+          
+          # Detect OS and Architecture
+          OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+          ARCH=$(uname -m)
+          
+          case "$ARCH" in
+              x86_64|amd64) ARCH="amd64" ;;
+              i386|i686) ARCH="386" ;;
+              aarch64|arm64) ARCH="arm64" ;;
+              armv7*|armv6*) ARCH="arm" ;;
+              *) echo -e "${RED}❌ Unsupported architecture: $ARCH${NC}"; exit 1 ;;
+          esac
+          
+          case "$OS" in
+              linux) OS="linux" ;;
+              darwin) OS="macos" ;;
+              freebsd) OS="freebsd" ;;
+              openbsd) OS="openbsd" ;;
+              netbsd) OS="netbsd" ;;
+              *) echo -e "${RED}❌ Unsupported OS: $OS${NC}"; exit 1 ;;
+          esac
+          
+          echo -e "${GREEN}✓${NC} Detected: $OS-$ARCH"
+          
+          # Get latest version
+          VERSION=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" | grep '"tag_name"' | sed -E 's/.*"v([^"]+)".*/\1/')
+          if [ -z "$VERSION" ]; then
+              echo -e "${RED}❌ Failed to get latest version${NC}"
+              exit 1
+          fi
+          echo -e "${GREEN}✓${NC} Latest version: v$VERSION"
+          
+          # Determine download file
+          if [ "$OS" = "linux" ]; then
+              # Try to detect package manager for native package
+              if command -v apt-get &> /dev/null && [ "$ARCH" = "amd64" ]; then
+                  DOWNLOAD_FILE="banglacode-linux-amd64.deb"
+                  INSTALL_CMD="sudo dpkg -i"
+              elif command -v dnf &> /dev/null && [ "$ARCH" = "amd64" ]; then
+                  DOWNLOAD_FILE="banglacode-linux-amd64.rpm"
+                  INSTALL_CMD="sudo dnf install -y"
+              elif command -v yum &> /dev/null && [ "$ARCH" = "amd64" ]; then
+                  DOWNLOAD_FILE="banglacode-linux-amd64.rpm"
+                  INSTALL_CMD="sudo yum install -y"
+              else
+                  DOWNLOAD_FILE="banglacode-${OS}-${ARCH}.tar.gz"
+                  INSTALL_CMD="tar"
+              fi
+          else
+              DOWNLOAD_FILE="banglacode-${OS}-${ARCH}.tar.gz"
+              INSTALL_CMD="tar"
+          fi
+          
+          DOWNLOAD_URL="https://github.com/$REPO/releases/download/v$VERSION/$DOWNLOAD_FILE"
+          
+          echo -e "${YELLOW}⬇${NC}  Downloading $DOWNLOAD_FILE..."
+          
+          TMP_DIR=$(mktemp -d)
+          cd "$TMP_DIR"
+          
+          if ! curl -fsSL -o "$DOWNLOAD_FILE" "$DOWNLOAD_URL"; then
+              echo -e "${RED}❌ Download failed${NC}"
+              rm -rf "$TMP_DIR"
+              exit 1
+          fi
+          
+          echo -e "${YELLOW}📦${NC} Installing..."
+          
+          if [ "$INSTALL_CMD" = "tar" ]; then
+              tar -xzf "$DOWNLOAD_FILE"
+              sudo mv banglacode "$INSTALL_DIR/"
+              sudo chmod +x "$INSTALL_DIR/banglacode"
+          else
+              $INSTALL_CMD "$DOWNLOAD_FILE"
+          fi
+          
+          # Cleanup
+          cd /
+          rm -rf "$TMP_DIR"
+          
+          # Verify installation
+          if command -v banglacode &> /dev/null; then
+              echo -e "${GREEN}✅ BanglaCode installed successfully!${NC}"
+              echo ""
+              echo "Run 'banglacode' to start the REPL"
+              echo "Run 'banglacode <file.bang>' to execute a file"
+              echo ""
+              banglacode --version 2>/dev/null || echo "Version: v$VERSION"
+          else
+              echo -e "${RED}❌ Installation verification failed${NC}"
+              exit 1
+          fi
+          INSTALL_SCRIPT
+          
+          # Create Windows install script (PowerShell)
+          cat > dist/install.ps1 << 'INSTALL_PS1'
+          # BanglaCode Installer for Windows
+          # Usage: irm https://raw.githubusercontent.com/AKN414-IND/BanglaCode/main/Scripts/install.ps1 | iex
+          
+          $ErrorActionPreference = "Stop"
+          
+          $REPO = "AKN414-IND/BanglaCode"
+          $INSTALL_DIR = "$env:LOCALAPPDATA\BanglaCode"
+          
+          Write-Host "🚀 BanglaCode Installer for Windows" -ForegroundColor Blue
+          Write-Host "====================================" -ForegroundColor Blue
+          
+          # Detect architecture
+          $ARCH = if ([Environment]::Is64BitOperatingSystem) {
+              if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") { "arm64" } else { "amd64" }
+          } else { "386" }
+          
+          Write-Host "✓ Detected: windows-$ARCH" -ForegroundColor Green
+          
+          # Get latest version
+          try {
+              $release = Invoke-RestMethod -Uri "https://api.github.com/repos/$REPO/releases/latest"
+              $VERSION = $release.tag_name -replace '^v', ''
+          } catch {
+              Write-Host "❌ Failed to get latest version" -ForegroundColor Red
+              exit 1
+          }
+          Write-Host "✓ Latest version: v$VERSION" -ForegroundColor Green
+          
+          $DOWNLOAD_FILE = "banglacode-windows-$ARCH.zip"
+          $DOWNLOAD_URL = "https://github.com/$REPO/releases/download/v$VERSION/$DOWNLOAD_FILE"
+          
+          Write-Host "⬇ Downloading $DOWNLOAD_FILE..." -ForegroundColor Yellow
+          
+          # Create install directory
+          New-Item -ItemType Directory -Force -Path $INSTALL_DIR | Out-Null
+          
+          $TMP_FILE = "$env:TEMP\$DOWNLOAD_FILE"
+          
+          try {
+              Invoke-WebRequest -Uri $DOWNLOAD_URL -OutFile $TMP_FILE
+          } catch {
+              Write-Host "❌ Download failed" -ForegroundColor Red
+              exit 1
+          }
+          
+          Write-Host "📦 Installing..." -ForegroundColor Yellow
+          
+          # Extract
+          Expand-Archive -Path $TMP_FILE -DestinationPath $INSTALL_DIR -Force
+          Remove-Item $TMP_FILE
+          
+          # Add to PATH
+          $currentPath = [Environment]::GetEnvironmentVariable("Path", "User")
+          if ($currentPath -notlike "*$INSTALL_DIR*") {
+              [Environment]::SetEnvironmentVariable("Path", "$currentPath;$INSTALL_DIR", "User")
+              $env:Path = "$env:Path;$INSTALL_DIR"
+              Write-Host "✓ Added to PATH" -ForegroundColor Green
+          }
+          
+          Write-Host ""
+          Write-Host "✅ BanglaCode installed successfully!" -ForegroundColor Green
+          Write-Host ""
+          Write-Host "Please restart your terminal, then run:"
+          Write-Host "  banglacode        - Start REPL"
+          Write-Host "  banglacode <file> - Run a .bang file"
+          Write-Host ""
+          Write-Host "Version: v$VERSION"
+          INSTALL_PS1
 
       - name: Package artifacts
         run: |
           VERSION=${{ needs.version-check.outputs.version }}
+          
+          # Windows packages (ZIP)
+          echo "Packaging Windows..."
           (cd dist/windows-amd64 && zip -r ../banglacode-windows-amd64.zip banglacode.exe) &
           (cd dist/windows-386 && zip -r ../banglacode-windows-386.zip banglacode.exe) &
-          (cd dist/macos-intel && zip -r ../banglacode-macos-amd64.zip banglacode) &
-          (cd dist/macos-arm && zip -r ../banglacode-macos-arm64.zip banglacode) &
+          (cd dist/windows-arm64 && zip -r ../banglacode-windows-arm64.zip banglacode.exe) &
+          
+          # macOS packages (tar.gz for easy extraction)
+          echo "Packaging macOS..."
+          tar -czvf dist/banglacode-macos-amd64.tar.gz -C dist/macos-amd64 banglacode &
+          tar -czvf dist/banglacode-macos-arm64.tar.gz -C dist/macos-arm64 banglacode &
+          
+          # Linux tar.gz packages (all architectures)
+          echo "Packaging Linux tar.gz..."
+          tar -czvf dist/banglacode-linux-amd64.tar.gz -C dist/linux-amd64 banglacode &
+          tar -czvf dist/banglacode-linux-386.tar.gz -C dist/linux-386 banglacode &
+          tar -czvf dist/banglacode-linux-arm64.tar.gz -C dist/linux-arm64 banglacode &
+          tar -czvf dist/banglacode-linux-arm.tar.gz -C dist/linux-arm banglacode &
+          
+          # BSD packages
+          echo "Packaging BSD..."
+          tar -czvf dist/banglacode-freebsd-amd64.tar.gz -C dist/freebsd-amd64 banglacode &
+          tar -czvf dist/banglacode-freebsd-386.tar.gz -C dist/freebsd-386 banglacode &
+          tar -czvf dist/banglacode-openbsd-amd64.tar.gz -C dist/openbsd-amd64 banglacode &
+          tar -czvf dist/banglacode-netbsd-amd64.tar.gz -C dist/netbsd-amd64 banglacode &
+          
           wait
-          (cd dist/linux && xpack -i ./banglacode -app banglacode -arch amd64 -v $VERSION && mv dist/*.deb ../banglacode-linux-amd64.deb)
-          tar -czvf dist/banglacode-linux-amd64.tgz -C dist/linux banglacode
+          
+          # Create DEB package for Debian/Ubuntu (amd64)
+          echo "Creating DEB package..."
+          (cd dist/linux-amd64 && xpack -i ./banglacode -app banglacode -arch amd64 -v $VERSION && mv dist/*.deb ../banglacode-linux-amd64.deb) || true
+          
+          # Create DEB package for ARM64
+          mkdir -p dist/deb-arm64/DEBIAN dist/deb-arm64/usr/local/bin
+          cp dist/linux-arm64/banglacode dist/deb-arm64/usr/local/bin/
+          cat > dist/deb-arm64/DEBIAN/control << EOF
+          Package: banglacode
+          Version: $VERSION
+          Architecture: arm64
+          Maintainer: Ankan <ankan@banglacode.dev>
+          Description: BanglaCode - Bengali Programming Language
+           A programming language with Bengali syntax for native Bengali speakers.
+          Homepage: https://github.com/AKN414-IND/BanglaCode
+          EOF
+          dpkg-deb --build dist/deb-arm64 dist/banglacode-linux-arm64.deb
+          
+          # Create RPM packages
+          echo "Creating RPM packages..."
           fpm -s dir -t rpm -n banglacode -v $VERSION --architecture x86_64 \
             --description "BanglaCode - Bengali Programming Language" \
             --url "https://github.com/AKN414-IND/BanglaCode" --license "MIT" \
-            dist/linux/banglacode=/usr/local/bin/banglacode
-          mv *.rpm dist/banglacode-linux-amd64.rpm
+            dist/linux-amd64/banglacode=/usr/local/bin/banglacode
+          mv banglacode-*.x86_64.rpm dist/banglacode-linux-amd64.rpm
+          
+          fpm -s dir -t rpm -n banglacode -v $VERSION --architecture aarch64 \
+            --description "BanglaCode - Bengali Programming Language" \
+            --url "https://github.com/AKN414-IND/BanglaCode" --license "MIT" \
+            dist/linux-arm64/banglacode=/usr/local/bin/banglacode
+          mv banglacode-*.aarch64.rpm dist/banglacode-linux-arm64.rpm
+          
+          # Create checksums
+          echo "Creating checksums..."
+          cd dist
+          sha256sum banglacode-*.zip banglacode-*.tar.gz banglacode-*.deb banglacode-*.rpm > checksums.txt
+          cd ..
+          
+          echo "Packaging complete!"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -147,11 +416,24 @@ jobs:
           path: |
             dist/banglacode-windows-amd64.zip
             dist/banglacode-windows-386.zip
-            dist/banglacode-macos-amd64.zip
-            dist/banglacode-macos-arm64.zip
+            dist/banglacode-windows-arm64.zip
+            dist/banglacode-macos-amd64.tar.gz
+            dist/banglacode-macos-arm64.tar.gz
+            dist/banglacode-linux-amd64.tar.gz
+            dist/banglacode-linux-386.tar.gz
+            dist/banglacode-linux-arm64.tar.gz
+            dist/banglacode-linux-arm.tar.gz
             dist/banglacode-linux-amd64.deb
+            dist/banglacode-linux-arm64.deb
             dist/banglacode-linux-amd64.rpm
-            dist/banglacode-linux-amd64.tgz
+            dist/banglacode-linux-arm64.rpm
+            dist/banglacode-freebsd-amd64.tar.gz
+            dist/banglacode-freebsd-386.tar.gz
+            dist/banglacode-openbsd-amd64.tar.gz
+            dist/banglacode-netbsd-amd64.tar.gz
+            dist/checksums.txt
+            dist/install.sh
+            dist/install.ps1
 
   release:
     needs: [version-check, test-and-build]
@@ -189,45 +471,134 @@ jobs:
           name: BanglaCode v${{ needs.version-check.outputs.version }}
           body: |
             ## BanglaCode v${{ needs.version-check.outputs.version }}
-
-            ### Downloads
-
+            
+            ### 🚀 Quick Install
+            
+            **Linux/macOS (one-liner):**
+            ```bash
+            curl -fsSL https://raw.githubusercontent.com/AKN414-IND/BanglaCode/main/Scripts/install.sh | bash
+            ```
+            
+            **Windows (PowerShell):**
+            ```powershell
+            irm https://raw.githubusercontent.com/AKN414-IND/BanglaCode/main/Scripts/install.ps1 | iex
+            ```
+            
+            ---
+            
+            ### 📦 Downloads
+            
+            #### Windows
+            | File | Architecture | Description |
+            |------|--------------|-------------|
+            | `banglacode-windows-amd64.zip` | x64 | Windows 64-bit (most common) |
+            | `banglacode-windows-386.zip` | x86 | Windows 32-bit |
+            | `banglacode-windows-arm64.zip` | ARM64 | Windows on ARM (Surface Pro X, etc.) |
+            
+            #### macOS
+            | File | Architecture | Description |
+            |------|--------------|-------------|
+            | `banglacode-macos-arm64.tar.gz` | ARM64 | Apple Silicon (M1/M2/M3) - **Recommended** |
+            | `banglacode-macos-amd64.tar.gz` | x64 | Intel Mac |
+            
+            #### Linux
+            | File | Architecture | Description |
+            |------|--------------|-------------|
+            | `banglacode-linux-amd64.deb` | x64 | Debian/Ubuntu 64-bit |
+            | `banglacode-linux-amd64.rpm` | x64 | Fedora/RHEL/CentOS 64-bit |
+            | `banglacode-linux-amd64.tar.gz` | x64 | Generic Linux 64-bit |
+            | `banglacode-linux-arm64.deb` | ARM64 | Debian/Ubuntu ARM64 (Raspberry Pi 4+, AWS Graviton) |
+            | `banglacode-linux-arm64.rpm` | ARM64 | Fedora/RHEL ARM64 |
+            | `banglacode-linux-arm64.tar.gz` | ARM64 | Generic Linux ARM64 |
+            | `banglacode-linux-386.tar.gz` | x86 | Linux 32-bit |
+            | `banglacode-linux-arm.tar.gz` | ARMv7 | Raspberry Pi (older models), embedded devices |
+            
+            #### BSD
+            | File | Architecture | Description |
+            |------|--------------|-------------|
+            | `banglacode-freebsd-amd64.tar.gz` | x64 | FreeBSD 64-bit |
+            | `banglacode-freebsd-386.tar.gz` | x86 | FreeBSD 32-bit |
+            | `banglacode-openbsd-amd64.tar.gz` | x64 | OpenBSD 64-bit |
+            | `banglacode-netbsd-amd64.tar.gz` | x64 | NetBSD 64-bit |
+            
+            ---
+            
+            ### 📋 Manual Installation
+            
+            **Linux (DEB):**
+            ```bash
+            sudo dpkg -i banglacode-linux-amd64.deb
+            ```
+            
+            **Linux (RPM):**
+            ```bash
+            sudo rpm -i banglacode-linux-amd64.rpm
+            # or with dnf
+            sudo dnf install ./banglacode-linux-amd64.rpm
+            ```
+            
+            **Linux/macOS/BSD (tar.gz):**
+            ```bash
+            tar -xzf banglacode-<os>-<arch>.tar.gz
+            sudo mv banglacode /usr/local/bin/
+            ```
+            
             **Windows:**
-            - `banglacode-windows-amd64.zip` - Windows 64-bit
-            - `banglacode-windows-386.zip` - Windows 32-bit
-
-            **macOS:**
-            - `banglacode-macos-amd64.zip` - macOS Intel
-            - `banglacode-macos-arm64.zip` - macOS Apple Silicon
-
-            **Linux:**
-            - `banglacode-linux-amd64.deb` - Debian/Ubuntu
-            - `banglacode-linux-amd64.rpm` - Fedora/RHEL
-            - `banglacode-linux-amd64.tgz` - Generic Linux
-
-            ### VSCode Extension
-            - Install from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=AnkanSaha.banglacode)
+            1. Download and extract the ZIP file
+            2. Add the extracted folder to your PATH
+            3. Or move `banglacode.exe` to a folder already in PATH
+            
+            ---
+            
+            ### ✅ Verify Installation
+            ```bash
+            banglacode --version
+            ```
+            
+            ### 🎨 VS Code Extension
+            Install syntax highlighting from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=AnkanSaha.banglacode)
+            
+            ---
+            
+            ### 🔐 Checksums
+            Verify your download with `checksums.txt` using:
+            ```bash
+            sha256sum -c checksums.txt --ignore-missing
+            ```
           files: |
             dist/banglacode-windows-amd64.zip
             dist/banglacode-windows-386.zip
-            dist/banglacode-macos-amd64.zip
-            dist/banglacode-macos-arm64.zip
+            dist/banglacode-windows-arm64.zip
+            dist/banglacode-macos-amd64.tar.gz
+            dist/banglacode-macos-arm64.tar.gz
+            dist/banglacode-linux-amd64.tar.gz
+            dist/banglacode-linux-386.tar.gz
+            dist/banglacode-linux-arm64.tar.gz
+            dist/banglacode-linux-arm.tar.gz
             dist/banglacode-linux-amd64.deb
+            dist/banglacode-linux-arm64.deb
             dist/banglacode-linux-amd64.rpm
-            dist/banglacode-linux-amd64.tgz
+            dist/banglacode-linux-arm64.rpm
+            dist/banglacode-freebsd-amd64.tar.gz
+            dist/banglacode-freebsd-386.tar.gz
+            dist/banglacode-openbsd-amd64.tar.gz
+            dist/banglacode-netbsd-amd64.tar.gz
+            dist/checksums.txt
+            dist/install.sh
+            dist/install.ps1
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cleanup old releases (keep last 3)
+      - name: Cleanup old releases (keep last 5)
         if: steps.check_release.outputs.exists == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           releases=$(gh release list --limit 100 --json tagName --jq '.[].tagName')
           count=$(echo "$releases" | wc -l)
-          [ "$count" -gt 3 ] && echo "$releases" | tail -n +4 | xargs -I {} gh release delete {} --cleanup-tag -y || true
+          [ "$count" -gt 5 ] && echo "$releases" | tail -n +6 | xargs -I {} gh release delete {} --cleanup-tag -y || true
 
   publish-vscode-extension:
     needs: [version-check, release]

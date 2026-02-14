@@ -152,7 +152,9 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 		return nil
 	}
 
-	lit.Parameters = p.parseFunctionParameters()
+	params, restParam := p.parseFunctionParametersWithRest()
+	lit.Parameters = params
+	lit.RestParameter = restParam
 
 	if !p.expectPeek(lexer.LBRACE) {
 		return nil
@@ -163,16 +165,35 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 	return lit
 }
 
-// parseFunctionParameters parses function parameter list
+// parseFunctionParameters parses function parameter list (legacy, kept for compatibility)
 func (p *Parser) parseFunctionParameters() []*ast.Identifier {
+	params, _ := p.parseFunctionParametersWithRest()
+	return params
+}
+
+// parseFunctionParametersWithRest parses function parameters including rest parameter
+func (p *Parser) parseFunctionParametersWithRest() ([]*ast.Identifier, *ast.Identifier) {
 	identifiers := []*ast.Identifier{}
+	var restParam *ast.Identifier
 
 	if p.peekTokenIs(lexer.RPAREN) {
 		p.nextToken()
-		return identifiers
+		return identifiers, nil
 	}
 
 	p.nextToken()
+
+	// Check for rest parameter
+	if p.curTokenIs(lexer.DOTDOTDOT) {
+		if !p.expectPeek(lexer.IDENT) {
+			return nil, nil
+		}
+		restParam = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+		if !p.expectPeek(lexer.RPAREN) {
+			return nil, nil
+		}
+		return identifiers, restParam
+	}
 
 	ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 	identifiers = append(identifiers, ident)
@@ -180,15 +201,28 @@ func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 	for p.peekTokenIs(lexer.COMMA) {
 		p.nextToken()
 		p.nextToken()
+
+		// Check for rest parameter
+		if p.curTokenIs(lexer.DOTDOTDOT) {
+			if !p.expectPeek(lexer.IDENT) {
+				return nil, nil
+			}
+			restParam = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+			if !p.expectPeek(lexer.RPAREN) {
+				return nil, nil
+			}
+			return identifiers, restParam
+		}
+
 		ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 		identifiers = append(identifiers, ident)
 	}
 
 	if !p.expectPeek(lexer.RPAREN) {
-		return nil
+		return nil, nil
 	}
 
-	return identifiers
+	return identifiers, restParam
 }
 
 // parseNewExpression parses notun ClassName(args)
@@ -295,4 +329,14 @@ func (p *Parser) parseExpressionList(end lexer.TokenType) []ast.Expression {
 	}
 
 	return list
+}
+
+// parseSpreadElement parses ...expression
+func (p *Parser) parseSpreadElement() ast.Expression {
+	spread := &ast.SpreadElement{Token: p.curToken}
+
+	p.nextToken()
+	spread.Argument = p.parseExpression(LOWEST)
+
+	return spread
 }
