@@ -2,9 +2,9 @@
 set -e
 
 # BanglaCode Installer Script
-# Usage: curl -fsSL https://raw.githubusercontent.com/AKN414-IND/BanglaCode/main/Scripts/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/nexoral/BanglaCode/main/Scripts/install.sh | bash
 
-REPO="AKN414-IND/BanglaCode"
+REPO="nexoral/BanglaCode"
 INSTALL_DIR="/usr/local/bin"
 
 # Colors for output

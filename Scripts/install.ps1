@@ -7,7 +7,7 @@
     Automatically detects system architecture and configures PATH.
 .EXAMPLE
     # Run directly from web:
-    irm https://raw.githubusercontent.com/AKN414-IND/BanglaCode/main/Scripts/install.ps1 | iex
+    irm https://raw.githubusercontent.com/nexoral/BanglaCode/main/Scripts/install.ps1 | iex
     
     # Or download and run:
     .\install.ps1
@@ -17,7 +17,7 @@
 #>
 
 # Configuration
-$REPO = "AKN414-IND/BanglaCode"
+$REPO = "nexoral/BanglaCode"
 $INSTALL_DIR = "$env:LOCALAPPDATA\BanglaCode"
 $ErrorActionPreference = "Stop"
 

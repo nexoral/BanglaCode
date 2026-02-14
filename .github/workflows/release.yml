@@ -158,9 +158,9 @@ jobs:
           set -e
           
           # BanglaCode Installer Script
-          # Usage: curl -fsSL https://raw.githubusercontent.com/AKN414-IND/BanglaCode/main/Scripts/install.sh | bash
+          # Usage: curl -fsSL https://raw.githubusercontent.com/nexoral/BanglaCode/main/Scripts/install.sh | bash
           
-          REPO="AKN414-IND/BanglaCode"
+          REPO="nexoral/BanglaCode"
           INSTALL_DIR="/usr/local/bin"
           
           # Colors for output
@@ -269,11 +269,11 @@ jobs:
           # Create Windows install script (PowerShell)
           cat > dist/install.ps1 << 'INSTALL_PS1'
           # BanglaCode Installer for Windows
-          # Usage: irm https://raw.githubusercontent.com/AKN414-IND/BanglaCode/main/Scripts/install.ps1 | iex
+          # Usage: irm https://raw.githubusercontent.com/nexoral/BanglaCode/main/Scripts/install.ps1 | iex
           
           $ErrorActionPreference = "Stop"
           
-          $REPO = "AKN414-IND/BanglaCode"
+          $REPO = "nexoral/BanglaCode"
           $INSTALL_DIR = "$env:LOCALAPPDATA\BanglaCode"
           
           Write-Host "🚀 BanglaCode Installer for Windows" -ForegroundColor Blue
@@ -382,7 +382,7 @@ jobs:
           Maintainer: Ankan <ankan@banglacode.dev>
           Description: BanglaCode - Bengali Programming Language
            A programming language with Bengali syntax for native Bengali speakers.
-          Homepage: https://github.com/AKN414-IND/BanglaCode
+          Homepage: https://github.com/nexoral/BanglaCode
           EOF
           dpkg-deb --build dist/deb-arm64 dist/banglacode-linux-arm64.deb
           
@@ -390,13 +390,13 @@ jobs:
           echo "Creating RPM packages..."
           fpm -s dir -t rpm -n banglacode -v $VERSION --architecture x86_64 \
             --description "BanglaCode - Bengali Programming Language" \
-            --url "https://github.com/AKN414-IND/BanglaCode" --license "MIT" \
+            --url "https://github.com/nexoral/BanglaCode" --license "MIT" \
             dist/linux-amd64/banglacode=/usr/local/bin/banglacode
           mv banglacode-*.x86_64.rpm dist/banglacode-linux-amd64.rpm
           
           fpm -s dir -t rpm -n banglacode -v $VERSION --architecture aarch64 \
             --description "BanglaCode - Bengali Programming Language" \
-            --url "https://github.com/AKN414-IND/BanglaCode" --license "MIT" \
+            --url "https://github.com/nexoral/BanglaCode" --license "MIT" \
             dist/linux-arm64/banglacode=/usr/local/bin/banglacode
           mv banglacode-*.aarch64.rpm dist/banglacode-linux-arm64.rpm
           
@@ -476,12 +476,12 @@ jobs:
             
             **Linux/macOS (one-liner):**
             ```bash
-            curl -fsSL https://raw.githubusercontent.com/AKN414-IND/BanglaCode/main/Scripts/install.sh | bash
+            curl -fsSL https://raw.githubusercontent.com/nexoral/BanglaCode/main/Scripts/install.sh | bash
             ```
             
             **Windows (PowerShell):**
             ```powershell
-            irm https://raw.githubusercontent.com/AKN414-IND/BanglaCode/main/Scripts/install.ps1 | iex
+            irm https://raw.githubusercontent.com/nexoral/BanglaCode/main/Scripts/install.ps1 | iex
             ```
             
             ---
