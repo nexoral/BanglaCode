@@ -2,6 +2,7 @@ package evaluator
 
 import (
 	"BanglaCode/src/ast"
+	"BanglaCode/src/evaluator/builtins"
 	"BanglaCode/src/lexer"
 	"BanglaCode/src/object"
 	"BanglaCode/src/parser"
@@ -207,7 +208,7 @@ func evalJSONImport(fullPath, modulePath string, alias *ast.Identifier, env *obj
 	}
 
 	// Convert JSON to BanglaCode object
-	obj := jsonToObject(jsonData)
+	obj := builtins.JsonToObject(jsonData)
 
 	// If alias provided, set with alias name, otherwise error (JSON requires alias)
 	if alias != nil {

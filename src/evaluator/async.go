@@ -4,34 +4,8 @@ import (
 	"BanglaCode/src/ast"
 	"BanglaCode/src/object"
 	"fmt"
+	"time"
 )
-
-// createPromise creates a new pending promise with channels
-func createPromise() *object.Promise {
-	return &object.Promise{
-		State:      object.PROMISE_PENDING,
-		ResultChan: make(chan object.Object, 1),
-		ErrorChan:  make(chan object.Object, 1),
-	}
-}
-
-// resolvePromise resolves a promise with a value
-func resolvePromise(promise *object.Promise, value object.Object) {
-	promise.Mu.Lock()
-	promise.State = object.PROMISE_RESOLVED
-	promise.Value = value
-	promise.Mu.Unlock()
-	promise.ResultChan <- value
-}
-
-// rejectPromise rejects a promise with an error
-func rejectPromise(promise *object.Promise, err object.Object) {
-	promise.Mu.Lock()
-	promise.State = object.PROMISE_REJECTED
-	promise.Error = err
-	promise.Mu.Unlock()
-	promise.ErrorChan <- err
-}
 
 // evalAsyncFunctionLiteral evaluates an async function literal and creates an async function object
 func evalAsyncFunctionLiteral(node *ast.AsyncFunctionLiteral, env *object.Environment) object.Object {
@@ -61,7 +35,7 @@ func evalAsyncFunctionLiteral(node *ast.AsyncFunctionLiteral, env *object.Enviro
 
 // evalAsyncFunctionCall executes an async function in a goroutine and returns a promise
 func evalAsyncFunctionCall(fn *object.Function, args []object.Object, env *object.Environment) object.Object {
-	promise := createPromise()
+	promise := object.CreatePromise()
 
 	// Spawn goroutine to execute async function
 	go func() {
@@ -69,7 +43,7 @@ func evalAsyncFunctionCall(fn *object.Function, args []object.Object, env *objec
 		defer func() {
 			if r := recover(); r != nil {
 				errorMsg := fmt.Sprintf("panic in async function: %v", r)
-				rejectPromise(promise, &object.Error{Message: errorMsg})
+				object.RejectPromise(promise, &object.Error{Message: errorMsg})
 			}
 		}()
 
@@ -86,23 +60,25 @@ func evalAsyncFunctionCall(fn *object.Function, args []object.Object, env *objec
 
 		// Check for errors or exceptions
 		if err, ok := result.(*object.Error); ok {
-			rejectPromise(promise, err)
+			object.RejectPromise(promise, err)
 			return
 		}
 
 		if exc, ok := result.(*object.Exception); ok {
-			rejectPromise(promise, exc)
+			object.RejectPromise(promise, exc)
 			return
 		}
 
 		// Resolve promise with result
-		resolvePromise(promise, result)
+		object.ResolvePromise(promise, result)
 	}()
 
 	return promise
 }
 
 // evalAwaitExpression waits for a promise to resolve or reject
+// FIXED: Removed race condition by relying on channel read directly
+// ADDED: 30-second timeout to prevent infinite blocking
 func evalAwaitExpression(node *ast.AwaitExpression, env *object.Environment) object.Object {
 	// Evaluate the expression that should produce a promise
 	value := Eval(node.Expression, env)
@@ -116,23 +92,14 @@ func evalAwaitExpression(node *ast.AwaitExpression, env *object.Environment) obj
 		return newError("opekha (await) can only be used with promises, got %s", value.Type())
 	}
 
-	// Check current state
-	promise.Mu.RLock()
-	state := promise.State
-	promise.Mu.RUnlock()
-
-	// If already resolved/rejected, return immediately
-	if state == object.PROMISE_RESOLVED {
-		return promise.Value
-	} else if state == object.PROMISE_REJECTED {
-		return promise.Error
-	}
-
-	// Wait for promise to complete
+	// Wait for promise to complete with timeout
+	// Channels are thread-safe, no need to check state first
 	select {
 	case result := <-promise.ResultChan:
 		return result
 	case err := <-promise.ErrorChan:
 		return err
+	case <-time.After(30 * time.Second):
+		return newError("await timeout: promise did not resolve within 30 seconds")
 	}
 }

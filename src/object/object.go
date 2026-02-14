@@ -261,6 +261,33 @@ func (p *Promise) Inspect() string {
 	}
 }
 
+// CreatePromise creates a new pending promise with channels
+func CreatePromise() *Promise {
+	return &Promise{
+		State:      PROMISE_PENDING,
+		ResultChan: make(chan Object, 1),
+		ErrorChan:  make(chan Object, 1),
+	}
+}
+
+// ResolvePromise resolves a promise with a value
+func ResolvePromise(promise *Promise, value Object) {
+	promise.Mu.Lock()
+	promise.State = PROMISE_RESOLVED
+	promise.Value = value
+	promise.Mu.Unlock()
+	promise.ResultChan <- value
+}
+
+// RejectPromise rejects a promise with an error
+func RejectPromise(promise *Promise, err Object) {
+	promise.Mu.Lock()
+	promise.State = PROMISE_REJECTED
+	promise.Error = err
+	promise.Mu.Unlock()
+	promise.ErrorChan <- err
+}
+
 // Singleton objects for common values
 var (
 	NULL     = &Null{}

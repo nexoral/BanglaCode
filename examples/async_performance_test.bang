@@ -1,0 +1,25 @@
+// Performance test to demonstrate concurrent execution of sob_proyash
+// Before fix: 3 promises × 500ms = 1500ms (sequential)
+// After fix: max(500ms, 500ms, 500ms) = ~500ms (concurrent)
+
+dekho("Creating 3 promises that each take 500ms...");
+dhoro startTime = somoy();
+
+dhoro p1 = ghumaao(500);
+dhoro p2 = ghumaao(500);
+dhoro p3 = ghumaao(500);
+
+dekho("Waiting for all promises with sob_proyash...");
+opekha sob_proyash([p1, p2, p3]);
+
+dhoro endTime = somoy();
+dhoro elapsed = endTime - startTime;
+
+dekho("All promises completed!");
+dekho("Time elapsed:", elapsed, "ms");
+
+jodi (elapsed < 700) {
+    dekho("✓ CONCURRENT EXECUTION CONFIRMED! (should be ~500ms)");
+} nahole {
+    dekho("✗ Sequential execution detected (would be ~1500ms)");
+}

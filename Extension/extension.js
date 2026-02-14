@@ -1205,10 +1205,14 @@ function activate(context) {
             const builtinFunc = builtinFunctions.find(f => f.label === funcName);
             if (builtinFunc) {
                 // Define variadic built-in functions that accept any number of arguments
+                // sob_proyash takes 1 array argument (not counted as variadic here)
                 const variadicBuiltins = new Set(['dekho', 'choto', 'boro']);
 
-                // Skip validation for variadic functions
-                if (!variadicBuiltins.has(funcName)) {
+                // Special case: functions that take array arguments (argument counting should ignore commas inside arrays)
+                const arrayArgFunctions = new Set(['sob_proyash']);
+
+                // Skip validation for variadic functions and array argument functions
+                if (!variadicBuiltins.has(funcName) && !arrayArgFunctions.has(funcName)) {
                     // Extract expected param count from insertText
                     const paramMatch = builtinFunc.insertText.match(/\$\{(\d+)(?::([^}]+))?\}/g);
                     if (paramMatch) {

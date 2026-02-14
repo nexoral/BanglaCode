@@ -4,12 +4,13 @@ package evaluator
 
 import (
 	"BanglaCode/src/ast"
+	"BanglaCode/src/evaluator/builtins"
 	"BanglaCode/src/object"
 )
 
 func init() {
 	// Set up EvalFunc for builtins that need to call back into the evaluator
-	EvalFunc = evalFunctionCall
+	builtins.EvalFunc = evalFunctionCall
 }
 
 // evalFunctionCall evaluates a function with the given arguments
