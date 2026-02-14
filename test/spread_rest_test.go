@@ -222,4 +222,3 @@ func TestSpreadErrors(t *testing.T) {
 		testErrorObject(t, evaluated, tt.expectedError, i)
 	}
 }
-
