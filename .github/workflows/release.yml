@@ -591,14 +591,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cleanup old releases (keep last 5)
+      - name: Cleanup old releases (keep last 3)
         if: steps.check_release.outputs.exists == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           releases=$(gh release list --limit 100 --json tagName --jq '.[].tagName')
           count=$(echo "$releases" | wc -l)
-          [ "$count" -gt 5 ] && echo "$releases" | tail -n +6 | xargs -I {} gh release delete {} --cleanup-tag -y || true
+          [ "$count" -gt 3 ] && echo "$releases" | tail -n +4 | xargs -I {} gh release delete {} --cleanup-tag -y || true
 
   publish-vscode-extension:
     needs: [version-check, release]
