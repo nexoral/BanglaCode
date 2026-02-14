@@ -4,12 +4,13 @@ package evaluator
 
 import (
 	"BanglaCode/src/ast"
+	"BanglaCode/src/evaluator/builtins"
 	"BanglaCode/src/object"
 )
 
 func init() {
 	// Set up EvalFunc for builtins that need to call back into the evaluator
-	EvalFunc = evalFunctionCall
+	builtins.EvalFunc = evalFunctionCall
 }
 
 // evalFunctionCall evaluates a function with the given arguments
@@ -177,6 +178,14 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 	case *ast.SpreadElement:
 		return evalSpreadElement(node, env)
+
+	// ==================== Async/Await ====================
+
+	case *ast.AsyncFunctionLiteral:
+		return evalAsyncFunctionLiteral(node, env)
+
+	case *ast.AwaitExpression:
+		return evalAwaitExpression(node, env)
 	}
 
 	return nil

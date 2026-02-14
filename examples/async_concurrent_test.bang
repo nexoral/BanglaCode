@@ -1,0 +1,27 @@
+// Test that sob_proyash runs promises concurrently, not sequentially
+// If concurrent: 3x500ms = ~500ms total
+// If sequential: 3x500ms = ~1500ms total
+
+dekho("Testing sob_proyash concurrent execution...");
+dhoro start = somoy();
+
+// Create 3 promises that each sleep for 500ms
+dhoro p1 = ghumaao(500);
+dhoro p2 = ghumaao(500);
+dhoro p3 = ghumaao(500);
+
+// Wait for all promises to complete
+opekha sob_proyash([p1, p2, p3]);
+
+dhoro end = somoy();
+dhoro elapsed = end - start;
+
+dekho("Elapsed time: " + sonkha(elapsed) + "ms");
+
+// If concurrent, should be ~500-600ms
+// If sequential, would be ~1500-1600ms
+jodi (elapsed < 1000) {
+    dekho("✓ PASS: Concurrent execution confirmed (elapsed < 1000ms)");
+} nahole {
+    dekho("✗ FAIL: Sequential execution detected (elapsed >= 1000ms)");
+}
