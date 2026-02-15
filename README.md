@@ -68,12 +68,13 @@
 <tr>
 <td width="50%">
 
-**🔧 130+ Built-in Functions**
+**🔧 135+ Built-in Functions**
 - String & Array operations
 - Math & Utility functions
 - HTTP server & JSON support
 - **Networking (TCP, UDP, WebSocket)**
 - **Database (PostgreSQL, MySQL, MongoDB, Redis)**
+- **Environment Variables (.env files)**
 - **Complete OS-level access**
 
 </td>

@@ -1240,6 +1240,168 @@ dhoro result = opekha fetchUsers();
 dekho("Fetched", dorghyo(result["rows"]), "users");
 ```
 
+## Environment Variables (.env Files)
+
+BanglaCode provides built-in support for loading and managing environment variables from `.env` files. This is perfect for managing configuration across different environments (development, UAT, production).
+
+### Environment Variable Functions
+
+- `env_load(filename)` - Load specific .env file
+- `env_load_auto(environment)` - Auto-load .env.{environment} or fallback to .env
+- `env_get(key)` - Get environment variable value
+- `env_get_default(key, default)` - Get with default fallback
+- `env_set(key, value)` - Set environment variable at runtime
+- `env_all()` - Get all environment variables as a map
+- `env_clear()` - Clear all loaded environment variables
+
+### Simple .env File Loading
+
+```banglacode
+// Load default .env file
+env_load(".env");
+
+// Get environment variables
+dhoro api_key = env_get("API_KEY");
+dhoro db_host = env_get("DB_HOST");
+dhoro db_port = env_get("DB_PORT");
+
+dekho("Connecting to:", db_host, ":", db_port);
+```
+
+### Multi-Environment Support
+
+BanglaCode makes it easy to manage different environments (UAT, staging, production):
+
+```banglacode
+// Auto-load based on environment
+// Tries .env.uat first, then falls back to .env
+env_load_auto("uat");
+
+// Or load production environment
+env_load_auto("prod");  // Tries .env.prod, then .env
+
+// Get values with defaults
+dhoro api_url = env_get_default("API_URL", "http://localhost:3000");
+dhoro debug_mode = env_get_default("DEBUG", "false");
+
+dekho("API URL:", api_url);
+dekho("Debug Mode:", debug_mode);
+```
+
+### .env File Format
+
+Create a `.env` file in your project directory:
+
+```
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=myapp
+DB_USER=admin
+DB_PASSWORD=secret123
+
+# API Keys
+API_KEY=your-api-key-here
+SECRET_KEY=your-secret-key
+
+# Environment
+NODE_ENV=development
+DEBUG=true
+```
+
+### Different Environment Files
+
+**`.env`** (Default/Development):
+```
+API_URL=http://localhost:3000
+DB_HOST=localhost
+DEBUG=true
+```
+
+**`.env.uat`** (UAT/Testing):
+```
+API_URL=https://uat-api.example.com
+DB_HOST=uat-db.example.com
+DEBUG=true
+```
+
+**`.env.prod`** (Production):
+```
+API_URL=https://api.example.com
+DB_HOST=prod-db.example.com
+DEBUG=false
+```
+
+### Complete Example with Database Connection
+
+```banglacode
+// Load environment-specific configuration
+env_load_auto("prod");  // Tries .env.prod, then .env
+
+// Get database credentials from .env
+dhoro db_host = env_get("DB_HOST");
+dhoro db_port = env_get_default("DB_PORT", "5432");
+dhoro db_name = env_get("DB_NAME");
+dhoro db_user = env_get("DB_USER");
+dhoro db_pass = env_get("DB_PASSWORD");
+
+// Connect to database using env variables
+dhoro conn = db_jukto("postgres", {
+    "host": db_host,
+    "port": jongate(db_port),  // Convert string to number
+    "database": db_name,
+    "user": db_user,
+    "password": db_pass
+});
+
+// Use connection
+dhoro users = db_query(conn, "SELECT * FROM users");
+dekho("Found", dorghyo(users["rows"]), "users");
+
+db_bandho(conn);
+```
+
+### Runtime Environment Variables
+
+```banglacode
+// Set environment variable at runtime
+env_set("TEMP_TOKEN", "abc123");
+
+// Get all environment variables
+dhoro all_vars = env_all();
+dekho("All environment variables:", all_vars);
+
+// Clear all environment variables
+env_clear();
+```
+
+### Best Practices
+
+1. **Never commit .env files** - Add `.env*` to `.gitignore`
+2. **Use .env.example** - Commit a template without secrets
+3. **Different files per environment** - `.env.dev`, `.env.uat`, `.env.prod`
+4. **Use defaults** - Always provide sensible defaults with `env_get_default()`
+5. **Validate early** - Check required env vars at startup
+
+### Example .env.example (Safe to commit)
+
+```
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=your_database_name
+DB_USER=your_username
+DB_PASSWORD=your_password
+
+# API Keys (replace with your actual keys)
+API_KEY=your_api_key_here
+SECRET_KEY=your_secret_key_here
+
+# Environment
+NODE_ENV=development
+DEBUG=true
+```
+
 ## Comments
 
 Use `//` for single-line comments:

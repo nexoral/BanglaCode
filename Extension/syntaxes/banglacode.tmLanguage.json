@@ -293,7 +293,10 @@
         {
           "name": "support.function.builtin.system.js",
           "match": "\\b(disk_akar|disk_bebohrito|disk_mukt)\\b"
-        }
+        },
+        {
+          "name": "support.function.builtin.env.js",
+          "match": "\\b(env_load|env_load_auto|env_get|env_get_default|env_set|env_all|env_clear)\\b"
         },
         {
           "name": "support.function.builtin.database.js",

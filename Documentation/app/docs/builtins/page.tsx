@@ -13,9 +13,9 @@ export default function Builtins() {
       <h1>Built-in Functions Reference</h1>
 
       <p className="lead text-xl text-muted-foreground mt-4">
-        BanglaCode provides 130+ built-in functions for I/O, type conversion, string manipulation,
-        array operations, math, file handling, HTTP, JSON, networking (TCP/UDP/WebSocket), database connectivity
-        (PostgreSQL/MySQL/MongoDB/Redis), and complete OS-level system access.
+        BanglaCode provides 135+ built-in functions for I/O, type conversion, string manipulation,
+        array operations, math, file handling, HTTP, JSON, environment variables, networking (TCP/UDP/WebSocket),
+        database connectivity (PostgreSQL/MySQL/MongoDB/Redis), and complete OS-level system access.
       </p>
 
       <h2>Input/Output</h2>
@@ -452,6 +452,92 @@ dekho(obj.name);  // "Rahim"
 // Create JSON
 dhoro json = json_banao({x: 1, y: 2});
 dekho(json);  // {"x":1,"y":2}`}
+      />
+
+      <h2>Environment Variables</h2>
+
+      <p>
+        See the <a href="/docs/environment-variables" className="text-primary hover:underline">Environment Variables Documentation</a> for detailed examples and multi-environment setup.
+      </p>
+
+      <div className="overflow-x-auto my-4">
+        <table>
+          <thead>
+            <tr>
+              <th>Function</th>
+              <th>Parameters</th>
+              <th>Returns</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>env_load</code></td>
+              <td><code>filename</code></td>
+              <td><code>boolean</code></td>
+              <td>Load environment variables from .env file</td>
+            </tr>
+            <tr>
+              <td><code>env_load_auto</code></td>
+              <td><code>environment</code></td>
+              <td><code>string</code></td>
+              <td>Auto-load .env.{'{environment}'} or fallback to .env</td>
+            </tr>
+            <tr>
+              <td><code>env_get</code></td>
+              <td><code>key</code></td>
+              <td><code>string</code></td>
+              <td>Get environment variable (error if not found)</td>
+            </tr>
+            <tr>
+              <td><code>env_get_default</code></td>
+              <td><code>key, default</code></td>
+              <td><code>string</code></td>
+              <td>Get environment variable with default fallback</td>
+            </tr>
+            <tr>
+              <td><code>env_set</code></td>
+              <td><code>key, value</code></td>
+              <td><code>boolean</code></td>
+              <td>Set environment variable at runtime</td>
+            </tr>
+            <tr>
+              <td><code>env_all</code></td>
+              <td><code>(none)</code></td>
+              <td><code>map</code></td>
+              <td>Get all environment variables as map</td>
+            </tr>
+            <tr>
+              <td><code>env_clear</code></td>
+              <td><code>(none)</code></td>
+              <td><code>boolean</code></td>
+              <td>Clear all loaded environment variables</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <CodeBlock
+        code={`// Load .env file
+env_load(".env");
+
+// Get environment variables
+dhoro api_key = env_get("API_KEY");
+dhoro api_url = env_get_default("API_URL", "http://localhost:3000");
+
+dekho("API URL:", api_url);
+
+// Multi-environment support
+env_load_auto("prod");  // Loads .env.prod or falls back to .env
+dhoro db_host = env_get("DB_HOST");
+dekho("Database Host:", db_host);
+
+// Set runtime variable
+env_set("SESSION_ID", "abc123");
+
+// Get all variables
+dhoro all = env_all();
+dekho("All env vars:", all);`}
       />
 
       <h2>Utility Functions</h2>

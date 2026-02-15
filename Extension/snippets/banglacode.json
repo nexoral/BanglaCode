@@ -1196,5 +1196,61 @@
       "$0"
     ],
     "description": "Create MongoDB index for performance"
+  },
+  "Load .env File": {
+    "prefix": "env-load",
+    "body": [
+      "// Load environment variables from .env file",
+      "env_load(\".env\");",
+      "$0"
+    ],
+    "description": "Load .env file"
+  },
+  "Auto-Load .env by Environment": {
+    "prefix": "env-load-auto",
+    "body": [
+      "// Auto-load .env file based on environment",
+      "env_load_auto(\"${1|dev,uat,staging,prod|}\");  // Tries .env.${1}, then .env",
+      "",
+      "// Get environment variables",
+      "dhoro ${2:api_key} = env_get(\"${3:API_KEY}\");",
+      "dhoro ${4:db_host} = env_get_default(\"${5:DB_HOST}\", \"${6:localhost}\");",
+      "$0"
+    ],
+    "description": "Auto-load environment-specific .env file"
+  },
+  "Get Environment Variable": {
+    "prefix": "env-get",
+    "body": [
+      "dhoro ${1:value} = env_get(\"${2:KEY}\");",
+      "$0"
+    ],
+    "description": "Get environment variable"
+  },
+  "Get Environment Variable with Default": {
+    "prefix": "env-get-default",
+    "body": [
+      "dhoro ${1:value} = env_get_default(\"${2:KEY}\", \"${3:default_value}\");",
+      "$0"
+    ],
+    "description": "Get environment variable with default value"
+  },
+  "Complete .env Example": {
+    "prefix": "env-example",
+    "body": [
+      "// Load environment configuration",
+      "env_load_auto(\"${1:prod}\");  // Tries .env.${1}, then .env",
+      "",
+      "// Get configuration from .env",
+      "dhoro api_url = env_get_default(\"API_URL\", \"http://localhost:3000\");",
+      "dhoro api_key = env_get(\"API_KEY\");",
+      "dhoro db_host = env_get_default(\"DB_HOST\", \"localhost\");",
+      "dhoro debug = env_get_default(\"DEBUG\", \"false\");",
+      "",
+      "dekho(\"API URL:\", api_url);",
+      "dekho(\"Debug Mode:\", debug);",
+      "$0"
+    ],
+    "description": "Complete .env usage example"
   }
 }
