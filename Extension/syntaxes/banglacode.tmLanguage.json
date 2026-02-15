@@ -357,6 +357,7 @@
         {
           "name": "support.function.builtin.database.pool.js",
           "match": "\\b(db_pool_banao|db_pool_nao|db_pool_ferot|db_pool_bondho|db_pool_tothyo)\\b"
+        }
       ]
     },
     "functions": {
