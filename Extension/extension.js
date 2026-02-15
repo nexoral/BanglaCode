@@ -595,6 +595,9 @@ function activate(context) {
                             const returnValue = extractReturnValue(moduleText, funcName);
                             const paramList = params ? params.split(',').map(p => p.trim()) : [];
 
+                            // Check if function has variadic parameter
+                            const isVariadic = paramList.length > 0 && paramList[paramList.length - 1].startsWith('...');
+
                             const item = new vscode.CompletionItem(funcName, vscode.CompletionItemKind.Function);
                             const returnInfo = returnValue ? ` → ${returnValue}` : '';
                             item.detail = `kaj ${funcName}(${params})${returnInfo} - ইম্পোর্ট করা`;
@@ -618,7 +621,18 @@ function activate(context) {
                                 docMd.appendMarkdown(`**রিটার্ন করে:** \`${returnValue}\`\n\n`);
                             }
 
-                            docMd.appendMarkdown(`**কল করো:** \`${funcName}(${paramList.map((_, i) => `arg${i+1}`).join(', ')})\``);
+                            // Generate call signature - handle variadic parameters
+                            let callSignature;
+                            if (isVariadic) {
+                                const regularParams = paramList.slice(0, -1).map((_, i) => `arg${i+1}`);
+                                const variadicParam = paramList[paramList.length - 1].substring(3); // Remove '...'
+                                const variadicArgs = `...${variadicParam}`;
+                                callSignature = [...regularParams, variadicArgs].join(', ');
+                            } else {
+                                callSignature = paramList.map((_, i) => `arg${i+1}`).join(', ');
+                            }
+
+                            docMd.appendMarkdown(`**কল করো:** \`${funcName}(${callSignature})\``);
 
                             item.documentation = docMd;
                             completions.push(item);
@@ -787,6 +801,10 @@ function activate(context) {
 
                                 const params = funcMatch[2].trim();
                                 const paramList = params ? params.split(',').map(p => p.trim()) : [];
+
+                                // Check if function has variadic parameter
+                                const isVariadic = paramList.length > 0 && paramList[paramList.length - 1].startsWith('...');
+
                                 const docComment = extractDocComment(moduleText, funcName, 'kaj');
                                 const returnValue = extractReturnValue(moduleText, funcName);
 
@@ -813,7 +831,18 @@ function activate(context) {
                                     docMd.appendMarkdown(`**রিটার্ন করে:** \`${returnValue}\`\n\n`);
                                 }
 
-                                docMd.appendMarkdown(`**কল করো:** \`${varName}.${funcName}(${paramList.map((_, i) => `arg${i+1}`).join(', ')})\``);
+                                // Generate call signature - handle variadic parameters
+                                let callSignature;
+                                if (isVariadic) {
+                                    const regularParams = paramList.slice(0, -1).map((_, i) => `arg${i+1}`);
+                                    const variadicParam = paramList[paramList.length - 1].substring(3); // Remove '...'
+                                    const variadicArgs = `...${variadicParam}`;
+                                    callSignature = [...regularParams, variadicArgs].join(', ');
+                                } else {
+                                    callSignature = paramList.map((_, i) => `arg${i+1}`).join(', ');
+                                }
+
+                                docMd.appendMarkdown(`**কল করো:** \`${varName}.${funcName}(${callSignature})\``);
 
                                 item.documentation = docMd;
                                 completions.push(item);
@@ -886,6 +915,9 @@ function activate(context) {
                 const paramList = params ? params.split(',').map(p => p.trim()) : [];
                 const paramCount = paramList.length;
 
+                // Check if function has variadic parameter
+                const isVariadic = paramList.length > 0 && paramList[paramList.length - 1].startsWith('...');
+
                 // Extract @comment documentation
                 const docComment = extractDocComment(text, word, 'kaj');
 
@@ -909,7 +941,18 @@ function activate(context) {
                     md.appendMarkdown(`**রিটার্ন করে:** কিছু না (void)\n\n`);
                 }
 
-                md.appendMarkdown(`**কল করো:** \`${word}(${paramList.map((_, i) => `arg${i+1}`).join(', ')})\``);
+                // Generate call signature - handle variadic parameters
+                let callSignature;
+                if (isVariadic) {
+                    const regularParams = paramList.slice(0, -1).map((_, i) => `arg${i+1}`);
+                    const variadicParam = paramList[paramList.length - 1].substring(3); // Remove '...'
+                    const variadicArgs = `...${variadicParam}`;
+                    callSignature = [...regularParams, variadicArgs].join(', ');
+                } else {
+                    callSignature = paramList.map((_, i) => `arg${i+1}`).join(', ');
+                }
+
+                md.appendMarkdown(`**কল করো:** \`${word}(${callSignature})\``);
 
                 return new vscode.Hover(md);
             }
@@ -1098,6 +1141,10 @@ function activate(context) {
                             if (funcInModule) {
                                 const params = funcInModule[1].trim();
                                 const paramList = params ? params.split(',').map(p => p.trim()) : [];
+
+                                // Check if function has variadic parameter
+                                const isVariadic = paramList.length > 0 && paramList[paramList.length - 1].startsWith('...');
+
                                 const docComment = extractDocComment(moduleText, word, 'kaj');
                                 const returnValue = extractReturnValue(moduleText, word);
 
@@ -1120,7 +1167,18 @@ function activate(context) {
                                     md.appendMarkdown(`**রিটার্ন করে:** কিছু না (void)\n\n`);
                                 }
 
-                                md.appendMarkdown(`**কল করো:** \`${mapName}.${word}(${paramList.map((_, i) => `arg${i+1}`).join(', ')})\``);
+                                // Generate call signature - handle variadic parameters
+                                let callSignature;
+                                if (isVariadic) {
+                                    const regularParams = paramList.slice(0, -1).map((_, i) => `arg${i+1}`);
+                                    const variadicParam = paramList[paramList.length - 1].substring(3); // Remove '...'
+                                    const variadicArgs = `...${variadicParam}`;
+                                    callSignature = [...regularParams, variadicArgs].join(', ');
+                                } else {
+                                    callSignature = paramList.map((_, i) => `arg${i+1}`).join(', ');
+                                }
+
+                                md.appendMarkdown(`**কল করো:** \`${mapName}.${word}(${callSignature})\``);
 
                                 return new vscode.Hover(md);
                             } else {
@@ -1186,6 +1244,10 @@ function activate(context) {
                     if (funcInModule) {
                         const params = funcInModule[1].trim();
                         const paramList = params ? params.split(',').map(p => p.trim()) : [];
+
+                        // Check if function has variadic parameter
+                        const isVariadic = paramList.length > 0 && paramList[paramList.length - 1].startsWith('...');
+
                         const docComment = extractDocComment(moduleText, word, 'kaj');
                         const returnValue = extractReturnValue(moduleText, word);
 
@@ -1207,7 +1269,18 @@ function activate(context) {
                             md.appendMarkdown(`**রিটার্ন করে:** কিছু না (void)\n\n`);
                         }
 
-                        md.appendMarkdown(`**কল করো:** \`${word}(${paramList.map((_, i) => `arg${i+1}`).join(', ')})\``);
+                        // Generate call signature - handle variadic parameters
+                        let callSignature;
+                        if (isVariadic) {
+                            const regularParams = paramList.slice(0, -1).map((_, i) => `arg${i+1}`);
+                            const variadicParam = paramList[paramList.length - 1].substring(3); // Remove '...'
+                            const variadicArgs = `...${variadicParam}`;
+                            callSignature = [...regularParams, variadicArgs].join(', ');
+                        } else {
+                            callSignature = paramList.map((_, i) => `arg${i+1}`).join(', ');
+                        }
+
+                        md.appendMarkdown(`**কল করো:** \`${word}(${callSignature})\``);
 
                         return new vscode.Hover(md);
                     }
@@ -1243,8 +1316,14 @@ function activate(context) {
         while ((match = funcDefRegex.exec(text)) !== null) {
             const name = match[1];
             const params = match[2].trim();
-            const paramCount = params ? params.split(',').length : 0;
-            funcDefs.set(name, { params, paramCount });
+            const paramList = params ? params.split(',').map(p => p.trim()) : [];
+            const paramCount = paramList.length;
+
+            // Check if last parameter is variadic (starts with ...)
+            const isVariadic = paramList.length > 0 && paramList[paramList.length - 1].startsWith('...');
+            const minArgs = isVariadic ? paramList.length - 1 : paramCount;
+
+            funcDefs.set(name, { params, paramCount, isVariadic, minArgs });
         }
         
         // Find all function calls and check argument counts
@@ -1266,13 +1345,22 @@ function activate(context) {
             if (funcDefs.has(funcName)) {
                 const def = funcDefs.get(funcName);
 
-                if (argCount !== def.paramCount) {
+                // For variadic functions, check if argCount >= minArgs
+                // For non-variadic functions, check if argCount === paramCount
+                const isValidArgCount = def.isVariadic ? argCount >= def.minArgs : argCount === def.paramCount;
+
+                if (!isValidArgCount) {
                     const pos = document.positionAt(match.index);
                     const range = new vscode.Range(pos, pos.translate(0, funcName.length));
                     const paramNames = def.params ? def.params.split(',').map(p => p.trim()).join(', ') : '';
+
+                    const expectedMsg = def.isVariadic
+                        ? `at least ${def.minArgs} argument(s)`
+                        : `${def.paramCount} argument(s)`;
+
                     diagnostics.push(new vscode.Diagnostic(
                         range,
-                        `Function '${funcName}(${paramNames})' expects ${def.paramCount} argument(s) but got ${argCount}`,
+                        `Function '${funcName}(${paramNames})' expects ${expectedMsg} but got ${argCount}`,
                         vscode.DiagnosticSeverity.Error
                     ));
                 }
@@ -1340,16 +1428,31 @@ function activate(context) {
 
                         if (funcInModule) {
                             const params = funcInModule[1].trim();
-                            const paramNames = params.split(',').map(p => p.trim()).join(', ');
-                            const expectedCount = params ? params.split(',').length : 0;
+                            const paramList = params ? params.split(',').map(p => p.trim()) : [];
+                            const paramNames = paramList.join(', ');
+                            const expectedCount = paramList.length;
+
+                            // Check if function has variadic parameter
+                            const isVariadic = paramList.length > 0 && paramList[paramList.length - 1].startsWith('...');
+                            const minArgs = isVariadic ? paramList.length - 1 : expectedCount;
+
                             const actualCount = countArguments(argsStr);
 
-                            if (actualCount !== expectedCount) {
+                            // For variadic functions, check if actualCount >= minArgs
+                            // For non-variadic functions, check if actualCount === expectedCount
+                            const isValidArgCount = isVariadic ? actualCount >= minArgs : actualCount === expectedCount;
+
+                            if (!isValidArgCount) {
                                 const pos = document.positionAt(match.index);
                                 const range = new vscode.Range(pos, pos.translate(0, aliasName.length + 1 + funcName.length));
+
+                                const expectedMsg = isVariadic
+                                    ? `at least ${minArgs} argument(s)`
+                                    : `${expectedCount} argument(s)`;
+
                                 diagnostics.push(new vscode.Diagnostic(
                                     range,
-                                    `Function '${funcName}(${paramNames})' expects ${expectedCount} argument(s) but got ${actualCount}`,
+                                    `Function '${funcName}(${paramNames})' expects ${expectedMsg} but got ${actualCount}`,
                                     vscode.DiagnosticSeverity.Error
                                 ));
                             }
@@ -1400,8 +1503,14 @@ function activate(context) {
                 while ((exportMatch = exportedFuncRegex.exec(moduleText)) !== null) {
                     const funcName = exportMatch[1];
                     const params = exportMatch[2].trim();
-                    const paramCount = params ? params.split(',').length : 0;
-                    exportedFuncs.set(funcName, { params, paramCount });
+                    const paramList = params ? params.split(',').map(p => p.trim()) : [];
+                    const paramCount = paramList.length;
+
+                    // Check if function has variadic parameter
+                    const isVariadic = paramList.length > 0 && paramList[paramList.length - 1].startsWith('...');
+                    const minArgs = isVariadic ? paramList.length - 1 : paramCount;
+
+                    exportedFuncs.set(funcName, { params, paramCount, isVariadic, minArgs });
                 }
 
                 // Now check if any function calls match these exported functions
@@ -1429,13 +1538,22 @@ function activate(context) {
                         const def = exportedFuncs.get(funcName);
                         const argCount = countArguments(argsStr);
 
-                        if (argCount !== def.paramCount) {
+                        // For variadic functions, check if argCount >= minArgs
+                        // For non-variadic functions, check if argCount === paramCount
+                        const isValidArgCount = def.isVariadic ? argCount >= def.minArgs : argCount === def.paramCount;
+
+                        if (!isValidArgCount) {
                             const pos = document.positionAt(callMatch.index);
                             const range = new vscode.Range(pos, pos.translate(0, funcName.length));
                             const paramNames = def.params.split(',').map(p => p.trim()).join(', ');
+
+                            const expectedMsg = def.isVariadic
+                                ? `at least ${def.minArgs} argument(s)`
+                                : `${def.paramCount} argument(s)`;
+
                             diagnostics.push(new vscode.Diagnostic(
                                 range,
-                                `Function '${funcName}(${paramNames})' expects ${def.paramCount} argument(s) but got ${argCount}`,
+                                `Function '${funcName}(${paramNames})' expects ${expectedMsg} but got ${argCount}`,
                                 vscode.DiagnosticSeverity.Error
                             ));
                         }
