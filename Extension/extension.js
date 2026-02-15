@@ -8,6 +8,52 @@ const fs = require('fs');
  * Created by Ankan from West Bengal, India
  */
 
+/**
+ * Helper function to count arguments correctly, respecting string boundaries
+ * @param {string} argsStr - The argument string from inside parentheses
+ * @returns {number} - The correct number of arguments
+ */
+function countArguments(argsStr) {
+    if (!argsStr || argsStr.trim() === '') {
+        return 0;
+    }
+
+    let count = 1;
+    let inString = false;
+    let stringChar = '';
+    let depth = 0; // Track parentheses/brackets/braces depth
+
+    for (let i = 0; i < argsStr.length; i++) {
+        const char = argsStr[i];
+        const prevChar = i > 0 ? argsStr[i - 1] : '';
+
+        // Toggle string state for single or double quotes
+        if ((char === '"' || char === "'") && prevChar !== '\\') {
+            if (!inString) {
+                inString = true;
+                stringChar = char;
+            } else if (char === stringChar) {
+                inString = false;
+                stringChar = '';
+            }
+        }
+
+        // Track nested structures (arrays, maps, function calls)
+        if (!inString) {
+            if (char === '(' || char === '[' || char === '{') {
+                depth++;
+            } else if (char === ')' || char === ']' || char === '}') {
+                depth--;
+            } else if (char === ',' && depth === 0) {
+                // Only count commas at depth 0 (not inside nested structures)
+                count++;
+            }
+        }
+    }
+
+    return count;
+}
+
 // All BanglaCode keywords
 const keywords = [
     { label: 'dhoro', kind: vscode.CompletionItemKind.Keyword, detail: 'চলক ঘোষণা (ধরো) - Variable', insertText: 'dhoro ${1:name} = ${2:value};' },
@@ -1203,8 +1249,8 @@ function activate(context) {
                 continue;
             }
 
-            // Count arguments (simple approach - count commas + 1, unless empty)
-            const argCount = argsStr ? argsStr.split(',').length : 0;
+            // Count arguments (correctly handles commas inside strings)
+            const argCount = countArguments(argsStr);
 
             // Check local functions first
             if (funcDefs.has(funcName)) {
@@ -1286,7 +1332,7 @@ function activate(context) {
                             const params = funcInModule[1].trim();
                             const paramNames = params.split(',').map(p => p.trim()).join(', ');
                             const expectedCount = params ? params.split(',').length : 0;
-                            const actualCount = argsStr ? argsStr.split(',').length : 0;
+                            const actualCount = countArguments(argsStr);
 
                             if (actualCount !== expectedCount) {
                                 const pos = document.positionAt(match.index);
@@ -1371,7 +1417,7 @@ function activate(context) {
                     // Check if it's an exported function from this module
                     if (exportedFuncs.has(funcName)) {
                         const def = exportedFuncs.get(funcName);
-                        const argCount = argsStr ? argsStr.split(',').length : 0;
+                        const argCount = countArguments(argsStr);
 
                         if (argCount !== def.paramCount) {
                             const pos = document.positionAt(callMatch.index);
