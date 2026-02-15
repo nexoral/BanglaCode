@@ -76,13 +76,14 @@ export const DOCS_CONFIG: DocSection[] = [
       { name: "File I/O", href: "/docs/file-io", description: "Reading and writing files" },
       { name: "HTTP Server", href: "/docs/http-server", description: "Building web servers" },
       { name: "Networking", href: "/docs/networking", description: "TCP, UDP, WebSocket" },
+      { name: "Database", href: "/docs/database", description: "PostgreSQL, MySQL, MongoDB, Redis" },
     ],
   },
   {
     section: "Reference",
     icon: FileText,
     items: [
-      { name: "Built-in Functions", href: "/docs/builtins", description: "All 95+ built-in functions" },
+      { name: "Built-in Functions", href: "/docs/builtins", description: "All 130+ built-in functions" },
       { name: "Operator Precedence", href: "/docs/precedence", description: "Order of operations" },
       { name: "Examples", href: "/docs/examples", description: "Complete code examples" },
     ],

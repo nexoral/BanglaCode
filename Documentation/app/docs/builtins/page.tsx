@@ -13,8 +13,9 @@ export default function Builtins() {
       <h1>Built-in Functions Reference</h1>
 
       <p className="lead text-xl text-muted-foreground mt-4">
-        BanglaCode provides 95+ built-in functions for I/O, type conversion, string manipulation,
-        array operations, math, file handling, HTTP, JSON, networking (TCP/UDP/WebSocket), and complete OS-level system access.
+        BanglaCode provides 130+ built-in functions for I/O, type conversion, string manipulation,
+        array operations, math, file handling, HTTP, JSON, networking (TCP/UDP/WebSocket), database connectivity
+        (PostgreSQL/MySQL/MongoDB/Redis), and complete OS-level system access.
       </p>
 
       <h2>Input/Output</h2>
@@ -1216,6 +1217,327 @@ ghuriye (dhoro i = 0; i < dorghyo(files); i = i + 1) {
               <td><code>path</code></td>
               <td><code>boolean</code></td>
               <td>Check if path is symlink</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Database Functions</h2>
+
+      <p>
+        Production-grade database connectors for PostgreSQL, MySQL, MongoDB, and Redis with connection pooling and async support.
+        See the <a href="/docs/database" className="text-primary hover:underline">Database Documentation</a> for detailed examples.
+      </p>
+
+      <h3>Universal Database Functions</h3>
+
+      <div className="overflow-x-auto my-4">
+        <table>
+          <thead>
+            <tr>
+              <th>Function</th>
+              <th>Parameters</th>
+              <th>Returns</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>db_jukto</code></td>
+              <td><code>type, config</code></td>
+              <td><code>connection</code></td>
+              <td>Connect to database (postgres/mysql/mongodb/redis)</td>
+            </tr>
+            <tr>
+              <td><code>db_jukto_async</code></td>
+              <td><code>type, config</code></td>
+              <td><code>promise</code></td>
+              <td>Connect to database (async)</td>
+            </tr>
+            <tr>
+              <td><code>db_bandho</code></td>
+              <td><code>conn</code></td>
+              <td><code>khali</code></td>
+              <td>Close database connection</td>
+            </tr>
+            <tr>
+              <td><code>db_query</code></td>
+              <td><code>conn, sql</code></td>
+              <td><code>result</code></td>
+              <td>Execute SELECT query (SQL databases)</td>
+            </tr>
+            <tr>
+              <td><code>db_exec</code></td>
+              <td><code>conn, sql</code></td>
+              <td><code>result</code></td>
+              <td>Execute INSERT/UPDATE/DELETE</td>
+            </tr>
+            <tr>
+              <td><code>db_proshno</code></td>
+              <td><code>conn, sql, params</code></td>
+              <td><code>result</code></td>
+              <td>Prepared statement (SQL injection safe)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Connection Pool Functions</h3>
+
+      <div className="overflow-x-auto my-4">
+        <table>
+          <thead>
+            <tr>
+              <th>Function</th>
+              <th>Parameters</th>
+              <th>Returns</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>db_pool_banao</code></td>
+              <td><code>type, config, maxConns</code></td>
+              <td><code>pool</code></td>
+              <td>Create connection pool (50-100x faster)</td>
+            </tr>
+            <tr>
+              <td><code>db_pool_nao</code></td>
+              <td><code>pool</code></td>
+              <td><code>connection</code></td>
+              <td>Get connection from pool</td>
+            </tr>
+            <tr>
+              <td><code>db_pool_ferot</code></td>
+              <td><code>pool, conn</code></td>
+              <td><code>khali</code></td>
+              <td>Return connection to pool</td>
+            </tr>
+            <tr>
+              <td><code>db_pool_bondho</code></td>
+              <td><code>pool</code></td>
+              <td><code>khali</code></td>
+              <td>Close connection pool</td>
+            </tr>
+            <tr>
+              <td><code>db_pool_tothyo</code></td>
+              <td><code>pool</code></td>
+              <td><code>map</code></td>
+              <td>Get pool statistics</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>PostgreSQL Functions</h3>
+
+      <div className="overflow-x-auto my-4">
+        <table>
+          <thead>
+            <tr>
+              <th>Function</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>db_jukto_postgres</code></td>
+              <td><code>config</code></td>
+              <td>Connect to PostgreSQL</td>
+            </tr>
+            <tr>
+              <td><code>db_query_postgres</code></td>
+              <td><code>conn, sql</code></td>
+              <td>Execute SELECT query</td>
+            </tr>
+            <tr>
+              <td><code>db_exec_postgres</code></td>
+              <td><code>conn, sql</code></td>
+              <td>Execute INSERT/UPDATE/DELETE</td>
+            </tr>
+            <tr>
+              <td><code>db_proshno_postgres</code></td>
+              <td><code>conn, sql, params</code></td>
+              <td>Prepared statement</td>
+            </tr>
+            <tr>
+              <td><code>db_transaction_shuru_postgres</code></td>
+              <td><code>conn</code></td>
+              <td>Begin transaction</td>
+            </tr>
+            <tr>
+              <td><code>db_commit_postgres</code></td>
+              <td><code>tx</code></td>
+              <td>Commit transaction</td>
+            </tr>
+            <tr>
+              <td><code>db_rollback_postgres</code></td>
+              <td><code>tx</code></td>
+              <td>Rollback transaction</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>MySQL Functions</h3>
+
+      <div className="overflow-x-auto my-4">
+        <table>
+          <thead>
+            <tr>
+              <th>Function</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>db_jukto_mysql</code></td>
+              <td><code>config</code></td>
+              <td>Connect to MySQL</td>
+            </tr>
+            <tr>
+              <td><code>db_query_mysql</code></td>
+              <td><code>conn, sql</code></td>
+              <td>Execute SELECT query</td>
+            </tr>
+            <tr>
+              <td><code>db_exec_mysql</code></td>
+              <td><code>conn, sql</code></td>
+              <td>Execute INSERT/UPDATE/DELETE</td>
+            </tr>
+            <tr>
+              <td><code>db_proshno_mysql</code></td>
+              <td><code>conn, sql, params</code></td>
+              <td>Prepared statement</td>
+            </tr>
+            <tr>
+              <td><code>db_transaction_shuru_mysql</code></td>
+              <td><code>conn</code></td>
+              <td>Begin transaction</td>
+            </tr>
+            <tr>
+              <td><code>db_commit_mysql</code></td>
+              <td><code>tx</code></td>
+              <td>Commit transaction</td>
+            </tr>
+            <tr>
+              <td><code>db_rollback_mysql</code></td>
+              <td><code>tx</code></td>
+              <td>Rollback transaction</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>MongoDB Functions</h3>
+
+      <div className="overflow-x-auto my-4">
+        <table>
+          <thead>
+            <tr>
+              <th>Function</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>db_jukto_mongodb</code></td>
+              <td><code>config</code></td>
+              <td>Connect to MongoDB</td>
+            </tr>
+            <tr>
+              <td><code>db_khojo_mongodb</code></td>
+              <td><code>conn, collection, filter</code></td>
+              <td>Find documents</td>
+            </tr>
+            <tr>
+              <td><code>db_dhokao_mongodb</code></td>
+              <td><code>conn, collection, doc</code></td>
+              <td>Insert document</td>
+            </tr>
+            <tr>
+              <td><code>db_update_mongodb</code></td>
+              <td><code>conn, collection, filter, update</code></td>
+              <td>Update documents</td>
+            </tr>
+            <tr>
+              <td><code>db_mujhe_mongodb</code></td>
+              <td><code>conn, collection, filter</code></td>
+              <td>Delete documents</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Redis Functions</h3>
+
+      <div className="overflow-x-auto my-4">
+        <table>
+          <thead>
+            <tr>
+              <th>Function</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>db_jukto_redis</code></td>
+              <td><code>config</code></td>
+              <td>Connect to Redis</td>
+            </tr>
+            <tr>
+              <td><code>db_set_redis</code></td>
+              <td><code>conn, key, value, ttl?</code></td>
+              <td>Set key-value (optional TTL)</td>
+            </tr>
+            <tr>
+              <td><code>db_get_redis</code></td>
+              <td><code>conn, key</code></td>
+              <td>Get value by key</td>
+            </tr>
+            <tr>
+              <td><code>db_del_redis</code></td>
+              <td><code>conn, key</code></td>
+              <td>Delete key</td>
+            </tr>
+            <tr>
+              <td><code>db_expire_redis</code></td>
+              <td><code>conn, key, seconds</code></td>
+              <td>Set expiration time</td>
+            </tr>
+            <tr>
+              <td><code>db_lpush_redis</code></td>
+              <td><code>conn, key, value</code></td>
+              <td>Push to list (left/front)</td>
+            </tr>
+            <tr>
+              <td><code>db_rpush_redis</code></td>
+              <td><code>conn, key, value</code></td>
+              <td>Push to list (right/back)</td>
+            </tr>
+            <tr>
+              <td><code>db_lpop_redis</code></td>
+              <td><code>conn, key</code></td>
+              <td>Pop from list (left/front)</td>
+            </tr>
+            <tr>
+              <td><code>db_hset_redis</code></td>
+              <td><code>conn, key, field, value</code></td>
+              <td>Set hash field</td>
+            </tr>
+            <tr>
+              <td><code>db_hget_redis</code></td>
+              <td><code>conn, key, field</code></td>
+              <td>Get hash field</td>
+            </tr>
+            <tr>
+              <td><code>db_hgetall_redis</code></td>
+              <td><code>conn, key</code></td>
+              <td>Get all hash fields</td>
             </tr>
           </tbody>
         </table>

@@ -25,6 +25,7 @@ BanglaCode is designed for **students** who:
 - [Modules (Import/Export)](#modules-importexport)
 - [Error Handling](#error-handling)
 - [HTTP Server](#http-server)
+- [Database Connectivity](#database-functions)
 - [Arrays](#arrays)
 - [Maps/Objects](#mapsobjects)
 - [Built-in Functions](#built-in-functions)
@@ -933,6 +934,310 @@ dekho(content);  // Output: Hello BanglaCode!
 dhoro response = anun("https://api.example.com/data");
 dekho(response["status"]);  // HTTP status code
 dekho(response["body"]);    // Response body
+```
+
+### Database Functions
+
+BanglaCode provides production-grade database connectors for **PostgreSQL, MySQL, MongoDB, and Redis** with connection pooling support.
+
+#### Universal Functions (Work with all databases)
+
+- `db_jukto(type, config)` - Connect to database (sync)
+- `db_jukto_async(type, config)` - Connect to database (async)
+- `db_bandho(conn)` - Close connection (sync)
+- `db_bandho_async(conn)` - Close connection (async)
+- `db_query(conn, sql)` - Execute SELECT query (sync)
+- `db_query_async(conn, sql)` - Execute SELECT query (async)
+- `db_exec(conn, sql)` - Execute INSERT/UPDATE/DELETE (sync)
+- `db_exec_async(conn, sql)` - Execute INSERT/UPDATE/DELETE (async)
+- `db_proshno(conn, sql, params)` - Prepared query (SQL injection safe)
+- `db_proshno_async(conn, sql, params)` - Prepared query async
+
+#### Connection Pool Functions
+
+- `db_pool_banao(type, config, maxConns)` - Create connection pool
+- `db_pool_nao(pool)` - Get connection from pool
+- `db_pool_ferot(pool, conn)` - Return connection to pool
+- `db_pool_bondho(pool)` - Close connection pool
+- `db_pool_tothyo(pool)` - Get pool statistics
+
+```banglacode
+// PostgreSQL with connection pool (50-100x faster!)
+dhoro pool = db_pool_banao("postgres", {
+    "host": "localhost",
+    "port": 5432,
+    "database": "myapp",
+    "user": "admin",
+    "password": "secret"
+}, 10); // Max 10 connections
+
+// Get connection from pool
+dhoro conn = db_pool_nao(pool);
+
+// Execute query
+dhoro users = db_query(conn, "SELECT * FROM users WHERE age > 25");
+ghuriye (dhoro i = 0; i < dorghyo(users["rows"]); i = i + 1) {
+    dekho("User:", users["rows"][i]["name"]);
+}
+
+// Prepared query (SQL injection safe)
+dhoro result = db_proshno(conn, "INSERT INTO users (name, email) VALUES ($1, $2)",
+    ["Rahim", "rahim@example.com"]);
+
+// Return connection to pool (important for reuse!)
+db_pool_ferot(pool, conn);
+
+// Close pool when done
+db_pool_bondho(pool);
+```
+
+#### PostgreSQL Specific Functions
+
+- `db_jukto_postgres(config)` - PostgreSQL connection
+- `db_query_postgres(conn, sql)` - Execute query
+- `db_exec_postgres(conn, sql)` - Execute statement
+- `db_proshno_postgres(conn, sql, params)` - Prepared statement
+- `db_transaction_shuru_postgres(conn)` - Begin transaction
+- `db_commit_postgres(tx)` - Commit transaction
+- `db_rollback_postgres(tx)` - Rollback transaction
+- `db_bulk_insert_postgres(conn, table, columns, rows)` - Efficient bulk insert
+
+```banglacode
+// Transaction example
+dhoro tx = db_transaction_shuru_postgres(conn);
+
+chesta {
+    db_exec_postgres(conn, "INSERT INTO accounts (name, balance) VALUES ('User1', 1000)");
+    db_exec_postgres(conn, "UPDATE accounts SET balance = balance - 100 WHERE name = 'User1'");
+
+    // Commit if successful
+    db_commit_postgres(tx);
+    dekho("Transaction completed!");
+} dhoro_bhul (error) {
+    // Rollback on error
+    db_rollback_postgres(tx);
+    dekho("Transaction failed:", error);
+}
+
+// Bulk insert example (10-100x faster than individual inserts!)
+dhoro users = [
+    ["Alice", 25, "alice@example.com"],
+    ["Bob", 30, "bob@example.com"],
+    ["Charlie", 35, "charlie@example.com"]
+];
+
+dhoro result = db_bulk_insert_postgres(conn, "users", ["name", "age", "email"], users);
+dekho("Inserted", result["rows_affected"], "users in bulk!");
+```
+
+#### MySQL Specific Functions
+
+- `db_jukto_mysql(config)` - MySQL connection
+- `db_query_mysql(conn, sql)` - Execute query
+- `db_exec_mysql(conn, sql)` - Execute statement
+- `db_proshno_mysql(conn, sql, params)` - Prepared statement
+- `db_transaction_shuru_mysql(conn)` - Begin transaction
+- `db_commit_mysql(tx)` - Commit transaction
+- `db_rollback_mysql(tx)` - Rollback transaction
+- `db_bulk_insert_mysql(conn, table, columns, rows)` - Efficient bulk insert
+
+#### MongoDB Specific Functions
+
+**Basic Operations:**
+- `db_jukto_mongodb(config)` - MongoDB connection
+- `db_khojo_mongodb(conn, collection, filter)` - Find documents
+- `db_khojo_async_mongodb(conn, collection, filter)` - Find documents async
+- `db_dhokao_mongodb(conn, collection, doc)` - Insert document
+- `db_dhokao_async_mongodb(conn, collection, doc)` - Insert document async
+- `db_update_mongodb(conn, collection, filter, update)` - Update documents
+- `db_update_async_mongodb(conn, collection, filter, update)` - Update async
+- `db_mujhe_mongodb(conn, collection, filter)` - Delete documents
+- `db_mujhe_async_mongodb(conn, collection, filter)` - Delete async
+
+**Advanced Operations:**
+- `db_aggregate_mongodb(conn, collection, pipeline)` - Execute aggregation pipeline
+- `db_findone_mongodb(conn, collection, filter)` - Find single document
+- `db_count_mongodb(conn, collection, filter)` - Count matching documents
+- `db_distinct_mongodb(conn, collection, field, filter)` - Get distinct values
+- `db_khojo_options_mongodb(conn, collection, filter, options)` - Find with sort/limit/skip
+- `db_create_index_mongodb(conn, collection, keys)` - Create index for performance
+- `db_insertmany_mongodb(conn, collection, docs)` - Bulk insert documents
+
+```banglacode
+// MongoDB example
+dhoro mongoConn = db_jukto("mongodb", {
+    "host": "localhost",
+    "port": 27017,
+    "database": "mydb"
+});
+
+// Find documents
+dhoro users = db_khojo_mongodb(mongoConn, "users", {
+    "age": {"$gt": 25},
+    "city": "Dhaka"
+});
+
+dekho("Found users:", dorghyo(users["rows"]));
+
+// Insert document
+db_dhokao_mongodb(mongoConn, "users", {
+    "name": "Karim Ahmed",
+    "age": 30,
+    "city": "Dhaka",
+    "profession": "Engineer"
+});
+
+// Update documents
+db_update_mongodb(mongoConn, "users",
+    {"city": "Dhaka"},
+    {"$set": {"country": "Bangladesh"}}
+);
+
+// Advanced: Aggregation pipeline
+dhoro pipeline = [
+    {"$match": {"city": "Dhaka"}},
+    {"$group": {"_id": "$profession", "count": {"$sum": 1}}},
+    {"$sort": {"count": -1}}
+];
+dhoro stats = db_aggregate_mongodb(mongoConn, "users", pipeline);
+dekho("User statistics:", stats);
+
+// Advanced: Find with options (sort, limit, skip)
+dhoro topUsers = db_khojo_options_mongodb(mongoConn, "users",
+    {"age": {"$gte": 18}},
+    {"sort": {"age": -1}, "limit": 10, "skip": 0}
+);
+
+// Create index for faster queries
+db_create_index_mongodb(mongoConn, "users", {"email": 1});
+
+db_bandho(mongoConn);
+```
+
+#### Redis Specific Functions
+
+**String Operations:**
+- `db_jukto_redis(config)` - Redis connection
+- `db_set_redis(conn, key, value, ttl)` - Set key-value
+- `db_set_async_redis(conn, key, value, ttl)` - Set key-value async
+- `db_get_redis(conn, key)` - Get value
+- `db_get_async_redis(conn, key)` - Get value async
+- `db_del_redis(conn, key)` - Delete key
+- `db_expire_redis(conn, key, seconds)` - Set expiration
+
+**List Operations:**
+- `db_lpush_redis(conn, key, value)` - List push left
+- `db_rpush_redis(conn, key, value)` - List push right
+- `db_lpop_redis(conn, key)` - List pop left
+- `db_rpop_redis(conn, key)` - List pop right
+
+**Hash Operations:**
+- `db_hset_redis(conn, key, field, value)` - Hash set field
+- `db_hget_redis(conn, key, field)` - Hash get field
+- `db_hgetall_redis(conn, key)` - Hash get all fields
+
+**Sorted Sets (Leaderboards, Rankings):**
+- `db_zadd_redis(conn, key, members)` - Add members with scores
+- `db_zrange_redis(conn, key, start, stop)` - Get members by rank range
+- `db_zrank_redis(conn, key, member)` - Get member's rank
+- `db_zscore_redis(conn, key, member)` - Get member's score
+- `db_zrem_redis(conn, key, members)` - Remove members
+
+**Sets (Unique Collections):**
+- `db_sadd_redis(conn, key, members)` - Add members to set
+- `db_smembers_redis(conn, key)` - Get all set members
+- `db_sismember_redis(conn, key, member)` - Check if member exists
+- `db_srem_redis(conn, key, members)` - Remove members from set
+- `db_sinter_redis(conn, keys)` - Intersection of sets
+- `db_sunion_redis(conn, keys)` - Union of sets
+- `db_sdiff_redis(conn, keys)` - Difference of sets
+
+**Counters (Atomic Operations):**
+- `db_incr_redis(conn, key)` - Increment by 1
+- `db_decr_redis(conn, key)` - Decrement by 1
+- `db_incrby_redis(conn, key, amount)` - Increment by amount
+- `db_decrby_redis(conn, key, amount)` - Decrement by amount
+- `db_incrbyfloat_redis(conn, key, amount)` - Increment by float
+
+**Pub/Sub (Message Queues):**
+- `db_publish_redis(conn, channel, message)` - Publish message to channel
+
+**Utilities:**
+- `db_ttl_redis(conn, key)` - Get time-to-live in seconds
+- `db_persist_redis(conn, key)` - Remove expiration
+- `db_exists_redis(conn, keys)` - Check if keys exist
+- `db_keys_redis(conn, pattern)` - Get keys matching pattern
+
+```banglacode
+// Redis caching example
+dhoro redisConn = db_jukto("redis", {
+    "host": "localhost",
+    "port": 6379
+});
+
+// Set key-value with 1 hour TTL
+db_set_redis(redisConn, "user:1", "Rahim Ahmed");
+db_expire_redis(redisConn, "user:1", 3600);
+
+// Get cached value
+dhoro cachedUser = db_get_redis(redisConn, "user:1");
+dekho("Cached user:", cachedUser);
+
+// List operations
+db_rpush_redis(redisConn, "queue:tasks", "Task 1");
+db_rpush_redis(redisConn, "queue:tasks", "Task 2");
+dhoro task = db_lpop_redis(redisConn, "queue:tasks");
+dekho("Processing task:", task);
+
+// Hash operations
+db_hset_redis(redisConn, "user:1:profile", "name", "Rahim");
+db_hset_redis(redisConn, "user:1:profile", "age", "30");
+dhoro profile = db_hgetall_redis(redisConn, "user:1:profile");
+dekho("Profile:", profile);
+
+// Advanced: Sorted Sets (Leaderboard)
+db_zadd_redis(redisConn, "leaderboard", {
+    "player1": 100,
+    "player2": 95,
+    "player3": 120
+});
+dhoro topPlayers = db_zrange_redis(redisConn, "leaderboard", 0, 2);  // Top 3
+dekho("Top players:", topPlayers);
+
+// Advanced: Sets (Unique tags)
+db_sadd_redis(redisConn, "tags:article1", ["bangla", "programming", "tutorial"]);
+db_sadd_redis(redisConn, "tags:article2", ["bangla", "coding", "tutorial"]);
+dhoro commonTags = db_sinter_redis(redisConn, ["tags:article1", "tags:article2"]);
+dekho("Common tags:", commonTags);
+
+// Advanced: Atomic counters
+db_incr_redis(redisConn, "page:views");
+db_incrby_redis(redisConn, "user:points", 50);
+dhoro views = db_get_redis(redisConn, "page:views");
+dekho("Page views:", views);
+
+db_bandho(redisConn);
+```
+
+#### Async Database Queries
+
+```banglacode
+// Async database operations with proyash/opekha
+proyash kaj fetchUsers() {
+    dhoro conn = opekha db_jukto_async("postgres", {
+        "host": "localhost",
+        "database": "myapp"
+    });
+
+    dhoro users = opekha db_query_async(conn, "SELECT * FROM users");
+    opekha db_bandho_async(conn);
+
+    ferao users;
+}
+
+// Call async function
+dhoro result = opekha fetchUsers();
+dekho("Fetched", dorghyo(result["rows"]), "users");
 ```
 
 ## Comments

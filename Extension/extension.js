@@ -468,8 +468,18 @@ function activate(context) {
         'banglacode',
         {
             provideCompletionItems(document, position, token, context) {
+                const line = document.lineAt(position.line).text;
+                const linePrefix = line.substring(0, position.character);
+
+                // Skip completions if we're inside an import statement string
+                // This allows the importPathProvider to handle file/folder suggestions
+                const insideImportString = linePrefix.match(/ano\s+["'][^"']*$/);
+                if (insideImportString) {
+                    return undefined;
+                }
+
                 const completions = [];
-                
+
                 // Add keywords
                 for (const kw of keywords) {
                     const item = new vscode.CompletionItem(kw.label, kw.kind);
@@ -682,7 +692,7 @@ function activate(context) {
                                 title: 'Re-trigger completions'
                             };
                             completions.push(item);
-                        } else if (entry.name.endsWith('.bang')) {
+                        } else if (entry.name.endsWith('.bang') || entry.name.endsWith('.bangla') || entry.name.endsWith('.bong')) {
                             const item = new vscode.CompletionItem(
                                 entry.name,
                                 vscode.CompletionItemKind.File
