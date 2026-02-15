@@ -11,8 +11,8 @@ import (
 
 // Global pool registry (thread-safe)
 var (
-	pools        = make(map[string]*ConnectionPool)
-	poolsMutex   sync.RWMutex
+	pools         = make(map[string]*ConnectionPool)
+	poolsMutex    sync.RWMutex
 	poolIDCounter int64
 )
 
@@ -36,16 +36,16 @@ func DefaultPoolConfig() PoolConfig {
 
 // ConnectionPool manages a pool of database connections
 type ConnectionPool struct {
-	id            string
-	dbType        string
-	config        PoolConfig
-	connConfig    map[string]interface{} // Connection configuration
-	conns         chan *object.DBConnection // Buffered channel for available connections
-	activeConns   int64                  // Atomic counter for active connections
-	totalConns    int64                  // Atomic counter for total connections created
-	mu            sync.RWMutex
-	closed        bool
-	closeChan     chan struct{} // Signal to stop cleanup goroutine
+	id          string
+	dbType      string
+	config      PoolConfig
+	connConfig  map[string]interface{}    // Connection configuration
+	conns       chan *object.DBConnection // Buffered channel for available connections
+	activeConns int64                     // Atomic counter for active connections
+	totalConns  int64                     // Atomic counter for total connections created
+	mu          sync.RWMutex
+	closed      bool
+	closeChan   chan struct{} // Signal to stop cleanup goroutine
 }
 
 // NewConnectionPool creates a new connection pool
@@ -241,7 +241,7 @@ func (p *ConnectionPool) closeConnection(conn *object.DBConnection) error {
 		if db, ok := conn.Native.(*sql.DB); ok {
 			return db.Close()
 		}
-	// MongoDB and Redis closers will be added when those connectors are implemented
+		// MongoDB and Redis closers will be added when those connectors are implemented
 	}
 
 	return nil
@@ -319,12 +319,12 @@ func (p *ConnectionPool) Stats() map[string]interface{} {
 	defer p.mu.RUnlock()
 
 	return map[string]interface{}{
-		"id":            p.id,
-		"type":          p.dbType,
-		"max_conns":     p.config.MaxConns,
-		"total_conns":   atomic.LoadInt64(&p.totalConns),
-		"active_conns":  atomic.LoadInt64(&p.activeConns),
-		"idle_conns":    len(p.conns),
-		"closed":        p.closed,
+		"id":           p.id,
+		"type":         p.dbType,
+		"max_conns":    p.config.MaxConns,
+		"total_conns":  atomic.LoadInt64(&p.totalConns),
+		"active_conns": atomic.LoadInt64(&p.activeConns),
+		"idle_conns":   len(p.conns),
+		"closed":       p.closed,
 	}
 }

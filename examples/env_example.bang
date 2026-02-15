@@ -3,7 +3,7 @@
 
 // Load environment variables from .env file
 dekho("Loading .env file...");
-env_load("examples/.env");
+env_load(".env");
 
 // Get environment variables
 dhoro api_key = env_get_default("API_KEY", "default-key");

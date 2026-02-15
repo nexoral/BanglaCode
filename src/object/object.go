@@ -293,12 +293,12 @@ func RejectPromise(promise *Promise, err Object) {
 
 // DBConnection represents a database connection
 type DBConnection struct {
-	ID       string                 // Unique connection identifier
-	DBType   string                 // Database type: "postgres", "mysql", "mongodb", "redis"
-	Native   interface{}            // Underlying driver connection (*sql.DB, *mongo.Client, *redis.Client)
-	PoolID   string                 // Reference to connection pool (if pooled)
-	Metadata map[string]Object      // Connection metadata (host, port, database, etc.)
-	Mu       sync.RWMutex           // Thread-safe access
+	ID       string            // Unique connection identifier
+	DBType   string            // Database type: "postgres", "mysql", "mongodb", "redis"
+	Native   interface{}       // Underlying driver connection (*sql.DB, *mongo.Client, *redis.Client)
+	PoolID   string            // Reference to connection pool (if pooled)
+	Metadata map[string]Object // Connection metadata (host, port, database, etc.)
+	Mu       sync.RWMutex      // Thread-safe access
 }
 
 func (d *DBConnection) Type() ObjectType { return DB_CONNECTION_OBJ }
