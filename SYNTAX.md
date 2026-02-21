@@ -83,7 +83,10 @@ BanglaCode uses Banglish keywords that are intuitive for Bengali speakers:
 | `jodi` | if | if |
 | `nahole` | else | else |
 | `jotokkhon` | as long as | while |
+| `do` | do/run once | do |
 | `ghuriye` | rotate/turn | for |
+| `of` | iterate values | of |
+| `of` | iterate values | of |
 | `kaj` | work/function | function |
 | `ferao` | return | return |
 | `sreni` | class/category | class |
@@ -95,6 +98,9 @@ BanglaCode uses Banglish keywords that are intuitive for Bengali speakers:
 | `ebong` | and | && |
 | `ba` | or | \|\| |
 | `na` | not | ! |
+| `in` | inside/check key | in |
+| `instanceof` | is instance of class | instanceof |
+| `delete` | remove property/index | delete |
 | `thamo` | stop | break |
 | `chharo` | leave | continue |
 | `dekho` | see/show | print |
@@ -221,6 +227,8 @@ dhoro remainder = 10 % 3; // Modulo
 sotti ebong mittha   // AND (&&)
 sotti ba mittha      // OR (||)
 na sotti             // NOT (!)
+"a" in {a: 1}        // true
+obj instanceof Class // true/false
 ```
 
 ### Assignment Operators
@@ -231,6 +239,13 @@ x += 5;       // Compound addition
 x -= 3;       // Compound subtraction
 x *= 2;       // Compound multiplication
 x /= 2;       // Compound division
+```
+
+### Delete Operator
+```banglacode
+dhoro user = {naam: "Ankan", boyosh: 25};
+delete user.boyosh;
+dekho("boyosh" in user); // Output: mittha
 ```
 
 ## Control Flow
@@ -279,10 +294,34 @@ jotokkhon (i < 5) {
 }
 ```
 
+### Do-While Loop (`do ... jotokkhon`)
+```banglacode
+dhoro i = 0;
+do {
+    dekho(i);
+    i = i + 1;
+} jotokkhon (i < 3);
+```
+
 ### For Loop (`ghuriye`)
 ```banglacode
 ghuriye (dhoro i = 0; i < 5; i = i + 1) {
     dekho("Count:", i);
+}
+```
+
+### For-Of Loop (`ghuriye ... of`)
+```banglacode
+ghuriye (item of [10, 20, 30]) {
+    dekho(item);
+}
+```
+
+### For-In Loop (`ghuriye ... in`)
+```banglacode
+dhoro user = {naam: "Ankan", boyosh: 25};
+ghuriye (k in user) {
+    dekho(k, user[k]);
 }
 ```
 
@@ -336,6 +375,24 @@ kaj calculate(x, y, z) {
 }
 
 dekho(calculate(2, 3, 4));  // Output: 20
+```
+
+### Arrow Functions
+```banglacode
+dhoro double = x => x * 2;
+dekho(double(5));  // Output: 10
+
+dhoro inc = x => { ferao x + 1; };
+dekho(inc(10));    // Output: 11
+
+dhoro add = (a, b) => a + b;
+dekho(add(2, 3));  // Output: 5
+```
+
+### Destructuring Assignment (Declaration)
+```banglacode
+dhoro [a, b] = [10, 20];
+dhoro {name, age} = {name: "Ankan", age: 25};
 ```
 
 ### Rest Parameters (Variadic Functions)
@@ -833,11 +890,21 @@ dekho(dorghyo(arr));  // Output: 3
 
 ### Map Functions
 - `chabi(map)` - চাবি - Get array of keys
+- `maan(map)` - Get values
+- `jora(map)` - Get key-value entry arrays
+- `mishra(target, ...sources)` - Merge maps
+- `nijer_ache(map, key)` - Own-key check
+- `jora_theke(entries)` - Build map from entries
+- `ekoi_ki(a, b)` - Object.is-like equality
+- `notun_map(proto, props?)` - Create map from base + props
+- `joma(map)` - Freeze semantic helper
 
 ```banglacode
 dhoro obj = {"a": 1, "b": 2};
 dhoro k = chabi(obj);
 dekho(k);  // Output: ["a", "b"]
+dekho(nijer_ache(obj, "a")); // Output: sotti
+dekho(jora_theke([["x", 10], ["y", 20]])); // Output: {x: 10, y: 20}
 ```
 
 ### Math Functions
@@ -884,6 +951,35 @@ dekho(angsho("hello", 1, 4));     // Output: ell
 dekho(bodlo("hello", "l", "x"));  // Output: hexxo
 ```
 
+### Extended String Functions
+- `ache_text(str, part)` - Includes substring check
+- `shuru_diye(str, prefix)` - Starts-with check
+- `shesh_diye(str, suffix)` - Ends-with check
+- `baro(str, count)` - Repeat string
+- `agey_bhoro(str, len, pad?)` - Pad at start
+- `pichoney_bhoro(str, len, pad?)` - Pad at end
+- `okkhor(str, index)` - Character at index
+- `text_at(str, index)` - Character at index (supports negative index)
+- `okkhor_code(str, index)` - Character code
+- `codepoint_at(str, index)` - Unicode code point
+- `tulona_text(a, b)` - String compare (-1/0/1)
+- `shadharon_text(str)` - Normalized text (NFC-like)
+- `chhanto_shuru(str)` - Trim start
+- `chhanto_shesh(str)` - Trim end
+- `shesh_khojo(str, part)` - Last index of substring
+
+```banglacode
+dekho(ache_text("banglacode", "code"));      // Output: sotti
+dekho(shuru_diye("banglacode", "bang"));     // Output: sotti
+dekho(shesh_diye("banglacode", "code"));     // Output: sotti
+dekho(baro("ha", 3));                        // Output: hahaha
+dekho(agey_bhoro("7", 3, "0"));              // Output: 007
+dekho(text_at("bangla", -1));                // Output: a
+dekho(okkhor_code("A", 0));                  // Output: 65
+dekho(codepoint_at("A", 0));                 // Output: 65
+dekho(tulona_text("a", "b"));                // Output: -1
+```
+
 ### Additional Array Functions
 - `kato(array, start, end)` - কাটো - Extract subarray
 - `ulto(array)` - উল্টো - Reverse array (returns new array)
@@ -899,17 +995,70 @@ dekho(ache(arr, 4));        // Output: sotti
 dekho(ache(arr, 9));        // Output: mittha
 ```
 
+### Advanced Array Functions
+- `khojo_prothom(arr, fn)` - Find first matching element
+- `khojo_index(arr, fn)` - Find first matching index
+- `khojo_shesh(arr, fn)` - Find last matching element
+- `khojo_shesh_index(arr, fn)` - Find last matching index
+- `prottek(arr, fn)` - Every element satisfies condition
+- `kono(arr, fn)` - At least one element satisfies condition
+- `somtol_manchitro(arr, fn)` - Map then flatten one level
+- `somtol(arr, depth?)` - Flatten nested arrays
+- `joro_array(arr, ...items)` - Concat arrays/values
+- `sonkuchito_dan(arr, fn, init?)` - Reduce from right
+- `array_at(arr, index)` - Index access with negative support
+- `shesh_index_of(arr, value)` - Last index of value
+
+```banglacode
+dekho(khojo_prothom([1, 3, 8], kaj(x) { ferao x > 5; }));      // Output: 8
+dekho(khojo_index([1, 3, 8], kaj(x) { ferao x > 5; }));        // Output: 2
+dekho(prottek([2, 4, 6], kaj(x) { ferao x % 2 == 0; }));       // Output: sotti
+dekho(kono([1, 3, 4], kaj(x) { ferao x % 2 == 0; }));          // Output: sotti
+dekho(joro_array([1,2], [3], 4));                              // Output: [1, 2, 3, 4]
+dekho(somtol([1, [2, [3]]], 2));                               // Output: [1, 2, 3]
+dekho(array_at([10, 20, 30], -1));                             // Output: 30
+dekho(shesh_index_of([1, 2, 3, 2], 2));                        // Output: 3
+```
+
 ### Utility Functions
 - `somoy()` - সময় - Current timestamp in milliseconds
 - `ghum(ms)` - ঘুম - Pause execution for milliseconds
 - `nao(prompt)` - নাও - Read user input from console
 - `bondho(code)` - বন্ধ - Exit program with code
+- `purno_sonkhya(text, radix?)` - Parse integer
+- `doshomik_sonkhya(text)` - Parse float
+- `sonkhya_na(x)` - Check NaN
+- `sonkhya_shimito(x)` - Check finite number
+- `uri_encode(uri)` - Encode URI
+- `uri_decode(uri)` - Decode URI
+- `uri_ongsho_encode(text)` - Encode URI component
+- `uri_ongsho_decode(text)` - Decode URI component
+- `tarikh_ekhon()` - Current timestamp (ms)
+- `tarikh_parse(text)` - Parse date string to timestamp
+- `tarikh_format(ts, layout?)` - Format timestamp
+- `regex_test(pattern, text)` - Regex boolean check
+- `regex_match(pattern, text)` - First match + captures
+- `regex_match_all(pattern, text)` - All matches
+- `regex_search(pattern, text)` - First match index
+- `regex_replace(pattern, text, replacement)` - Regex replacement
+- `match(text, pattern, flags?)` - String-like regex first match
+- `matchAll(text, pattern, flags?)` - String-like regex all matches
+- `search(text, pattern, flags?)` - String-like regex search index
+- `setTimeout(fn, ms, ...args)` - Run callback after delay
+- `setInterval(fn, ms, ...args)` - Run callback repeatedly
+- `clearTimeout(id)` - Cancel timeout
+- `clearInterval(id)` - Cancel interval
 
 ```banglacode
 dekho(somoy());             // Output: 1234567890123
 ghum(1000);                 // Pauses for 1 second
 dhoro naam = nao("Tomar naam ki: ");
 dekho("Hello", naam);
+dekho(purno_sonkhya("42"));                // Output: 42
+dekho(doshomik_sonkhya("3.14abc"));        // Output: 3.14
+dekho(sonkhya_na("abc"));                  // Output: sotti
+dekho(uri_ongsho_encode("hello world"));   // Output: hello%20world
+dekho(regex_test("[a-z]+", "bangla"));     // Output: sotti
 ```
 
 ### File Functions

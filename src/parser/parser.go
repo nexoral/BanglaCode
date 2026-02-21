@@ -27,15 +27,17 @@ type Parser struct {
 
 // New creates a new parser from a lexer
 func New(l *lexer.Lexer) *Parser {
-	p := &Parser{
-		l:      l,
-		errors: []string{},
-	}
-
+	p := &Parser{l: l, errors: []string{}}
 	p.prefixParseFns = make(map[lexer.TokenType]prefixParseFn)
 	p.infixParseFns = make(map[lexer.TokenType]infixParseFn)
+	p.registerPrefixParsers()
+	p.registerInfixParsers()
+	p.nextToken()
+	p.nextToken()
+	return p
+}
 
-	// Register prefix parse functions
+func (p *Parser) registerPrefixParsers() {
 	p.registerPrefix(lexer.IDENT, p.parseIdentifier)
 	p.registerPrefix(lexer.NUMBER, p.parseNumberLiteral)
 	p.registerPrefix(lexer.STRING, p.parseStringLiteral)
@@ -54,8 +56,10 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(lexer.OPEKHA, p.parseAwaitExpression)
 	p.registerPrefix(lexer.NOTUN, p.parseNewExpression)
 	p.registerPrefix(lexer.DOTDOTDOT, p.parseSpreadElement)
+	p.registerPrefix(lexer.DELETE, p.parseDeleteExpression)
+}
 
-	// Register infix parse functions
+func (p *Parser) registerInfixParsers() {
 	p.registerInfix(lexer.PLUS, p.parseBinaryExpression)
 	p.registerInfix(lexer.MINUS, p.parseBinaryExpression)
 	p.registerInfix(lexer.ASTERISK, p.parseBinaryExpression)
@@ -69,6 +73,8 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(lexer.GTE, p.parseBinaryExpression)
 	p.registerInfix(lexer.EBONG, p.parseBinaryExpression)
 	p.registerInfix(lexer.BA, p.parseBinaryExpression)
+	p.registerInfix(lexer.IN, p.parseBinaryExpression)
+	p.registerInfix(lexer.INSTANCEOF, p.parseBinaryExpression)
 	p.registerInfix(lexer.ASSIGN, p.parseAssignmentExpression)
 	p.registerInfix(lexer.PLUS_ASSIGN, p.parseAssignmentExpression)
 	p.registerInfix(lexer.MINUS_ASSIGN, p.parseAssignmentExpression)
@@ -77,12 +83,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(lexer.LPAREN, p.parseCallExpression)
 	p.registerInfix(lexer.LBRACKET, p.parseMemberExpression)
 	p.registerInfix(lexer.DOT, p.parseMemberExpression)
-
-	// Read two tokens to initialize curToken and peekToken
-	p.nextToken()
-	p.nextToken()
-
-	return p
+	p.registerInfix(lexer.ARROW, p.parseArrowFunctionExpression)
 }
 
 // Errors returns the list of parsing errors

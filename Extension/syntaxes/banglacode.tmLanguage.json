@@ -109,7 +109,7 @@
         },
         {
           "name": "keyword.control.loop.js",
-          "match": "\\b(jotokkhon|ghuriye|thamo|chharo)\\b"
+          "match": "\\b(jotokkhon|ghuriye|thamo|chharo|do)\\b"
         },
         {
           "name": "storage.type.function.js",
@@ -164,6 +164,10 @@
           "match": "\\b(ebong|ba|na)\\b"
         },
         {
+          "name": "keyword.operator.js",
+          "match": "\\b(in|of|instanceof|delete)\\b"
+        },
+        {
           "name": "keyword.control.switch.js",
           "match": "\\b(bikolpo|khetre|manchito)\\b"
         }
@@ -177,7 +181,7 @@
         },
         {
           "name": "keyword.control.loop.js",
-          "match": "\\b(jotokkhon|ghuriye|thamo|chharo)\\b"
+          "match": "\\b(jotokkhon|ghuriye|thamo|chharo|do)\\b"
         },
         {
           "name": "keyword.control.trycatch.js",
@@ -206,6 +210,10 @@
         {
           "name": "keyword.operator.assignment.js",
           "match": "="
+        },
+        {
+          "name": "keyword.operator.arrow.js",
+          "match": "=>"
         }
       ]
     },
@@ -220,16 +228,32 @@
           "match": "\\b(dhoron|lipi|sonkha|dorghyo)\\b"
         },
         {
+          "name": "support.function.js",
+          "match": "\\b(purno_sonkhya|doshomik_sonkhya|sonkhya_na|sonkhya_shimito|uri_encode|uri_decode|uri_ongsho_encode|uri_ongsho_decode)\\b"
+        },
+        {
+          "name": "support.function.js",
+          "match": "\\b(tarikh_ekhon|tarikh_parse|tarikh_format|regex_test|regex_match|regex_match_all|regex_search|regex_replace|match|matchAll|search)\\b"
+        },
+        {
           "name": "support.function.array.js",
           "match": "\\b(manchitro|chhanno|sonkuchito|proti)\\b"
         },
         {
+          "name": "support.function.array.js",
+          "match": "\\b(khojo_prothom|khojo_index|khojo_shesh|khojo_shesh_index|prottek|kono|somtol_manchitro|array_at|shesh_index_of|joro_array|somtol|sonkuchito_dan)\\b"
+        },
+        {
           "name": "support.function.object.js",
-          "match": "\\b(maan|jora|mishra)\\b"
+          "match": "\\b(maan|jora|mishra|nijer_ache|jora_theke|ekoi_ki|notun_map|joma)\\b"
         },
         {
           "name": "support.function.js",
           "match": "\\b(boroHater|chotoHater|chhanto|bhag|joro|khojo|angsho|bodlo)\\b"
+        },
+        {
+          "name": "support.function.js",
+          "match": "\\b(ache_text|shuru_diye|shesh_diye|baro|agey_bhoro|pichoney_bhoro|okkhor|text_at|okkhor_code|codepoint_at|tulona_text|shadharon_text|chhanto_shuru|chhanto_shesh|shesh_khojo)\\b"
         },
         {
           "name": "support.function.js",
@@ -241,7 +265,7 @@
         },
         {
           "name": "support.function.js",
-          "match": "\\b(somoy|ghum|nao|bondho|poro|lekho)\\b"
+          "match": "\\b(somoy|ghum|nao|bondho|poro|lekho|setTimeout|setInterval|clearTimeout|clearInterval)\\b"
         },
         {
           "name": "support.function.js",

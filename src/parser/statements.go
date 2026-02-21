@@ -20,6 +20,8 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseWhileStatement()
 	case lexer.GHURIYE:
 		return p.parseForStatement()
+	case lexer.DO:
+		return p.parseDoWhileStatement()
 	case lexer.FERAO:
 		return p.parseReturnStatement()
 	case lexer.SRENI:
@@ -44,7 +46,19 @@ func (p *Parser) parseStatement() ast.Statement {
 }
 
 // parseVariableDeclaration parses "dhoro x = value", "sthir x = value", or "bishwo x = value"
-func (p *Parser) parseVariableDeclaration(isConstant bool, isGlobal bool) *ast.VariableDeclaration {
+func (p *Parser) parseVariableDeclaration(isConstant bool, isGlobal bool) ast.Statement {
+	declToken := p.curToken
+
+	if p.peekTokenIs(lexer.LBRACKET) {
+		p.nextToken()
+		return p.parseArrayDestructuringDeclaration(declToken, isConstant, isGlobal)
+	}
+
+	if p.peekTokenIs(lexer.LBRACE) {
+		p.nextToken()
+		return p.parseObjectDestructuringDeclaration(declToken, isConstant, isGlobal)
+	}
+
 	stmt := &ast.VariableDeclaration{
 		Token:      p.curToken,
 		IsConstant: isConstant,
@@ -140,15 +154,28 @@ func (p *Parser) parseWhileStatement() *ast.WhileStatement {
 	return stmt
 }
 
-// parseForStatement parses "ghuriye (init; condition; update) { }"
-func (p *Parser) parseForStatement() *ast.ForStatement {
-	stmt := &ast.ForStatement{Token: p.curToken}
+// parseForStatement parses:
+// - classic for: ghuriye (init; condition; update) { }
+// - for...of: ghuriye (dhoro item of iterable) { }
+// - for...in: ghuriye (dhoro key in object) { }
+func (p *Parser) parseForStatement() ast.Statement {
+	forToken := p.curToken
 
 	if !p.expectPeek(lexer.LPAREN) {
 		return nil
 	}
 
 	p.nextToken()
+
+	if iterStmt := p.parseForInOrForOf(forToken); iterStmt != nil {
+		return iterStmt
+	}
+
+	return p.parseClassicForStatement(forToken)
+}
+
+func (p *Parser) parseClassicForStatement(forToken lexer.Token) ast.Statement {
+	stmt := &ast.ForStatement{Token: forToken}
 
 	// Parse init statement
 	if !p.curTokenIs(lexer.SEMICOLON) {
@@ -412,73 +439,4 @@ func (p *Parser) parseThrowStatement() *ast.ThrowStatement {
 	}
 
 	return stmt
-}
-
-// parseSwitchStatement parses "bikolpo (expression) { khetre value: ... manchito: ... }"
-func (p *Parser) parseSwitchStatement() *ast.SwitchStatement {
-	stmt := &ast.SwitchStatement{Token: p.curToken}
-
-	// Expect opening parenthesis
-	if !p.expectPeek(lexer.LPAREN) {
-		return nil
-	}
-
-	// Parse the expression to match against
-	p.nextToken()
-	stmt.Expr = p.parseExpression(LOWEST)
-
-	// Expect closing parenthesis
-	if !p.expectPeek(lexer.RPAREN) {
-		return nil
-	}
-
-	// Expect opening brace
-	if !p.expectPeek(lexer.LBRACE) {
-		return nil
-	}
-
-	// Parse cases and default
-	stmt.Cases = []*ast.CaseClause{}
-
-	p.nextToken()
-	for !p.curTokenIs(lexer.RBRACE) && !p.curTokenIs(lexer.EOF) {
-		if p.curTokenIs(lexer.KHETRE) {
-			caseClause := p.parseCaseClause()
-			if caseClause != nil {
-				stmt.Cases = append(stmt.Cases, caseClause)
-			}
-			p.nextToken()
-		} else if p.curTokenIs(lexer.MANCHITO) {
-			// Parse default case (no colon in simplified syntax)
-			// Expect opening brace
-			if !p.expectPeek(lexer.LBRACE) {
-				return nil
-			}
-
-			stmt.Default = p.parseBlockStatement()
-			p.nextToken()
-		} else {
-			return nil
-		}
-	}
-
-	return stmt
-}
-
-// parseCaseClause parses a single "khetre value { ... }" clause
-func (p *Parser) parseCaseClause() *ast.CaseClause {
-	clause := &ast.CaseClause{Token: p.curToken}
-
-	// Move to the value expression
-	p.nextToken()
-	clause.Value = p.parseExpression(LOWEST)
-
-	// Expect opening brace (no colon in simplified syntax)
-	if !p.expectPeek(lexer.LBRACE) {
-		return nil
-	}
-
-	clause.Body = p.parseBlockStatement()
-
-	return clause
 }

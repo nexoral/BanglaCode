@@ -17,6 +17,48 @@ export default function Functions() {
         or &quot;task&quot;). Functions are first-class values and support closures.
       </p>
 
+      <h2>New Utility Methods</h2>
+
+      <p>
+        BanglaCode now includes additional JavaScript-style helpers for arrays, strings, number parsing,
+        and URI encoding.
+      </p>
+
+      <CodeBlock
+        code={`// Array search helpers
+dhoro first = khojo_prothom([1, 3, 8, 10], kaj(x) { ferao x > 5; });      // 8
+dhoro idx = khojo_index([1, 3, 8, 10], kaj(x) { ferao x > 5; });           // 2
+dhoro last = khojo_shesh([1, 3, 8, 10], kaj(x) { ferao x % 2 == 0; });     // 10
+
+// String helpers
+ache_text("banglacode", "code");        // sotti
+shuru_diye("banglacode", "bang");       // sotti
+shesh_diye("banglacode", "code");       // sotti
+baro("ha", 3);                          // "hahaha"
+text_at("bangla", -1);                  // "a"
+
+// Number + URI helpers
+purno_sonkhya("42");                    // 42
+doshomik_sonkhya("3.14abc");            // 3.14
+sonkhya_na("abc");                      // sotti
+uri_ongsho_encode("hello world");       // "hello%20world"
+
+// Date + Regex helpers
+dhoro ts = tarikh_ekhon();
+tarikh_format(ts, "2006-01-02");
+regex_test("[a-z]+", "bangla");         // sotti
+regex_search("la", "bangla");           // 4
+
+// Object helpers
+nijer_ache({a: 1}, "a");                // sotti
+jora_theke([["x", 10], ["y", 20]]);     // {x: 10, y: 20}
+ekoi_ki(1, 1);                           // sotti
+
+// Timers
+dhoro id = setInterval(kaj() { dekho("tick"); }, 1000);
+clearInterval(id);`}
+      />
+
       <h2>Defining Functions</h2>
 
       <p>

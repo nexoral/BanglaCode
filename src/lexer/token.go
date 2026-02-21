@@ -41,6 +41,7 @@ const (
 
 	// Logical operators
 	BANG = "!"
+	IN   = "IN"
 
 	// Compound assignment
 	PLUS_ASSIGN     = "+="
@@ -53,6 +54,7 @@ const (
 	SEMICOLON = ";"
 	COLON     = ":"
 	DOT       = "."
+	ARROW     = "=>"
 
 	LPAREN    = "("
 	RPAREN    = ")"
@@ -95,6 +97,10 @@ const (
 	BIKOLPO    = "BIKOLPO"    // switch (বিকল্প - alternative)
 	KHETRE     = "KHETRE"     // case (ক্ষেত্রে - in case of)
 	MANCHITO   = "MANCHITO"   // default (মানচিত্র - default)
+	DO         = "DO"         // do
+	INSTANCEOF = "INSTANCEOF" // instanceof
+	DELETE     = "DELETE"     // delete
+	OF         = "OF"         // of
 )
 
 // keywords maps Banglish keywords to their token types
@@ -131,6 +137,11 @@ var keywords = map[string]TokenType{
 	"bikolpo":    BIKOLPO,
 	"khetre":     KHETRE,
 	"manchito":   MANCHITO,
+	"do":         DO,
+	"in":         IN,
+	"instanceof": INSTANCEOF,
+	"delete":     DELETE,
+	"of":         OF,
 }
 
 // LookupIdent checks if an identifier is a keyword

@@ -24,7 +24,13 @@ export default function Syntax() {
               { k: "dhoro", m: "hold/var", e: "var/let" },
               { k: "jodi", m: "if", e: "if" },
               { k: "nahole", m: "else", e: "else" },
+              { k: "jotokkhon", m: "while", e: "while" },
+              { k: "do", m: "do once then loop", e: "do...while" },
               { k: "ghuriye", m: "loop", e: "for" },
+              { k: "of", m: "iterate values", e: "of" },
+              { k: "in", m: "property/index check", e: "in" },
+              { k: "instanceof", m: "instance check", e: "instanceof" },
+              { k: "delete", m: "delete key/index", e: "delete" },
               { k: "kaj", m: "work", e: "function" },
               { k: "ferao", m: "return", e: "return" },
               { k: "dekho", m: "see/print", e: "print" },
@@ -45,6 +51,18 @@ export default function Syntax() {
         dhoro name = "Rahim";<br />
         dhoro age = 24;<br />
         dhoro isStudent = sotti; <span className="text-muted-foreground">// true</span>
+      </div>
+
+      <h2>New Core Syntax</h2>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm border border-border">
+        do {"{"}<br />
+        &nbsp;&nbsp;dekho("run once");<br />
+        {"}"} jotokkhon (mittha);<br /><br />
+        dhoro obj = {"{"}a: 1{"}"};<br />
+        dekho("a" in obj);<br />
+        delete obj.a;<br /><br />
+        dhoro double = x =&gt; x * 2;<br />
+        dhoro [a, b] = [10, 20];
       </div>
 
       <div className="pt-8">

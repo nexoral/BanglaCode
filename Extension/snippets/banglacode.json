@@ -1351,5 +1351,173 @@
       "$0"
     ],
     "description": "Complete .env usage example"
+  },
+  "Array Find First": {
+    "prefix": "khojo-prothom",
+    "body": [
+      "dhoro ${1:item} = khojo_prothom(${2:arr}, kaj(${3:x}) {",
+      "\tferao ${3:x} > ${4:0};",
+      "});",
+      "$0"
+    ],
+    "description": "Find first matching element in array"
+  },
+  "Array FlatMap": {
+    "prefix": "somtol-manchitro",
+    "body": [
+      "dhoro ${1:result} = somtol_manchitro(${2:arr}, kaj(${3:x}) {",
+      "\tferao [${3:x}, ${3:x} * ${4:2}];",
+      "});",
+      "$0"
+    ],
+    "description": "Map then flatten one level"
+  },
+  "String Includes": {
+    "prefix": "ache-text",
+    "body": [
+      "jodi (ache_text(${1:text}, ${2:query})) {",
+      "\t${3:// found}",
+      "}",
+      "$0"
+    ],
+    "description": "Check if string contains substring"
+  },
+  "Parse Int": {
+    "prefix": "purno-sonkhya",
+    "body": [
+      "dhoro ${1:value} = purno_sonkhya(${2:text});",
+      "$0"
+    ],
+    "description": "Parse integer from string"
+  },
+  "URI Encode Component": {
+    "prefix": "uri-encode",
+    "body": [
+      "dhoro ${1:encoded} = uri_ongsho_encode(${2:text});",
+      "$0"
+    ],
+    "description": "Encode URI component"
+  },
+  "Do-While Loop": {
+    "prefix": "do-jotokkhon",
+    "body": [
+      "do {",
+      "\t${1:// code}",
+      "} jotokkhon (${2:condition});",
+      "$0"
+    ],
+    "description": "Do-while loop"
+  },
+  "Delete Property": {
+    "prefix": "delete",
+    "body": [
+      "delete ${1:obj}.${2:prop};",
+      "$0"
+    ],
+    "description": "Delete object property"
+  },
+  "Array Flat": {
+    "prefix": "somtol",
+    "body": [
+      "dhoro ${1:flat} = somtol(${2:arr}, ${3:1});",
+      "$0"
+    ],
+    "description": "Flatten nested array"
+  },
+  "String Compare": {
+    "prefix": "tulona-text",
+    "body": [
+      "dhoro ${1:cmp} = tulona_text(${2:left}, ${3:right});",
+      "$0"
+    ],
+    "description": "Compare two strings"
+  },
+  "Arrow Function": {
+    "prefix": "arrow",
+    "body": [
+      "dhoro ${1:fn} = ${2:x} => ${3:x};",
+      "$0"
+    ],
+    "description": "Arrow function with implicit return"
+  },
+  "For Of Loop": {
+    "prefix": "for-of",
+    "body": [
+      "ghuriye (${1:item} of ${2:array}) {",
+      "\t${3:// code}",
+      "}",
+      "$0"
+    ],
+    "description": "for...of loop"
+  },
+  "For In Loop": {
+    "prefix": "for-in",
+    "body": [
+      "ghuriye (${1:key} in ${2:obj}) {",
+      "\t${3:// code}",
+      "}",
+      "$0"
+    ],
+    "description": "for...in loop"
+  },
+  "Date Now": {
+    "prefix": "date-now",
+    "body": [
+      "dhoro ${1:ts} = tarikh_ekhon();",
+      "$0"
+    ],
+    "description": "Current timestamp in milliseconds"
+  },
+  "Regex Test": {
+    "prefix": "regex-test",
+    "body": [
+      "dhoro ${1:ok} = regex_test(\"${2:pattern}\", ${3:text});",
+      "$0"
+    ],
+    "description": "Regex test against text"
+  },
+  "Object HasOwn": {
+    "prefix": "nijer-ache",
+    "body": [
+      "dhoro ${1:has} = nijer_ache(${2:obj}, ${3:\"key\"});",
+      "$0"
+    ],
+    "description": "Check own property existence on map"
+  },
+  "Array Destructuring": {
+    "prefix": "dhoro-array",
+    "body": [
+      "dhoro [${1:a}, ${2:b}] = ${3:arr};",
+      "$0"
+    ],
+    "description": "Array destructuring declaration"
+  },
+  "Object Destructuring": {
+    "prefix": "dhoro-obj",
+    "body": [
+      "dhoro {${1:x}, ${2:y}} = ${3:obj};",
+      "$0"
+    ],
+    "description": "Object destructuring declaration"
+  },
+  "Set Timeout": {
+    "prefix": "set-timeout",
+    "body": [
+      "setTimeout(kaj() {",
+      "\t${1:// callback}",
+      "}, ${2:1000});",
+      "$0"
+    ],
+    "description": "Schedule callback once"
+  },
+  "Set Interval": {
+    "prefix": "set-interval",
+    "body": [
+      "dhoro ${1:id} = setInterval(kaj() {",
+      "\t${2:// repeated callback}",
+      "}, ${3:1000});",
+      "$0"
+    ],
+    "description": "Schedule repeated callback"
   }
 }
