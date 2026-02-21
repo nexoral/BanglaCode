@@ -28,23 +28,33 @@ func evalFunctionCall(handler *object.Function, args []object.Object) object.Obj
 
 // Eval evaluates an AST node and returns the resulting object
 func Eval(node ast.Node, env *object.Environment) object.Object {
+	if out, ok := evalStatementNode(node, env); ok {
+		return out
+	}
+	if out, ok := evalControlNode(node, env); ok {
+		return out
+	}
+	if out, ok := evalLiteralNode(node, env); ok {
+		return out
+	}
+	if out, ok := evalExpressionNode(node, env); ok {
+		return out
+	}
+	return nil
+}
+
+func evalStatementNode(node ast.Node, env *object.Environment) (object.Object, bool) {
 	switch node := node.(type) {
-
-	// ==================== Statements ====================
-
 	case *ast.Program:
-		return evalProgram(node.Statements, env)
-
+		return evalProgram(node.Statements, env), true
 	case *ast.ExpressionStatement:
-		return Eval(node.Expression, env)
-
+		return Eval(node.Expression, env), true
 	case *ast.BlockStatement:
-		return evalBlockStatement(node, env)
-
+		return evalBlockStatement(node, env), true
 	case *ast.VariableDeclaration:
 		val := Eval(node.Value, env)
 		if isError(val) {
-			return val
+			return val, true
 		}
 		if node.IsConstant {
 			env.SetConstant(node.Name.Value, val)
@@ -53,146 +63,157 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		} else {
 			env.Set(node.Name.Value, val)
 		}
-		return val
+		return val, true
+	case *ast.ArrayDestructuringDeclaration:
+		return evalArrayDestructuringDeclaration(node, env), true
+	case *ast.ObjectDestructuringDeclaration:
+		return evalObjectDestructuringDeclaration(node, env), true
+	}
+	return evalFlowStatementNode(node, env)
+}
 
+func evalFlowStatementNode(node ast.Node, env *object.Environment) (object.Object, bool) {
+	switch node := node.(type) {
 	case *ast.IfStatement:
-		return evalIfStatement(node, env)
-
+		return evalIfStatement(node, env), true
 	case *ast.WhileStatement:
-		return evalWhileStatement(node, env)
-
+		return evalWhileStatement(node, env), true
+	case *ast.DoWhileStatement:
+		return evalDoWhileStatement(node, env), true
 	case *ast.ForStatement:
-		return evalForStatement(node, env)
-
+		return evalForStatement(node, env), true
+	case *ast.ForOfStatement:
+		return evalForOfStatement(node, env), true
+	case *ast.ForInStatement:
+		return evalForInStatement(node, env), true
 	case *ast.ReturnStatement:
 		val := Eval(node.ReturnValue, env)
 		if isError(val) {
-			return val
+			return val, true
 		}
-		return &object.ReturnValue{Value: val}
-
+		return &object.ReturnValue{Value: val}, true
 	case *ast.BreakStatement:
-		return object.BREAK
-
+		return object.BREAK, true
 	case *ast.ContinueStatement:
-		return object.CONTINUE
-
+		return object.CONTINUE, true
 	case *ast.SwitchStatement:
-		return evalSwitchStatement(node, env)
+		return evalSwitchStatement(node, env), true
+	}
+	return nil, false
+}
 
-	// ==================== Classes & Modules ====================
-
+func evalControlNode(node ast.Node, env *object.Environment) (object.Object, bool) {
+	switch node := node.(type) {
 	case *ast.ClassDeclaration:
-		return evalClassDeclaration(node, env)
-
+		return evalClassDeclaration(node, env), true
 	case *ast.ImportStatement:
-		return evalImportStatement(node, env)
-
+		return evalImportStatement(node, env), true
 	case *ast.ExportStatement:
-		return evalExportStatement(node, env)
-
-	// ==================== Error Handling ====================
-
+		return evalExportStatement(node, env), true
 	case *ast.TryCatchStatement:
-		return evalTryCatchStatement(node, env)
-
+		return evalTryCatchStatement(node, env), true
 	case *ast.ThrowStatement:
-		return evalThrowStatement(node, env)
+		return evalThrowStatement(node, env), true
+	}
+	return nil, false
+}
 
-	// ==================== Literals ====================
-
+func evalLiteralNode(node ast.Node, env *object.Environment) (object.Object, bool) {
+	switch node := node.(type) {
 	case *ast.NumberLiteral:
-		return &object.Number{Value: node.Value}
-
+		return &object.Number{Value: node.Value}, true
 	case *ast.StringLiteral:
-		return &object.String{Value: node.Value}
-
+		return &object.String{Value: node.Value}, true
 	case *ast.TemplateLiteral:
-		return evalTemplateLiteral(node, env)
-
+		return evalTemplateLiteral(node, env), true
 	case *ast.BooleanLiteral:
-		return object.NativeBoolToBooleanObject(node.Value)
-
+		return object.NativeBoolToBooleanObject(node.Value), true
 	case *ast.NullLiteral:
-		return object.NULL
-
+		return object.NULL, true
 	case *ast.ArrayLiteral:
 		elements := evalExpressions(node.Elements, env)
 		if len(elements) == 1 && isError(elements[0]) {
-			return elements[0]
+			return elements[0], true
 		}
-		return &object.Array{Elements: elements}
-
+		return &object.Array{Elements: elements}, true
 	case *ast.MapLiteral:
-		return evalMapLiteral(node, env)
+		return evalMapLiteral(node, env), true
+	}
+	return nil, false
+}
 
-	// ==================== Expressions ====================
-
+func evalExpressionNode(node ast.Node, env *object.Environment) (object.Object, bool) {
+	switch node := node.(type) {
 	case *ast.Identifier:
-		return evalIdentifier(node, env)
-
+		return evalIdentifier(node, env), true
 	case *ast.UnaryExpression:
 		right := Eval(node.Right, env)
 		if isError(right) {
-			return right
+			return right, true
 		}
-		return evalUnaryExpression(node.Operator, right)
-
+		return evalUnaryExpression(node.Operator, right), true
 	case *ast.BinaryExpression:
-		left := Eval(node.Left, env)
-		if isError(left) {
-			return left
-		}
-		right := Eval(node.Right, env)
-		if isError(right) {
-			return right
-		}
-		return evalBinaryExpression(node.Operator, left, right)
-
+		return evalBinaryNode(node, env), true
+	case *ast.DeleteExpression:
+		return evalDeleteExpression(node, env), true
 	case *ast.AssignmentExpression:
-		return evalAssignmentExpression(node, env)
-
+		return evalAssignmentExpression(node, env), true
 	case *ast.CallExpression:
-		function := Eval(node.Function, env)
-		if isError(function) {
-			return function
-		}
-		args := evalExpressions(node.Arguments, env)
-		if len(args) == 1 && isError(args[0]) {
-			return args[0]
-		}
-		return applyFunctionWithPosition(function, args, env, node.Token.Line, node.Token.Column, node.Function)
-
+		return evalCallExpression(node, env), true
 	case *ast.MemberExpression:
-		return evalMemberExpression(node, env)
-
+		return evalMemberExpression(node, env), true
 	case *ast.FunctionLiteral:
-		params := node.Parameters
-		body := node.Body
-		name := ""
-		if node.Name != nil {
-			name = node.Name.Value
-		}
-		fn := &object.Function{Parameters: params, RestParameter: node.RestParameter, Env: env, Body: body, Name: name}
-		if name != "" {
-			env.Set(name, fn)
-		}
-		return fn
-
+		return buildFunctionLiteral(node, env), true
 	case *ast.NewExpression:
-		return evalNewExpression(node, env)
-
+		return evalNewExpression(node, env), true
 	case *ast.SpreadElement:
-		return evalSpreadElement(node, env)
-
-	// ==================== Async/Await ====================
-
+		return evalSpreadElement(node, env), true
 	case *ast.AsyncFunctionLiteral:
-		return evalAsyncFunctionLiteral(node, env)
-
+		return evalAsyncFunctionLiteral(node, env), true
 	case *ast.AwaitExpression:
-		return evalAwaitExpression(node, env)
+		return evalAwaitExpression(node, env), true
 	}
+	return nil, false
+}
 
-	return nil
+func evalBinaryNode(node *ast.BinaryExpression, env *object.Environment) object.Object {
+	left := Eval(node.Left, env)
+	if isError(left) {
+		return left
+	}
+	right := Eval(node.Right, env)
+	if isError(right) {
+		return right
+	}
+	return evalBinaryExpression(node.Operator, left, right)
+}
+
+func evalCallExpression(node *ast.CallExpression, env *object.Environment) object.Object {
+	function := Eval(node.Function, env)
+	if isError(function) {
+		return function
+	}
+	args := evalExpressions(node.Arguments, env)
+	if len(args) == 1 && isError(args[0]) {
+		return args[0]
+	}
+	return applyFunctionWithPosition(function, args, env, node.Token.Line, node.Token.Column, node.Function)
+}
+
+func buildFunctionLiteral(node *ast.FunctionLiteral, env *object.Environment) object.Object {
+	name := ""
+	if node.Name != nil {
+		name = node.Name.Value
+	}
+	fn := &object.Function{
+		Parameters:    node.Parameters,
+		RestParameter: node.RestParameter,
+		Env:           env,
+		Body:          node.Body,
+		Name:          name,
+	}
+	if name != "" {
+		env.Set(name, fn)
+	}
+	return fn
 }

@@ -7,8 +7,10 @@ const (
 	_ int = iota
 	LOWEST
 	ASSIGN      // =, +=, -=, *=, /=
+	ARROWP      // =>
 	OR          // ba (||)
 	AND         // ebong (&&)
+	INOP        // in, instanceof
 	EQUALS      // ==, !=
 	LESSGREATER // <, >, <=, >=
 	SUM         // +, -
@@ -25,8 +27,11 @@ var precedences = map[lexer.TokenType]int{
 	lexer.MINUS_ASSIGN:    ASSIGN,
 	lexer.ASTERISK_ASSIGN: ASSIGN,
 	lexer.SLASH_ASSIGN:    ASSIGN,
+	lexer.ARROW:           ARROWP,
 	lexer.BA:              OR,
 	lexer.EBONG:           AND,
+	lexer.IN:              INOP,
+	lexer.INSTANCEOF:      INOP,
 	lexer.EQ:              EQUALS,
 	lexer.NOT_EQ:          EQUALS,
 	lexer.LT:              LESSGREATER,

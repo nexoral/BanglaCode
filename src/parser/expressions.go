@@ -95,15 +95,52 @@ func (p *Parser) parseUnaryExpression() ast.Expression {
 
 // parseGroupedExpression parses (expression)
 func (p *Parser) parseGroupedExpression() ast.Expression {
+	if p.peekTokenIs(lexer.RPAREN) {
+		return p.parseEmptyArrowParams()
+	}
 	p.nextToken()
-
-	exp := p.parseExpression(LOWEST)
-
+	first := p.parseExpression(LOWEST)
+	if first == nil {
+		return nil
+	}
+	if ident, ok := first.(*ast.Identifier); ok {
+		return p.parseGroupedIdentifierOrArrow(first, ident)
+	}
 	if !p.expectPeek(lexer.RPAREN) {
 		return nil
 	}
+	return first
+}
 
-	return exp
+func (p *Parser) parseEmptyArrowParams() ast.Expression {
+	lp := p.curToken
+	p.nextToken()
+	if p.peekTokenIs(lexer.ARROW) {
+		return &ast.ArrowParamList{Token: lp, Params: []*ast.Identifier{}}
+	}
+	return nil
+}
+
+func (p *Parser) parseGroupedIdentifierOrArrow(first ast.Expression, ident *ast.Identifier) ast.Expression {
+	params := []*ast.Identifier{ident}
+	for p.peekTokenIs(lexer.COMMA) {
+		p.nextToken()
+		if !p.expectPeek(lexer.IDENT) {
+			return nil
+		}
+		params = append(params, &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal})
+	}
+	if !p.expectPeek(lexer.RPAREN) {
+		return nil
+	}
+	if p.peekTokenIs(lexer.ARROW) {
+		return &ast.ArrowParamList{Token: p.curToken, Params: params}
+	}
+	if len(params) == 1 {
+		return first
+	}
+	p.errors = append(p.errors, "grouped identifier list is only valid for arrow functions")
+	return nil
 }
 
 // parseArrayLiteral parses [elements]
@@ -223,54 +260,40 @@ func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 // parseFunctionParametersWithRest parses function parameters including rest parameter
 func (p *Parser) parseFunctionParametersWithRest() ([]*ast.Identifier, *ast.Identifier) {
 	identifiers := []*ast.Identifier{}
-	var restParam *ast.Identifier
 
 	if p.peekTokenIs(lexer.RPAREN) {
 		p.nextToken()
 		return identifiers, nil
 	}
-
 	p.nextToken()
-
-	// Check for rest parameter
 	if p.curTokenIs(lexer.DOTDOTDOT) {
-		if !p.expectPeek(lexer.IDENT) {
-			return nil, nil
-		}
-		restParam = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
-		if !p.expectPeek(lexer.RPAREN) {
-			return nil, nil
-		}
-		return identifiers, restParam
+		return p.parseRestOnlyParameters(identifiers)
 	}
-
 	ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 	identifiers = append(identifiers, ident)
-
 	for p.peekTokenIs(lexer.COMMA) {
 		p.nextToken()
 		p.nextToken()
-
-		// Check for rest parameter
 		if p.curTokenIs(lexer.DOTDOTDOT) {
-			if !p.expectPeek(lexer.IDENT) {
-				return nil, nil
-			}
-			restParam = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
-			if !p.expectPeek(lexer.RPAREN) {
-				return nil, nil
-			}
-			return identifiers, restParam
+			return p.parseRestOnlyParameters(identifiers)
 		}
-
 		ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 		identifiers = append(identifiers, ident)
 	}
-
 	if !p.expectPeek(lexer.RPAREN) {
 		return nil, nil
 	}
+	return identifiers, nil
+}
 
+func (p *Parser) parseRestOnlyParameters(identifiers []*ast.Identifier) ([]*ast.Identifier, *ast.Identifier) {
+	if !p.expectPeek(lexer.IDENT) {
+		return nil, nil
+	}
+	restParam := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	if !p.expectPeek(lexer.RPAREN) {
+		return nil, nil
+	}
 	return identifiers, restParam
 }
 

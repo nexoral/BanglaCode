@@ -53,170 +53,181 @@ func (l *Lexer) peekChar() byte {
 
 // NextToken returns the next token from the input
 func (l *Lexer) NextToken() Token {
-	var tok Token
-
 	l.skipWhitespace()
-
-	// Handle comments
-	if l.ch == '/' && l.peekChar() == '/' {
-		l.skipComment()
+	if l.consumeComment() {
 		return l.NextToken()
 	}
-
-	switch l.ch {
-	case '=':
-		if l.peekChar() == '=' {
-			ch := l.ch
-			line := l.line
-			column := l.column
-			l.readChar()
-			tok = NewToken(EQ, string(ch)+string(l.ch), line, column)
-		} else {
-			tok = NewToken(ASSIGN, string(l.ch), l.line, l.column)
-		}
-	case '+':
-		if l.peekChar() == '=' {
-			ch := l.ch
-			line := l.line
-			column := l.column
-			l.readChar()
-			tok = NewToken(PLUS_ASSIGN, string(ch)+string(l.ch), line, column)
-		} else {
-			tok = NewToken(PLUS, string(l.ch), l.line, l.column)
-		}
-	case '-':
-		if l.peekChar() == '=' {
-			ch := l.ch
-			line := l.line
-			column := l.column
-			l.readChar()
-			tok = NewToken(MINUS_ASSIGN, string(ch)+string(l.ch), line, column)
-		} else {
-			tok = NewToken(MINUS, string(l.ch), l.line, l.column)
-		}
-	case '*':
-		if l.peekChar() == '=' {
-			ch := l.ch
-			line := l.line
-			column := l.column
-			l.readChar()
-			tok = NewToken(ASTERISK_ASSIGN, string(ch)+string(l.ch), line, column)
-		} else {
-			tok = NewToken(ASTERISK, string(l.ch), l.line, l.column)
-		}
-	case '/':
-		if l.peekChar() == '=' {
-			ch := l.ch
-			line := l.line
-			column := l.column
-			l.readChar()
-			tok = NewToken(SLASH_ASSIGN, string(ch)+string(l.ch), line, column)
-		} else {
-			tok = NewToken(SLASH, string(l.ch), l.line, l.column)
-		}
-	case '%':
-		tok = NewToken(PERCENT, string(l.ch), l.line, l.column)
-	case '!':
-		if l.peekChar() == '=' {
-			ch := l.ch
-			line := l.line
-			column := l.column
-			l.readChar()
-			tok = NewToken(NOT_EQ, string(ch)+string(l.ch), line, column)
-		} else {
-			tok = NewToken(BANG, string(l.ch), l.line, l.column)
-		}
-	case '<':
-		if l.peekChar() == '=' {
-			ch := l.ch
-			line := l.line
-			column := l.column
-			l.readChar()
-			tok = NewToken(LTE, string(ch)+string(l.ch), line, column)
-		} else {
-			tok = NewToken(LT, string(l.ch), l.line, l.column)
-		}
-	case '>':
-		if l.peekChar() == '=' {
-			ch := l.ch
-			line := l.line
-			column := l.column
-			l.readChar()
-			tok = NewToken(GTE, string(ch)+string(l.ch), line, column)
-		} else {
-			tok = NewToken(GT, string(l.ch), l.line, l.column)
-		}
-	case ',':
-		tok = NewToken(COMMA, string(l.ch), l.line, l.column)
-	case ';':
-		tok = NewToken(SEMICOLON, string(l.ch), l.line, l.column)
-	case ':':
-		tok = NewToken(COLON, string(l.ch), l.line, l.column)
-	case '.':
-		if l.peekChar() == '.' && l.readPosition+1 < len(l.input) && l.input[l.readPosition+1] == '.' {
-			line := l.line
-			column := l.column
-			l.readChar() // consume second '.'
-			l.readChar() // consume third '.'
-			tok = NewToken(DOTDOTDOT, "...", line, column)
-		} else {
-			tok = NewToken(DOT, string(l.ch), l.line, l.column)
-		}
-	case '(':
-		tok = NewToken(LPAREN, string(l.ch), l.line, l.column)
-	case ')':
-		tok = NewToken(RPAREN, string(l.ch), l.line, l.column)
-	case '{':
-		tok = NewToken(LBRACE, string(l.ch), l.line, l.column)
-	case '}':
-		tok = NewToken(RBRACE, string(l.ch), l.line, l.column)
-	case '[':
-		tok = NewToken(LBRACKET, string(l.ch), l.line, l.column)
-	case ']':
-		tok = NewToken(RBRACKET, string(l.ch), l.line, l.column)
-	case '"':
-		tok.Type = STRING
-		tok.Literal = l.readString('"')
-		tok.Line = l.line
-		tok.Column = l.column
-		l.readChar() // advance past closing quote
+	if tok, ok := l.readStringOrTemplateToken(); ok {
 		return tok
-	case '\'':
-		tok.Type = STRING
-		tok.Literal = l.readString('\'')
-		tok.Line = l.line
-		tok.Column = l.column
-		l.readChar() // advance past closing quote
-		return tok
-	case '`':
-		tok.Type = TEMPLATE
-		tok.Literal = l.readTemplate()
-		tok.Line = l.line
-		tok.Column = l.column
-		l.readChar() // advance past closing backtick
-		return tok
-	case 0:
-		tok = NewToken(EOF, "", l.line, l.column)
-	default:
-		if isLetter(l.ch) {
-			tok.Line = l.line
-			tok.Column = l.column
-			tok.Literal = l.readIdentifier()
-			tok.Type = LookupIdent(tok.Literal)
-			return tok
-		} else if isDigit(l.ch) {
-			tok.Line = l.line
-			tok.Column = l.column
-			tok.Literal = l.readNumber()
-			tok.Type = NUMBER
-			return tok
-		} else {
-			tok = NewToken(ILLEGAL, string(l.ch), l.line, l.column)
-		}
 	}
+	if tok, ok := l.readIdentifierOrNumberToken(); ok {
+		return tok
+	}
+	tok, advance := l.readSymbolToken()
+	if advance {
+		l.readChar()
+	}
+	return tok
+}
 
+func (l *Lexer) consumeComment() bool {
+	if l.ch != '/' || l.peekChar() != '/' {
+		return false
+	}
+	l.skipComment()
+	return true
+}
+
+func (l *Lexer) readStringOrTemplateToken() (Token, bool) {
+	switch l.ch {
+	case '"':
+		return l.readQuotedToken('"'), true
+	case '\'':
+		return l.readQuotedToken('\''), true
+	case '`':
+		return l.readTemplateToken(), true
+	default:
+		return Token{}, false
+	}
+}
+
+func (l *Lexer) readQuotedToken(quote byte) Token {
+	tok := Token{Type: STRING, Line: l.line, Column: l.column}
+	tok.Literal = l.readString(quote)
 	l.readChar()
 	return tok
+}
+
+func (l *Lexer) readTemplateToken() Token {
+	tok := Token{Type: TEMPLATE, Line: l.line, Column: l.column}
+	tok.Literal = l.readTemplate()
+	l.readChar()
+	return tok
+}
+
+func (l *Lexer) readIdentifierOrNumberToken() (Token, bool) {
+	if isLetter(l.ch) {
+		tok := Token{Line: l.line, Column: l.column}
+		tok.Literal = l.readIdentifier()
+		tok.Type = LookupIdent(tok.Literal)
+		return tok, true
+	}
+	if isDigit(l.ch) {
+		tok := Token{Type: NUMBER, Line: l.line, Column: l.column}
+		tok.Literal = l.readNumber()
+		return tok, true
+	}
+	return Token{}, false
+}
+
+func (l *Lexer) readSymbolToken() (Token, bool) {
+	if tok, ok := l.readTwoCharOperator(); ok {
+		return tok, true
+	}
+	switch l.ch {
+	case '.':
+		return l.readDotToken()
+	case 0:
+		return NewToken(EOF, "", l.line, l.column), false
+	case ',', ';', ':', '(', ')', '{', '}', '[', ']', '%':
+		return NewToken(singleCharTokenType(l.ch), string(l.ch), l.line, l.column), true
+	default:
+		return NewToken(ILLEGAL, string(l.ch), l.line, l.column), true
+	}
+}
+
+func (l *Lexer) readTwoCharOperator() (Token, bool) {
+	switch l.ch {
+	case '=':
+		if l.peekChar() == '>' {
+			return l.makeTwoCharToken(ARROW), true
+		}
+		if l.peekChar() == '=' {
+			return l.makeTwoCharToken(EQ), true
+		}
+		return NewToken(ASSIGN, string(l.ch), l.line, l.column), true
+	case '+':
+		if l.peekChar() == '=' {
+			return l.makeTwoCharToken(PLUS_ASSIGN), true
+		}
+		return NewToken(PLUS, string(l.ch), l.line, l.column), true
+	case '-':
+		if l.peekChar() == '=' {
+			return l.makeTwoCharToken(MINUS_ASSIGN), true
+		}
+		return NewToken(MINUS, string(l.ch), l.line, l.column), true
+	case '*':
+		if l.peekChar() == '=' {
+			return l.makeTwoCharToken(ASTERISK_ASSIGN), true
+		}
+		return NewToken(ASTERISK, string(l.ch), l.line, l.column), true
+	case '/':
+		if l.peekChar() == '=' {
+			return l.makeTwoCharToken(SLASH_ASSIGN), true
+		}
+		return NewToken(SLASH, string(l.ch), l.line, l.column), true
+	case '!':
+		if l.peekChar() == '=' {
+			return l.makeTwoCharToken(NOT_EQ), true
+		}
+		return NewToken(BANG, string(l.ch), l.line, l.column), true
+	case '<':
+		if l.peekChar() == '=' {
+			return l.makeTwoCharToken(LTE), true
+		}
+		return NewToken(LT, string(l.ch), l.line, l.column), true
+	case '>':
+		if l.peekChar() == '=' {
+			return l.makeTwoCharToken(GTE), true
+		}
+		return NewToken(GT, string(l.ch), l.line, l.column), true
+	default:
+		return Token{}, false
+	}
+}
+
+func (l *Lexer) makeTwoCharToken(tokenType TokenType) Token {
+	ch := l.ch
+	line := l.line
+	column := l.column
+	l.readChar()
+	return NewToken(tokenType, string(ch)+string(l.ch), line, column)
+}
+
+func (l *Lexer) readDotToken() (Token, bool) {
+	if l.peekChar() == '.' && l.readPosition+1 < len(l.input) && l.input[l.readPosition+1] == '.' {
+		line := l.line
+		column := l.column
+		l.readChar()
+		l.readChar()
+		return NewToken(DOTDOTDOT, "...", line, column), true
+	}
+	return NewToken(DOT, string(l.ch), l.line, l.column), true
+}
+
+func singleCharTokenType(ch byte) TokenType {
+	switch ch {
+	case ',':
+		return COMMA
+	case ';':
+		return SEMICOLON
+	case ':':
+		return COLON
+	case '(':
+		return LPAREN
+	case ')':
+		return RPAREN
+	case '{':
+		return LBRACE
+	case '}':
+		return RBRACE
+	case '[':
+		return LBRACKET
+	case ']':
+		return RBRACKET
+	default:
+		return PERCENT
+	}
 }
 
 // readIdentifier reads an identifier (variable name, keyword, etc.)

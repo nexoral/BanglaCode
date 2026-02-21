@@ -518,6 +518,21 @@ dekho("Fetched users:", dorghyo(result["rows"]));
 - `angsho(str, start, end)` - Substring
 - `bodlo(str, old, new)` - Replace
 - `kato(str, len)` - String length
+- `ache_text(str, part)` - Includes check
+- `shuru_diye(str, prefix)` - Starts with
+- `shesh_diye(str, suffix)` - Ends with
+- `baro(str, count)` - Repeat string
+- `agey_bhoro(str, len, pad?)` - Pad start
+- `pichoney_bhoro(str, len, pad?)` - Pad end
+- `okkhor(str, index)` - Character at index
+- `text_at(str, index)` - Character at index (supports negative index)
+- `okkhor_code(str, index)` - Character code
+- `codepoint_at(str, index)` - Unicode code point at index
+- `tulona_text(a, b)` - String compare (-1/0/1)
+- `shadharon_text(str)` - Normalized text (NFC-like)
+- `chhanto_shuru(str)` - Trim start
+- `chhanto_shesh(str)` - Trim end
+- `shesh_khojo(str, part)` - Last index of substring
 
 ### 📦 Array Operations
 - `dorghyo(arr)` - Array length
@@ -528,6 +543,18 @@ dekho("Fetched users:", dorghyo(result["rows"]));
 - `saja(arr)` - Sort array
 - `ache(arr, val)` - Contains check
 - `chabi(map)` - Get map keys
+- `khojo_prothom(arr, fn)` - Find first matching element
+- `khojo_index(arr, fn)` - Find first matching index
+- `khojo_shesh(arr, fn)` - Find last matching element
+- `khojo_shesh_index(arr, fn)` - Find last matching index
+- `prottek(arr, fn)` - Every element satisfies condition
+- `kono(arr, fn)` - At least one element satisfies condition
+- `somtol_manchitro(arr, fn)` - FlatMap (map + flatten one level)
+- `somtol(arr, depth?)` - Flatten nested arrays
+- `joro_array(arr, ...items)` - Concat arrays/values
+- `sonkuchito_dan(arr, fn, init?)` - Reduce from right
+- `array_at(arr, index)` - Index access with negative support
+- `shesh_index_of(arr, value)` - Last index of value
 
 ### 🧮 Math Functions
 - `borgomul(x)` - Square root
@@ -602,6 +629,30 @@ dekho("Fetched users:", dorghyo(result["rows"]));
 - `json_uttor(res, data, status)` - Send JSON
 - `json_poro(str)` - Parse JSON
 - `json_banao(obj)` - Stringify JSON
+
+### 🕒 Date & Regex
+- `tarikh_ekhon()` - Current timestamp in ms
+- `tarikh_parse(text)` - Parse date string to timestamp
+- `tarikh_format(ts, layout?)` - Format timestamp
+- `regex_test(pattern, text)` - Regex test
+- `regex_match(pattern, text)` - First match with captures
+- `regex_match_all(pattern, text)` - All matches
+- `regex_search(pattern, text)` - Match start index
+- `regex_replace(pattern, text, replacement)` - Regex replace
+- `match(text, pattern, flags?)` - String-like regex match
+- `matchAll(text, pattern, flags?)` - String-like regex all match
+- `search(text, pattern, flags?)` - String-like regex search index
+- `nijer_ache(obj, key)` - Object.hasOwn equivalent
+- `jora_theke(entries)` - Object.fromEntries equivalent
+- `ekoi_ki(a, b)` - Object.is equivalent
+- `notun_map(proto, props?)` - Object.create-like helper
+- `joma(obj)` - Object.freeze semantic helper
+
+### ⏱️ Timers
+- `setTimeout(fn, ms, ...args)` - Run callback once after delay
+- `setInterval(fn, ms, ...args)` - Run callback repeatedly
+- `clearTimeout(id)` - Cancel timeout
+- `clearInterval(id)` - Cancel interval
 
 ### 🌐 Networking (TCP, UDP, WebSocket)
 **TCP Functions:**
@@ -731,6 +782,14 @@ BanglaCode provides production-grade database connectors with **connection pooli
 - `dhoron(x)` - Get type
 - `lipi(x)` - Convert to string
 - `sonkha(x)` - Convert to number
+- `purno_sonkhya(text, radix?)` - Parse integer
+- `doshomik_sonkhya(text)` - Parse float
+- `sonkhya_na(x)` - Check NaN
+- `sonkhya_shimito(x)` - Check finite number
+- `uri_encode(uri)` - Encode full URI
+- `uri_decode(uri)` - Decode full URI
+- `uri_ongsho_encode(text)` - Encode URI component
+- `uri_ongsho_decode(text)` - Decode URI component
 - `bondho(code)` - Exit program
 
 ---
@@ -746,7 +805,9 @@ BanglaCode provides production-grade database connectors with **connection pooli
 | যদি | `jodi` | if | `jodi (x > 0) { }` |
 | নাহলে | `nahole` | else | `nahole { }` |
 | যতক্ষণ | `jotokkhon` | while | `jotokkhon (x < 10) { }` |
+| করো | `do` | do | `do { ... } jotokkhon (cond);` |
 | ঘুরিয়ে | `ghuriye` | for | `ghuriye (dhoro i = 0; i < 5; i++) { }` |
+| অফ | `of` | of | `ghuriye (x of arr) { }` |
 | কাজ | `kaj` | function | `kaj add(a, b) { }` |
 | ফেরাও | `ferao` | return | `ferao result;` |
 | থামো | `thamo` | break | `thamo;` |
@@ -790,6 +851,26 @@ BanglaCode provides production-grade database connectors with **connection pooli
 | এবং | `ebong` | and | Logical AND |
 | বা | `ba` | or | Logical OR |
 | না | `na` | not | Logical NOT |
+| মধ্যে | `in` | in | `"a" in obj` |
+| উদাহরণ | `instanceof` | instanceof | `obj instanceof Class` |
+| মুছে দাও | `delete` | delete | `delete obj.key` |
+
+### Arrow Functions
+
+```banglacode
+dhoro double = x => x * 2;
+dekho(double(10)); // 20
+
+dhoro add = (a, b) => a + b;
+dekho(add(3, 4)); // 7
+```
+
+### Destructuring
+
+```banglacode
+dhoro [a, b] = [10, 20];
+dhoro {name, age} = {name: "Ankan", age: 25};
+```
 
 ---
 
