@@ -16,7 +16,7 @@
 [![Go Version](https://img.shields.io/badge/Go-1.20+-00ADD8?style=for-the-badge&logo=go&logoColor=white)](https://go.dev/)
 [![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey?style=for-the-badge)](https://github.com/nexoral/BanglaCode)
 
-[🚀 Quick Start](#-quick-start) • [📚 Documentation](https://banglacode.dev) • [💡 Examples](#-examples) • [🎯 Features](#-why-banglacode) • [🤝 Contributing](#-contributing)
+[🚀 Quick Start](#-quick-start) • [📚 Documentation](https://banglacode.nexoral.in) • [💡 Examples](#-examples) • [🎯 Features](#-why-banglacode) • [🤝 Contributing](#-contributing)
 
 </div>
 
@@ -952,7 +952,7 @@ code --install-extension banglacode-*.vsix
 
 | Resource | Description |
 |----------|-------------|
-| [🌐 Official Website](https://banglacode.dev) | Complete documentation & tutorials |
+| [🌐 Official Website](https://banglacode.nexoral.in) | Complete documentation & tutorials |
 | [📘 SYNTAX.md](SYNTAX.md) | Language syntax reference |
 | [🏗️ ARCHITECTURE.md](ARCHITECTURE.md) | Technical architecture deep-dive |
 | [🗺️ ROADMAP.md](ROADMAP.md) | Future development plans |
@@ -1062,7 +1062,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 ### 💬 Get Help
 - [GitHub Discussions](https://github.com/nexoral/BanglaCode/discussions)
 - [GitHub Issues](https://github.com/nexoral/BanglaCode/issues)
-- [Documentation](https://banglacode.dev)
+- [Documentation](https://banglacode.nexoral.in)
 
 </td>
 <td width="50%">
