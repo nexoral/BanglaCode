@@ -397,7 +397,7 @@ ghotona_prokash(stateManager, "decrement");  // count: 1`}
         </div>
       </div>
 
-      <DocNavigation />
+      <DocNavigation currentPath="/docs/eventemitter" />
     </div>
   );
 }
