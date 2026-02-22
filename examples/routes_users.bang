@@ -1,0 +1,108 @@
+// User Routes Module - Modular routing example
+// User management routes
+// ফাইল: routes_users.bang (ইউজার রুটস)
+
+// Create users router
+dhoro usersRouter = router_banao();
+
+// Sample users database (in-memory for demo)
+dhoro users = [
+    {"id": 1, "name": "Ankan Saha", "email": "ankan@banglacode.dev", "role": "admin"},
+    {"id": 2, "name": "Rahim Ahmed", "email": "rahim@example.com", "role": "user"},
+    {"id": 3, "name": "Fatima Khan", "email": "fatima@example.com", "role": "user"}
+];
+
+// GET /users - Get all users
+usersRouter.ana("/", kaj(req, res) {
+    dekho("Fetching all users");
+
+    dhoro response = {
+        "success": sotti,
+        "count": dorghyo(users),
+        "users": users
+    };
+
+    json_uttor(res, response);
+});
+
+// GET /users/:id - Get user by ID (simulated with query param for now)
+usersRouter.ana("/find", kaj(req, res) {
+    dekho("Finding user");
+
+    // In real implementation, would parse :id from path
+    // For now, using query parameter: /users/find?id=1
+    dhoro userId = 1;
+
+    dhoro foundUser = users[0]; // Simplified - would search by ID
+
+    dhoro response = {
+        "success": sotti,
+        "user": foundUser
+    };
+
+    json_uttor(res, response);
+});
+
+// POST /users - Create new user
+usersRouter.pathano("/", kaj(req, res) {
+    dekho("Creating new user");
+
+    // In real app, would parse req.body
+    dhoro newUser = {
+        "id": dorghyo(users) + 1,
+        "name": "New User",
+        "email": "newuser@example.com",
+        "role": "user"
+    };
+
+    dhokao(users, newUser);
+
+    dhoro response = {
+        "success": sotti,
+        "message": "User created successfully",
+        "user": newUser
+    };
+
+    json_uttor(res, response, 201);
+});
+
+// PUT /users/:id - Update user
+usersRouter.put("/update", kaj(req, res) {
+    dekho("Updating user");
+
+    dhoro response = {
+        "success": sotti,
+        "message": "User updated successfully"
+    };
+
+    json_uttor(res, response);
+});
+
+// DELETE /users/:id - Delete user
+usersRouter.mujhe_felo("/delete", kaj(req, res) {
+    dekho("Deleting user");
+
+    dhoro response = {
+        "success": sotti,
+        "message": "User deleted successfully"
+    };
+
+    json_uttor(res, response);
+});
+
+// GET /users/stats - Get user statistics
+usersRouter.ana("/stats", kaj(req, res) {
+    dekho("Fetching user statistics");
+
+    dhoro response = {
+        "totalUsers": dorghyo(users),
+        "activeUsers": 3,
+        "adminUsers": 1,
+        "regularUsers": 2
+    };
+
+    json_uttor(res, response);
+});
+
+// Export users router
+pathao usersRouter;

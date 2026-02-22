@@ -76,6 +76,7 @@ export const DOCS_CONFIG: DocSection[] = [
       { name: "Environment Variables", href: "/docs/environment-variables", description: "Loading and managing .env files" },
       { name: "File I/O", href: "/docs/file-io", description: "Reading and writing files" },
       { name: "HTTP Server", href: "/docs/http-server", description: "Building web servers" },
+      { name: "HTTP Routing", href: "/docs/http-routing", description: "Express.js-style modular routing" },
       { name: "Networking", href: "/docs/networking", description: "TCP, UDP, WebSocket" },
       { name: "Database", href: "/docs/database", description: "PostgreSQL, MySQL, MongoDB, Redis" },
     ],

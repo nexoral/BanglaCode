@@ -269,7 +269,7 @@
         },
         {
           "name": "support.function.js",
-          "match": "\\b(server_chalu|anun|uttor|json_uttor)\\b"
+          "match": "\\b(server_chalu|router_banao|anun|uttor|json_uttor)\\b"
         },
         {
           "name": "support.function.builtin.network.js",

@@ -1,0 +1,37 @@
+// Basic HTTP Router Example - Express.js-style routing in BanglaCode
+// নমুনা: মৌলিক HTTP রাউটার
+
+// Create a new router
+dhoro app = router_banao();
+
+// Define GET route for home
+app.ana("/", kaj(req, res) {
+    uttor(res, "Namaskar! Welcome to BanglaCode Router!", 200);
+});
+
+// Define GET route for about
+app.ana("/about", kaj(req, res) {
+    dhoro aboutInfo = {
+        "name": "BanglaCode",
+        "version": "8.0.0",
+        "description": "Bengali Programming Language"
+    };
+    json_uttor(res, aboutInfo);
+});
+
+// Define POST route for data submission
+app.pathano("/submit", kaj(req, res) {
+    dekho("Received POST request:", req["body"]);
+    json_uttor(res, {"message": "Data received successfully"}, 201);
+});
+
+// Define GET route with query parameters
+app.ana("/search", kaj(req, res) {
+    dhoro query = req["query"];
+    dekho("Search query:", query);
+    json_uttor(res, {"query": query, "results": []});
+});
+
+// Start server with router
+dekho("Starting server on port 3000...");
+server_chalu(3000, app);

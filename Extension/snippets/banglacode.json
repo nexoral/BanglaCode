@@ -1519,5 +1519,147 @@
       "$0"
     ],
     "description": "Schedule repeated callback"
+  },
+  "Router Create": {
+    "prefix": "router-banao",
+    "body": [
+      "dhoro ${1:router} = router_banao();",
+      "$0"
+    ],
+    "description": "Create new Express-style router (রাউটার বানাও)"
+  },
+  "Router GET": {
+    "prefix": "router-ana",
+    "body": [
+      "${1:router}.ana(\"${2:/path}\", kaj(req, res) {",
+      "\t${3:// Handle GET request}",
+      "\tuttor(res, ${4:\"response\"});",
+      "});",
+      "$0"
+    ],
+    "description": "Define GET route on router (আনা - fetch)"
+  },
+  "Router POST": {
+    "prefix": "router-pathano",
+    "body": [
+      "${1:router}.pathano(\"${2:/path}\", kaj(req, res) {",
+      "\t${3:// Handle POST request}",
+      "\tjson_uttor(res, {${4:\"message\": \"success\"}});",
+      "});",
+      "$0"
+    ],
+    "description": "Define POST route on router (পাঠানো - send)"
+  },
+  "Router PUT": {
+    "prefix": "router-bodlano",
+    "body": [
+      "${1:router}.bodlano(\"${2:/path}\", kaj(req, res) {",
+      "\t${3:// Handle PUT request}",
+      "\tuttor(res, ${4:\"updated\"}, 200);",
+      "});",
+      "$0"
+    ],
+    "description": "Define PUT route on router (বদলানো - update/change)"
+  },
+  "Router DELETE": {
+    "prefix": "router-mujhe-felo",
+    "body": [
+      "${1:router}.mujhe_felo(\"${2:/path}\", kaj(req, res) {",
+      "\t${3:// Handle DELETE request}",
+      "\tuttor(res, ${4:\"deleted\"}, 204);",
+      "});",
+      "$0"
+    ],
+    "description": "Define DELETE route on router (মুছে ফেলো - remove)"
+  },
+  "Router PATCH": {
+    "prefix": "router-songshodhon",
+    "body": [
+      "${1:router}.songshodhon(\"${2:/path}\", kaj(req, res) {",
+      "\t${3:// Handle PATCH request}",
+      "\tuttor(res, ${4:\"modified\"}, 200);",
+      "});",
+      "$0"
+    ],
+    "description": "Define PATCH route on router (সংশোধন - modify)"
+  },
+  "Router Mount": {
+    "prefix": "router-bebohar",
+    "body": [
+      "${1:app}.bebohar(\"${2:/api}\", ${3:subRouter});",
+      "$0"
+    ],
+    "description": "Mount sub-router at path (রাউটার ব্যবহার)"
+  },
+  "Router Full App": {
+    "prefix": "router-app",
+    "body": [
+      "// Create main app router",
+      "dhoro app = router_banao();",
+      "",
+      "// Define routes",
+      "app.ana(\"/\", kaj(req, res) {",
+      "\tuttor(res, \"Welcome to BanglaCode!\");",
+      "});",
+      "",
+      "app.ana(\"/${1:path}\", kaj(req, res) {",
+      "\tjson_uttor(res, {${2:\"message\": \"Hello\"}});",
+      "});",
+      "",
+      "// Start server",
+      "server_chalu(${3:3000}, app);",
+      "$0"
+    ],
+    "description": "Complete router-based app template"
+  },
+  "Modular Router File": {
+    "prefix": "router-module",
+    "body": [
+      "// ${1:Feature} Routes Module",
+      "// ফাইল: routes_${2:feature}.bang",
+      "",
+      "dhoro ${2:feature}Router = router_banao();",
+      "",
+      "// GET /${2:feature}",
+      "${2:feature}Router.ana(\"/\", kaj(req, res) {",
+      "\t${3:// List items}",
+      "\tjson_uttor(res, {\"items\": []});",
+      "});",
+      "",
+      "// POST /${2:feature}",
+      "${2:feature}Router.pathano(\"/\", kaj(req, res) {",
+      "\t${4:// Create item}",
+      "\tjson_uttor(res, {\"message\": \"Created\"}, 201);",
+      "});",
+      "",
+      "// Export router",
+      "pathao ${2:feature}Router;",
+      "$0"
+    ],
+    "description": "Modular router file template"
+  },
+  "Router HEAD": {
+    "prefix": "router-matha",
+    "body": [
+      "${1:router}.matha(\"${2:/path}\", kaj(req, res) {",
+      "\t${3:// Handle HEAD request}",
+      "\tres[\"headers\"] = {${4:\"Content-Type\": \"application/json\"}};",
+      "\tres[\"status\"] = 200;",
+      "});",
+      "$0"
+    ],
+    "description": "Define HEAD route on router (মাথা - retrieve headers)"
+  },
+  "Router OPTIONS": {
+    "prefix": "router-nirdharon",
+    "body": [
+      "${1:router}.nirdharon(\"${2:/path}\", kaj(req, res) {",
+      "\t${3:// Handle OPTIONS request}",
+      "\tres[\"headers\"] = {\"Allow\": \"GET, POST, PUT, DELETE, PATCH\"};",
+      "\tres[\"status\"] = 200;",
+      "});",
+      "$0"
+    ],
+    "description": "Define OPTIONS route on router (নির্ধারণ - determine options)"
   }
 }
