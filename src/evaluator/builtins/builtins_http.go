@@ -18,11 +18,34 @@ func init() {
 			if args[0].Type() != object.NUMBER_OBJ {
 				return newError("first argument to `server_chalu` must be NUMBER (port), got %s", args[0].Type())
 			}
-			if args[1].Type() != object.FUNCTION_OBJ {
-				return newError("second argument to `server_chalu` must be FUNCTION (handler), got %s", args[1].Type())
-			}
 
 			port := int(args[0].(*object.Number).Value)
+
+			// Check if second argument is a Router (MAP with __router_id__) or Function
+			if args[1].Type() == object.MAP_OBJ {
+				// Router-based server
+				routerMap := args[1].(*object.Map)
+
+				if routerIDObj, ok := routerMap.Pairs["__router_id__"]; ok {
+					if routerID, ok := routerIDObj.(*object.String); ok {
+						if router, found := getRouter(routerID.Value); found {
+							fmt.Printf("🚀 Server cholche http://localhost:%d e (Router mode)\n", port)
+							err := http.ListenAndServe(fmt.Sprintf(":%d", port), router)
+							if err != nil {
+								return newError("server error: %s", err.Error())
+							}
+							return object.NULL
+						}
+					}
+				}
+				return newError("invalid router object")
+			}
+
+			// Function-based server (backward compatible)
+			if args[1].Type() != object.FUNCTION_OBJ {
+				return newError("second argument to `server_chalu` must be FUNCTION (handler) or ROUTER, got %s", args[1].Type())
+			}
+
 			handler := args[1].(*object.Function)
 
 			http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {

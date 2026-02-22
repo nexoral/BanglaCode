@@ -11,3 +11,4 @@ dekho("Amar naam", naam, "ebong ami", boyosh, "bochhor boyoshi");
 dekho("Type of naam:", dhoron(naam));
 dekho("Type of boyosh:", dhoron(boyosh));
 dekho("boyosh as lipi:", lipi(boyosh));
+dekho(`amar boyosh ${boyosh} bochhor`);

@@ -3,9 +3,16 @@ package path
 import (
 	"BanglaCode/src/object"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 )
+
+// Constants for path constants initialization
+var Constants = map[string]string{
+	"PATH_SEP":       string(os.PathSeparator),
+	"PATH_DELIMITER": string(os.PathListSeparator),
+}
 
 // Builtins is the map that holds all path built-in functions
 var Builtins = make(map[string]*object.Builtin, 10)
@@ -142,5 +149,68 @@ func init() {
 			return object.TRUE
 		}
 		return object.FALSE
+	})
+
+	// path_resolve (পাথ রেজলভ) - Resolve path to absolute path
+	registerBuiltin("path_resolve", func(args ...object.Object) object.Object {
+		if len(args) < 1 {
+			return newError("path_resolve requires at least 1 argument")
+		}
+
+		// Convert all arguments to strings
+		parts := make([]string, len(args))
+		for i, arg := range args {
+			if arg.Type() != object.STRING_OBJ {
+				return newError("all arguments must be STRING")
+			}
+			parts[i] = arg.(*object.String).Value
+		}
+
+		// Join all parts and get absolute path
+		joined := filepath.Join(parts...)
+		absPath, err := filepath.Abs(joined)
+		if err != nil {
+			return newError("failed to resolve path: %s", err.Error())
+		}
+
+		return &object.String{Value: absPath}
+	})
+
+	// path_normalize (পাথ স্বাভাবিক) - Normalize/clean path
+	registerBuiltin("path_normalize", func(args ...object.Object) object.Object {
+		if len(args) != 1 {
+			return newError("path_normalize requires 1 argument (path)")
+		}
+		if args[0].Type() != object.STRING_OBJ {
+			return newError("path must be STRING, got %s", args[0].Type())
+		}
+
+		path := args[0].(*object.String).Value
+		// filepath.Clean removes redundant separators and resolves . and ..
+		cleaned := filepath.Clean(path)
+		return &object.String{Value: cleaned}
+	})
+
+	// path_relative (পাথ আপেক্ষিক) - Get relative path from base to target
+	registerBuiltin("path_relative", func(args ...object.Object) object.Object {
+		if len(args) != 2 {
+			return newError("path_relative requires 2 arguments (base, target)")
+		}
+		if args[0].Type() != object.STRING_OBJ {
+			return newError("base path must be STRING, got %s", args[0].Type())
+		}
+		if args[1].Type() != object.STRING_OBJ {
+			return newError("target path must be STRING, got %s", args[1].Type())
+		}
+
+		base := args[0].(*object.String).Value
+		target := args[1].(*object.String).Value
+
+		rel, err := filepath.Rel(base, target)
+		if err != nil {
+			return newError("failed to get relative path: %s", err.Error())
+		}
+
+		return &object.String{Value: rel}
 	})
 }

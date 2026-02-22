@@ -1,0 +1,85 @@
+// Auth Routes Module - Modular routing example
+// Authentication-related routes
+// ফাইল: routes_auth.bang (প্রমাণীকরণ রুটস)
+
+// Create auth router
+dhoro authRouter = router_banao();
+
+// POST /login - User login
+authRouter.pathano("/login", kaj(req, res) {
+    dekho("Login request received");
+
+    // Parse request body (in real app, would parse JSON)
+    dhoro credentials = {
+        "username": "user@example.com",
+        "password": "****"
+    };
+
+    // Simulate authentication
+    dhoro response = {
+        "success": sotti,
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "user": {
+            "id": 1,
+            "name": "Ankan Saha",
+            "role": "admin"
+        }
+    };
+
+    json_uttor(res, response, 200);
+});
+
+// POST /register - User registration
+authRouter.pathano("/register", kaj(req, res) {
+    dekho("Registration request received");
+
+    dhoro response = {
+        "success": sotti,
+        "message": "User registered successfully",
+        "userId": 42
+    };
+
+    json_uttor(res, response, 201);
+});
+
+// POST /logout - User logout
+authRouter.pathano("/logout", kaj(req, res) {
+    dekho("Logout request received");
+
+    dhoro response = {
+        "success": sotti,
+        "message": "Logged out successfully"
+    };
+
+    json_uttor(res, response);
+});
+
+// GET /verify - Verify token
+authRouter.get("/verify", kaj(req, res) {
+    dekho("Token verification request");
+
+    dhoro response = {
+        "valid": sotti,
+        "user": {
+            "id": 1,
+            "name": "Ankan Saha"
+        }
+    };
+
+    json_uttor(res, response);
+});
+
+// POST /refresh - Refresh access token
+authRouter.pathano("/refresh", kaj(req, res) {
+    dekho("Token refresh request");
+
+    dhoro response = {
+        "token": "new_token_here",
+        "expiresIn": 3600
+    };
+
+    json_uttor(res, response);
+});
+
+// Export auth router
+pathao authRouter;

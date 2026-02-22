@@ -27,12 +27,20 @@ export default function Keywords() {
     { keyword: "ano", meaning: "bring", english: "import", description: "Import module", example: 'ano "math.bang" hisabe math;' },
     { keyword: "pathao", meaning: "send", english: "export", description: "Export symbol", example: 'pathao kaj add(a, b) { }' },
     { keyword: "hisabe", meaning: "as", english: "as", description: "Alias for imports", example: 'ano "mod.bang" hisabe m;' },
+    { keyword: "instanceof", meaning: "instance check", english: "instanceof", description: "Check class instance", example: "obj instanceof Person" },
+    { keyword: "delete", meaning: "remove", english: "delete", description: "Delete property/index", example: "delete obj.key;" },
     { keyword: "chesta", meaning: "try/attempt", english: "try", description: "Try block", example: 'chesta { }' },
     { keyword: "dhoro_bhul", meaning: "catch error", english: "catch", description: "Catch block", example: 'dhoro_bhul (e) { }' },
     { keyword: "shesh", meaning: "end/finish", english: "finally", description: "Finally block", example: 'shesh { }' },
     { keyword: "felo", meaning: "throw", english: "throw", description: "Throw exception", example: 'felo "error message";' },
+    { keyword: "bikolpo", meaning: "alternative", english: "switch", description: "Switch statement", example: "bikolpo (x) { }" },
+    { keyword: "khetre", meaning: "case", english: "case", description: "Switch case", example: "khetre 1:" },
+    { keyword: "manchito", meaning: "default", english: "default", description: "Default switch branch", example: "manchito:" },
     { keyword: "proyash", meaning: "effort/attempt", english: "async", description: "Async function declaration", example: 'proyash kaj fetchData() { }' },
     { keyword: "opekha", meaning: "wait/await", english: "await", description: "Wait for promise", example: 'opekha promise;' },
+    { keyword: "utpadan", meaning: "produce/yield", english: "yield", description: "Yield next value from generator", example: 'utpadan value;' },
+    { keyword: "pao", meaning: "get", english: "get", description: "Class getter", example: "pao fullName() { ferao ei.name; }" },
+    { keyword: "set", meaning: "set", english: "set", description: "Class setter", example: "set fullName(v) { ei.name = v; }" },
   ];
 
   return (
@@ -46,7 +54,7 @@ export default function Keywords() {
       <h1>Keywords Reference</h1>
 
       <p className="lead text-xl text-muted-foreground mt-4">
-        BanglaCode has 31 Bengali keywords written in Banglish (Bengali words using English/Latin script).
+        BanglaCode keywords are written in Banglish (Bengali words using English/Latin script).
         This makes it easy to type on any keyboard while remaining familiar to Bengali speakers.
       </p>
 
@@ -191,6 +199,25 @@ kaj greet(naam) {
 // Call functions
 dhoro sum = add(5, 3);
 greet("Rahim");`}
+      />
+
+      <h3>Generators</h3>
+
+      <CodeBlock
+        code={`// kaj* - generator function
+// utpadan - yield next value
+kaj* count(max) {
+    dhoro i = 0;
+    jotokkhon (i < max) {
+        utpadan i;
+        i = i + 1;
+    }
+}
+
+dhoro g = count(3);
+dekho(g.next()["value"]); // 0
+dekho(g.next()["value"]); // 1
+dekho(g.next()["value"]); // 2`}
       />
 
       <h3>Classes & OOP</h3>

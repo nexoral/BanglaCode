@@ -172,3 +172,20 @@ func (ae *AwaitExpression) String() string {
 	out.WriteString(ae.Expression.String())
 	return out.String()
 }
+
+// YieldExpression represents yield expression in generators
+type YieldExpression struct {
+	Token      lexer.Token // the UTPADAN token
+	Expression Expression  // value to yield (optional)
+}
+
+func (ye *YieldExpression) expressionNode()      {}
+func (ye *YieldExpression) TokenLiteral() string { return ye.Token.Literal }
+func (ye *YieldExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("utpadan ")
+	if ye.Expression != nil {
+		out.WriteString(ye.Expression.String())
+	}
+	return out.String()
+}

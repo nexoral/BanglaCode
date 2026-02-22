@@ -54,6 +54,7 @@ func (p *Parser) registerPrefixParsers() {
 	p.registerPrefix(lexer.KAJ, p.parseFunctionLiteral)
 	p.registerPrefix(lexer.PROYASH, p.parseAsyncFunctionLiteral)
 	p.registerPrefix(lexer.OPEKHA, p.parseAwaitExpression)
+	p.registerPrefix(lexer.UTPADAN, p.parseYieldExpression)
 	p.registerPrefix(lexer.NOTUN, p.parseNewExpression)
 	p.registerPrefix(lexer.DOTDOTDOT, p.parseSpreadElement)
 	p.registerPrefix(lexer.DELETE, p.parseDeleteExpression)

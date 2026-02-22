@@ -184,6 +184,12 @@ func (p *Parser) parseMapLiteral() ast.Expression {
 func (p *Parser) parseFunctionLiteral() ast.Expression {
 	lit := &ast.FunctionLiteral{Token: p.curToken}
 
+	// Optional generator marker: kaj* (...)
+	if p.peekTokenIs(lexer.ASTERISK) {
+		p.nextToken()
+		lit.IsGenerator = true
+	}
+
 	// Check if function has a name
 	if p.peekTokenIs(lexer.IDENT) {
 		p.nextToken()
@@ -203,6 +209,9 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 	}
 
 	lit.Body = p.parseBlockStatement()
+
+	// Check if this is a generator function by scanning for yield
+	lit.IsGenerator = lit.IsGenerator || p.containsYield(lit.Body)
 
 	return lit
 }
@@ -247,6 +256,19 @@ func (p *Parser) parseAwaitExpression() ast.Expression {
 
 	p.nextToken()
 	exp.Expression = p.parseExpression(PREFIX)
+
+	return exp
+}
+
+// parseYieldExpression parses utpadan expression (generator yield)
+func (p *Parser) parseYieldExpression() ast.Expression {
+	exp := &ast.YieldExpression{Token: p.curToken}
+
+	// yield can be used alone or with a value
+	if !p.peekTokenIs(lexer.SEMICOLON) && !p.peekTokenIs(lexer.RBRACE) {
+		p.nextToken()
+		exp.Expression = p.parseExpression(PREFIX)
+	}
 
 	return exp
 }
@@ -411,4 +433,105 @@ func (p *Parser) parseSpreadElement() ast.Expression {
 	spread.Argument = p.parseExpression(LOWEST)
 
 	return spread
+}
+
+// containsYield recursively checks if a block statement contains yield expressions
+func (p *Parser) containsYield(block *ast.BlockStatement) bool {
+	if block == nil {
+		return false
+	}
+
+	for _, stmt := range block.Statements {
+		if p.statementContainsYield(stmt) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// statementContainsYield checks if a statement contains yield
+func (p *Parser) statementContainsYield(stmt ast.Statement) bool {
+	switch s := stmt.(type) {
+	case *ast.ExpressionStatement:
+		return p.expressionContainsYield(s.Expression)
+	case *ast.ReturnStatement:
+		if s.ReturnValue != nil {
+			return p.expressionContainsYield(s.ReturnValue)
+		}
+	case *ast.VariableDeclaration:
+		if s.Value != nil {
+			return p.expressionContainsYield(s.Value)
+		}
+	case *ast.IfStatement:
+		if p.expressionContainsYield(s.Condition) {
+			return true
+		}
+		if p.containsYield(s.Consequence) {
+			return true
+		}
+		if s.Alternative != nil && p.containsYield(s.Alternative) {
+			return true
+		}
+	case *ast.WhileStatement:
+		if p.expressionContainsYield(s.Condition) {
+			return true
+		}
+		if p.containsYield(s.Body) {
+			return true
+		}
+	case *ast.ForStatement:
+		if s.Init != nil && p.statementContainsYield(s.Init) {
+			return true
+		}
+		if s.Condition != nil && p.expressionContainsYield(s.Condition) {
+			return true
+		}
+		if s.Update != nil && p.expressionContainsYield(s.Update) {
+			return true
+		}
+		if p.containsYield(s.Body) {
+			return true
+		}
+	}
+	return false
+}
+
+// expressionContainsYield checks if an expression contains yield
+func (p *Parser) expressionContainsYield(expr ast.Expression) bool {
+	if expr == nil {
+		return false
+	}
+
+	switch e := expr.(type) {
+	case *ast.YieldExpression:
+		return true
+	case *ast.CallExpression:
+		if p.expressionContainsYield(e.Function) {
+			return true
+		}
+		for _, arg := range e.Arguments {
+			if p.expressionContainsYield(arg) {
+				return true
+			}
+		}
+	case *ast.BinaryExpression:
+		return p.expressionContainsYield(e.Left) || p.expressionContainsYield(e.Right)
+	case *ast.UnaryExpression:
+		return p.expressionContainsYield(e.Right)
+	case *ast.ArrayLiteral:
+		for _, elem := range e.Elements {
+			if p.expressionContainsYield(elem) {
+				return true
+			}
+		}
+	case *ast.MapLiteral:
+		for key, val := range e.Pairs {
+			if p.expressionContainsYield(key) || p.expressionContainsYield(val) {
+				return true
+			}
+		}
+	}
+
+	return false
 }

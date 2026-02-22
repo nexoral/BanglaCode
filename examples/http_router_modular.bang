@@ -1,0 +1,113 @@
+// Modular HTTP Router Example - Express.js-style modular routing
+// নমুনা: মডুলার HTTP রাউটার (যেমন Express.js)
+//
+// File Structure:
+// - http_router_modular.bang (main app - this file)
+// - routes_auth.bang (authentication routes)
+// - routes_users.bang (user management routes)
+//
+// This demonstrates how to organize routes in separate files
+// and mount them on different paths, just like Express.js!
+
+dekho("=== BanglaCode Modular Router Demo ===");
+dekho("");
+
+// Import route modules
+dhoro authRouter = ano("routes_auth.bang");
+dhoro usersRouter = ano("routes_users.bang");
+
+// Create main app router
+dhoro app = router_banao();
+
+// ===== Main App Routes =====
+
+// Home route
+app.ana("/", kaj(req, res) {
+    dhoro welcome = {
+        "message": "Welcome to BanglaCode Modular API!",
+        "version": "8.0.0",
+        "endpoints": {
+            "auth": "/api/auth (login, register, logout, verify, refresh)",
+            "users": "/api/users (CRUD operations)",
+            "health": "/health"
+        },
+        "documentation": "https://banglacode.nexoral.in/docs"
+    };
+
+    json_uttor(res, welcome);
+});
+
+// Health check route
+app.ana("/health", kaj(req, res) {
+    dhoro health = {
+        "status": "healthy",
+        "uptime": somoy(),
+        "timestamp": tarikh_ekhon(),
+        "service": "BanglaCode API"
+    };
+
+    json_uttor(res, health);
+});
+
+// API info route
+app.ana("/api", kaj(req, res) {
+    dhoro apiInfo = {
+        "name": "BanglaCode REST API",
+        "version": "1.0.0",
+        "author": "Ankan Saha",
+        "routes": {
+            "auth": [
+                "POST /api/auth/login",
+                "POST /api/auth/register",
+                "POST /api/auth/logout",
+                "GET /api/auth/verify",
+                "POST /api/auth/refresh"
+            ],
+            "users": [
+                "GET /api/users",
+                "GET /api/users/find",
+                "POST /api/users",
+                "PUT /api/users/update",
+                "DELETE /api/users/delete",
+                "GET /api/users/stats"
+            ]
+        }
+    };
+
+    json_uttor(res, apiInfo);
+});
+
+// ===== Mount Sub-Routers =====
+
+// Mount auth routes at /api/auth
+dekho("Mounting auth routes at /api/auth");
+app.bebohar("/api/auth", authRouter);
+
+// Mount user routes at /api/users
+dekho("Mounting user routes at /api/users");
+app.bebohar("/api/users", usersRouter);
+
+dekho("");
+dekho("Available Routes:");
+dekho("  GET  /                      - Welcome message");
+dekho("  GET  /health                - Health check");
+dekho("  GET  /api                   - API information");
+dekho("");
+dekho("  POST /api/auth/login        - User login");
+dekho("  POST /api/auth/register     - User registration");
+dekho("  POST /api/auth/logout       - User logout");
+dekho("  GET  /api/auth/verify       - Verify token");
+dekho("  POST /api/auth/refresh      - Refresh token");
+dekho("");
+dekho("  GET  /api/users             - Get all users");
+dekho("  GET  /api/users/find        - Get user by ID");
+dekho("  POST /api/users             - Create new user");
+dekho("  PUT  /api/users/update      - Update user");
+dekho("  DELETE /api/users/delete    - Delete user");
+dekho("  GET  /api/users/stats       - User statistics");
+dekho("");
+dekho("🚀 Starting server on http://localhost:3000");
+dekho("");
+
+// Start server with modular router
+server_chalu(3000, app);

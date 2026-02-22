@@ -16,6 +16,9 @@ import (
 // Functions from all subdirectory packages are merged into this map
 var Builtins = make(map[string]*object.Builtin, 60)
 
+// PathConstants exports path constants for initialization
+var PathConstants = path.Constants
+
 func init() {
 	// Merge all subdirectory builtins into the main Builtins map
 	// This allows all system functions to be accessed through system.Builtins

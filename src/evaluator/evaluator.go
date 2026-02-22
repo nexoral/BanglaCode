@@ -5,12 +5,20 @@ package evaluator
 import (
 	"BanglaCode/src/ast"
 	"BanglaCode/src/evaluator/builtins"
+	"BanglaCode/src/evaluator/builtins/collections"
+	"BanglaCode/src/evaluator/builtins/events"
+	"BanglaCode/src/evaluator/builtins/streams"
+	"BanglaCode/src/evaluator/builtins/worker"
 	"BanglaCode/src/object"
 )
 
 func init() {
 	// Set up EvalFunc for builtins that need to call back into the evaluator
 	builtins.EvalFunc = evalFunctionCall
+	events.SetEvalFunc(evalFunctionCall)
+	worker.SetEvalFunc(Eval)
+	streams.SetEvalFunc(Eval)
+	collections.SetEvalFunc(evalFunctionCall)
 }
 
 // evalFunctionCall evaluates a function with the given arguments
@@ -164,6 +172,8 @@ func evalExpressionNode(node ast.Node, env *object.Environment) (object.Object, 
 		return evalMemberExpression(node, env), true
 	case *ast.FunctionLiteral:
 		return buildFunctionLiteral(node, env), true
+	case *ast.YieldExpression:
+		return newError("utpadan (yield) can only be used inside generator function"), true
 	case *ast.NewExpression:
 		return evalNewExpression(node, env), true
 	case *ast.SpreadElement:
@@ -211,6 +221,7 @@ func buildFunctionLiteral(node *ast.FunctionLiteral, env *object.Environment) ob
 		Env:           env,
 		Body:          node.Body,
 		Name:          name,
+		IsGenerator:   node.IsGenerator,
 	}
 	if name != "" {
 		env.Set(name, fn)

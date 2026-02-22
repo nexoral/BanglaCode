@@ -1519,5 +1519,1117 @@
       "$0"
     ],
     "description": "Schedule repeated callback"
+  },
+  "Router Create": {
+    "prefix": "router-banao",
+    "body": [
+      "dhoro ${1:router} = router_banao();",
+      "$0"
+    ],
+    "description": "Create new Express-style router (রাউটার বানাও)"
+  },
+  "Router GET": {
+    "prefix": "router-ana",
+    "body": [
+      "${1:router}.ana(\"${2:/path}\", kaj(req, res) {",
+      "\t${3:// Handle GET request}",
+      "\tuttor(res, ${4:\"response\"});",
+      "});",
+      "$0"
+    ],
+    "description": "Define GET route on router (আনা - fetch)"
+  },
+  "Router POST": {
+    "prefix": "router-pathano",
+    "body": [
+      "${1:router}.pathano(\"${2:/path}\", kaj(req, res) {",
+      "\t${3:// Handle POST request}",
+      "\tjson_uttor(res, {${4:\"message\": \"success\"}});",
+      "});",
+      "$0"
+    ],
+    "description": "Define POST route on router (পাঠানো - send)"
+  },
+  "Router PUT": {
+    "prefix": "router-bodlano",
+    "body": [
+      "${1:router}.bodlano(\"${2:/path}\", kaj(req, res) {",
+      "\t${3:// Handle PUT request}",
+      "\tuttor(res, ${4:\"updated\"}, 200);",
+      "});",
+      "$0"
+    ],
+    "description": "Define PUT route on router (বদলানো - update/change)"
+  },
+  "Router DELETE": {
+    "prefix": "router-mujhe-felo",
+    "body": [
+      "${1:router}.mujhe_felo(\"${2:/path}\", kaj(req, res) {",
+      "\t${3:// Handle DELETE request}",
+      "\tuttor(res, ${4:\"deleted\"}, 204);",
+      "});",
+      "$0"
+    ],
+    "description": "Define DELETE route on router (মুছে ফেলো - remove)"
+  },
+  "Router PATCH": {
+    "prefix": "router-songshodhon",
+    "body": [
+      "${1:router}.songshodhon(\"${2:/path}\", kaj(req, res) {",
+      "\t${3:// Handle PATCH request}",
+      "\tuttor(res, ${4:\"modified\"}, 200);",
+      "});",
+      "$0"
+    ],
+    "description": "Define PATCH route on router (সংশোধন - modify)"
+  },
+  "Router Mount": {
+    "prefix": "router-bebohar",
+    "body": [
+      "${1:app}.bebohar(\"${2:/api}\", ${3:subRouter});",
+      "$0"
+    ],
+    "description": "Mount sub-router at path (রাউটার ব্যবহার)"
+  },
+  "Router Full App": {
+    "prefix": "router-app",
+    "body": [
+      "// Create main app router",
+      "dhoro app = router_banao();",
+      "",
+      "// Define routes",
+      "app.ana(\"/\", kaj(req, res) {",
+      "\tuttor(res, \"Welcome to BanglaCode!\");",
+      "});",
+      "",
+      "app.ana(\"/${1:path}\", kaj(req, res) {",
+      "\tjson_uttor(res, {${2:\"message\": \"Hello\"}});",
+      "});",
+      "",
+      "// Start server",
+      "server_chalu(${3:3000}, app);",
+      "$0"
+    ],
+    "description": "Complete router-based app template"
+  },
+  "Modular Router File": {
+    "prefix": "router-module",
+    "body": [
+      "// ${1:Feature} Routes Module",
+      "// ফাইল: routes_${2:feature}.bang",
+      "",
+      "dhoro ${2:feature}Router = router_banao();",
+      "",
+      "// GET /${2:feature}",
+      "${2:feature}Router.ana(\"/\", kaj(req, res) {",
+      "\t${3:// List items}",
+      "\tjson_uttor(res, {\"items\": []});",
+      "});",
+      "",
+      "// POST /${2:feature}",
+      "${2:feature}Router.pathano(\"/\", kaj(req, res) {",
+      "\t${4:// Create item}",
+      "\tjson_uttor(res, {\"message\": \"Created\"}, 201);",
+      "});",
+      "",
+      "// Export router",
+      "pathao ${2:feature}Router;",
+      "$0"
+    ],
+    "description": "Modular router file template"
+  },
+  "Router HEAD": {
+    "prefix": "router-matha",
+    "body": [
+      "${1:router}.matha(\"${2:/path}\", kaj(req, res) {",
+      "\t${3:// Handle HEAD request}",
+      "\tres[\"headers\"] = {${4:\"Content-Type\": \"application/json\"}};",
+      "\tres[\"status\"] = 200;",
+      "});",
+      "$0"
+    ],
+    "description": "Define HEAD route on router (মাথা - retrieve headers)"
+  },
+  "Router OPTIONS": {
+    "prefix": "router-nirdharon",
+    "body": [
+      "${1:router}.nirdharon(\"${2:/path}\", kaj(req, res) {",
+      "\t${3:// Handle OPTIONS request}",
+      "\tres[\"headers\"] = {\"Allow\": \"GET, POST, PUT, DELETE, PATCH\"};",
+      "\tres[\"status\"] = 200;",
+      "});",
+      "$0"
+    ],
+    "description": "Define OPTIONS route on router (নির্ধারণ - determine options)"
+  },
+  "EventEmitter Create": {
+    "prefix": "ghotona-srishti",
+    "body": [
+      "dhoro ${1:emitter} = ghotona_srishti();"
+    ],
+    "description": "Create an EventEmitter instance (ঘটনা সৃষ্টি - create event)"
+  },
+  "EventEmitter On": {
+    "prefix": "ghotona-shuno",
+    "body": [
+      "ghotona_shuno(${1:emitter}, \"${2:event_name}\", kaj(${3:data}) {",
+      "\t${4:// Handle event}",
+      "});",
+      "$0"
+    ],
+    "description": "Add event listener (ঘটনা শুনো - listen to event)"
+  },
+  "EventEmitter Once": {
+    "prefix": "ghotona-ekbar",
+    "body": [
+      "ghotona_ekbar(${1:emitter}, \"${2:event_name}\", kaj(${3:data}) {",
+      "\t${4:// Handle event once}",
+      "});",
+      "$0"
+    ],
+    "description": "Add one-time event listener (ঘটনা একবার - listen once)"
+  },
+  "EventEmitter Emit": {
+    "prefix": "ghotona-prokash",
+    "body": [
+      "ghotona_prokash(${1:emitter}, \"${2:event_name}\"${3:, data});"
+    ],
+    "description": "Emit an event (ঘটনা প্রকাশ - emit event)"
+  },
+  "EventEmitter Off": {
+    "prefix": "ghotona-bondho",
+    "body": [
+      "ghotona_bondho(${1:emitter}, \"${2:event_name}\", ${3:listener});"
+    ],
+    "description": "Remove event listener (ঘটনা বন্ধ - turn off event)"
+  },
+  "EventEmitter Remove All": {
+    "prefix": "ghotona-sob-bondho",
+    "body": [
+      "ghotona_sob_bondho(${1:emitter}${2:, \"event_name\"});"
+    ],
+    "description": "Remove all listeners (ঘটনা সব বন্ধ - turn off all events)"
+  },
+  "EventEmitter Get Listeners": {
+    "prefix": "ghotona-shrotara",
+    "body": [
+      "dhoro ${1:listeners} = ghotona_shrotara(${2:emitter}, \"${3:event_name}\");"
+    ],
+    "description": "Get all listeners for an event (ঘটনা শ্রোতারা - event listeners)"
+  },
+  "EventEmitter Get Event Names": {
+    "prefix": "ghotona-naam-sob",
+    "body": [
+      "dhoro ${1:events} = ghotona_naam_sob(${2:emitter});"
+    ],
+    "description": "Get all event names (ঘটনা নাম সব - all event names)"
+  },
+  "Buffer Create": {
+    "prefix": "buffer-banao",
+    "body": [
+      "dhoro ${1:buf} = buffer_banao(${2:10});"
+    ],
+    "description": "Create a new Buffer with specified size (বাফার বানাও - create buffer)"
+  },
+  "Buffer From String": {
+    "prefix": "buffer-theke-string",
+    "body": [
+      "dhoro ${1:buf} = buffer_theke(\"${2:Hello}\");"
+    ],
+    "description": "Create Buffer from string (বাফার থেকে - buffer from)"
+  },
+  "Buffer From Array": {
+    "prefix": "buffer-theke-array",
+    "body": [
+      "dhoro ${1:buf} = buffer_theke([${2:72, 101, 108, 108, 111}]);"
+    ],
+    "description": "Create Buffer from byte array (বাফার থেকে - buffer from)"
+  },
+  "Buffer Concat": {
+    "prefix": "buffer-joro",
+    "body": [
+      "dhoro ${1:combined} = buffer_joro(${2:buf1}, ${3:buf2});"
+    ],
+    "description": "Concatenate multiple buffers (বাফার জোড়ো - join buffers)"
+  },
+  "Buffer To String": {
+    "prefix": "buffer-text",
+    "body": [
+      "dhoro ${1:text} = buffer_text(${2:buf}${3:, \"utf8\"});"
+    ],
+    "description": "Convert buffer to string (বাফার টেক্সট - buffer to text)"
+  },
+  "Buffer Write": {
+    "prefix": "buffer-lekho",
+    "body": [
+      "buffer_lekho(${1:buf}, \"${2:data}\", ${3:0});"
+    ],
+    "description": "Write string to buffer at offset (বাফার লেখো - write to buffer)"
+  },
+  "Buffer Slice": {
+    "prefix": "buffer-angsho",
+    "body": [
+      "dhoro ${1:slice} = buffer_angsho(${2:buf}, ${3:0}, ${4:5});"
+    ],
+    "description": "Extract a section of buffer (বাফার অংশ - buffer slice)"
+  },
+  "Buffer Compare": {
+    "prefix": "buffer-tulona",
+    "body": [
+      "dhoro ${1:result} = buffer_tulona(${2:buf1}, ${3:buf2});"
+    ],
+    "description": "Compare two buffers (-1, 0, 1) (বাফার তুলনা - compare buffers)"
+  },
+  "Buffer To Hex": {
+    "prefix": "buffer-hex",
+    "body": [
+      "dhoro ${1:hex} = buffer_hex(${2:buf});"
+    ],
+    "description": "Convert buffer to hex string (বাফার হেক্স - buffer to hex)"
+  },
+  "Buffer Copy": {
+    "prefix": "buffer-copy",
+    "body": [
+      "dhoro ${1:written} = buffer_copy(${2:target}, ${3:source}, ${4:0});"
+    ],
+    "description": "Copy data from one buffer to another (বাফার কপি - copy buffer)"
+  },
+  "Buffer Binary Protocol": {
+    "prefix": "buffer-protocol",
+    "body": [
+      "// Build binary protocol message",
+      "dhoro ${1:header} = buffer_theke([${2:0xFF, 0x01, 0x02}]);",
+      "dhoro ${3:payload} = buffer_theke(\"${4:message data}\");",
+      "dhoro ${5:checksum} = buffer_theke([${6:0xAB, 0xCD}]);",
+      "",
+      "// Combine all parts",
+      "dhoro ${7:message} = buffer_joro(${1:header}, ${3:payload}, ${5:checksum});",
+      "",
+      "// Extract parts",
+      "dhoro ${8:headerPart} = buffer_angsho(${7:message}, 0, ${9:3});",
+      "$0"
+    ],
+    "description": "Binary protocol message pattern with Buffer"
+  },
+  "Worker Create": {
+    "prefix": "worker-srishti",
+    "body": [
+      "dhoro ${1:worker} = kaj_kormi_srishti(kaj() {",
+      "\t${2:// Worker code here}",
+      "});"
+    ],
+    "description": "Create a worker thread (কাজ কর্মী সৃষ্টি - create worker)"
+  },
+  "Worker With Data": {
+    "prefix": "worker-data",
+    "body": [
+      "dhoro ${1:worker} = kaj_kormi_srishti(kaj() {",
+      "\tdhoro data = kaj_kormi_tothya;",
+      "\tdekho(\"Worker data:\", data);",
+      "\t${2:// Use data}",
+      "}, ${3:initialData});"
+    ],
+    "description": "Create worker with initial data (কাজ কর্মী তথ্য - worker data)"
+  },
+  "Worker Post Message": {
+    "prefix": "worker-pathao",
+    "body": [
+      "kaj_kormi_pathao(${1:worker}, ${2:message});"
+    ],
+    "description": "Send message to worker (কাজ কর্মী পাঠাও - send to worker)"
+  },
+  "Worker Terminate": {
+    "prefix": "worker-bondho",
+    "body": [
+      "kaj_kormi_bondho(${1:worker});"
+    ],
+    "description": "Terminate worker thread (কাজ কর্মী বন্ধ - stop worker)"
+  },
+  "Worker On Message": {
+    "prefix": "worker-shuno",
+    "body": [
+      "kaj_kormi_shuno(${1:worker}, kaj(${2:data}) {",
+      "\tdekho(\"Received:\", ${2:data});",
+      "\t${3:// Handle message}",
+      "});",
+      "$0"
+    ],
+    "description": "Listen for worker responses (কাজ কর্মী শুনো - listen to worker)"
+  },
+  "Worker Complete Example": {
+    "prefix": "worker-example",
+    "body": [
+      "// Create worker for CPU-intensive task",
+      "dhoro ${1:worker} = kaj_kormi_srishti(kaj() {",
+      "\t// Access initial data",
+      "\tdhoro config = kaj_kormi_tothya;",
+      "\t",
+      "\t// Perform computation",
+      "\tdhoro result = 0;",
+      "\tghuriye (dhoro i = 0; i < config[\"count\"]; i = i + 1) {",
+      "\t\tresult = result + i;",
+      "\t}",
+      "\t",
+      "\tdekho(\"Computation complete:\", result);",
+      "}, {\"count\": ${2:100}});",
+      "",
+      "// Send additional data to worker",
+      "kaj_kormi_pathao(${1:worker}, {\"command\": \"${3:process}\"});",
+      "",
+      "// Listen for worker messages",
+      "kaj_kormi_shuno(${1:worker}, kaj(data) {",
+      "\tdekho(\"Worker response:\", data);",
+      "});",
+      "",
+      "// Terminate when done",
+      "process_ghum(${4:1000});",
+      "kaj_kormi_bondho(${1:worker});",
+      "$0"
+    ],
+    "description": "Complete worker pattern with communication"
+  },
+  "Parallel Workers": {
+    "prefix": "worker-parallel",
+    "body": [
+      "// Run multiple workers in parallel",
+      "dhoro ${1:workers} = [];",
+      "",
+      "ghuriye (dhoro i = 0; i < ${2:4}; i = i + 1) {",
+      "\tdhoro worker = kaj_kormi_srishti(kaj() {",
+      "\t\tdhoro id = kaj_kormi_tothya;",
+      "\t\tdekho(\"Worker\", id, \"processing...\");",
+      "\t\t${3:// Parallel task}",
+      "\t}, i);",
+      "\t",
+      "\t${1:workers} = dhaaka(${1:workers}, worker);",
+      "}",
+      "",
+      "// Wait for all workers",
+      "process_ghum(${4:2000});",
+      "",
+      "// Clean up all workers",
+      "ghuriye (dhoro i = 0; i < dorghyo(${1:workers}); i = i + 1) {",
+      "\tkaj_kormi_bondho(${1:workers}[i]);",
+      "}",
+      "$0"
+    ],
+    "description": "Create multiple parallel workers"
+  },
+  "Stream Readable Create": {
+    "prefix": "stream-readable",
+    "body": [
+      "dhoro ${1:stream} = stream_readable_srishti();"
+    ],
+    "description": "Create a readable stream (স্ট্রীম পড়ার সৃষ্টি - create readable stream)"
+  },
+  "Stream Writable Create": {
+    "prefix": "stream-writable",
+    "body": [
+      "dhoro ${1:stream} = stream_writable_srishti(${2:16384});"
+    ],
+    "description": "Create a writable stream (স্ট্রীম লেখার সৃষ্টি - create writable stream)"
+  },
+  "Stream Write": {
+    "prefix": "stream-lekho",
+    "body": [
+      "stream_lekho(${1:stream}, ${2:data});"
+    ],
+    "description": "Write data to stream (স্ট্রীম লেখো - write to stream)"
+  },
+  "Stream Read": {
+    "prefix": "stream-poro",
+    "body": [
+      "dhoro ${1:data} = stream_poro(${2:stream}${3:, size});"
+    ],
+    "description": "Read data from stream (স্ট্রীম পড়ো - read from stream)"
+  },
+  "Stream Close": {
+    "prefix": "stream-bondho",
+    "body": [
+      "stream_bondho(${1:stream});"
+    ],
+    "description": "Close stream (স্ট্রীম বন্ধ - close stream)"
+  },
+  "Stream End": {
+    "prefix": "stream-shesh",
+    "body": [
+      "stream_shesh(${1:stream});"
+    ],
+    "description": "Signal end of readable stream (স্ট্রীম শেষ - end stream)"
+  },
+  "Stream Pipe": {
+    "prefix": "stream-pipe",
+    "body": [
+      "stream_pipe(${1:readable}, ${2:writable});"
+    ],
+    "description": "Pipe readable stream to writable stream (স্ট্রীম পাইপ - pipe streams)"
+  },
+  "Stream On Event": {
+    "prefix": "stream-on",
+    "body": [
+      "stream_on(${1:stream}, \"${2|data,end,error|}\", kaj(${3:chunk}) {",
+      "\t${4:// Handle event}",
+      "});",
+      "$0"
+    ],
+    "description": "Register stream event handler (স্ট্রীম অন - stream event)"
+  },
+  "Stream Complete Example": {
+    "prefix": "stream-example",
+    "body": [
+      "// Create readable and writable streams",
+      "dhoro ${1:readable} = stream_readable_srishti();",
+      "dhoro ${2:writable} = stream_writable_srishti();",
+      "",
+      "// Handle data events",
+      "stream_on(${2:writable}, \"data\", kaj(chunk) {",
+      "\tdekho(\"Received chunk:\", chunk);",
+      "});",
+      "",
+      "// Handle end event",
+      "stream_on(${2:writable}, \"end\", kaj() {",
+      "\tdekho(\"Stream ended\");",
+      "});",
+      "",
+      "// Write data",
+      "stream_lekho(${2:writable}, \"${3:Chunk 1}\");",
+      "stream_lekho(${2:writable}, \"${4:Chunk 2}\");",
+      "",
+      "// Close stream",
+      "stream_bondho(${2:writable});",
+      "$0"
+    ],
+    "description": "Complete stream processing example"
+  },
+  "Stream File Processing": {
+    "prefix": "stream-file",
+    "body": [
+      "// Process file in chunks using streams",
+      "dhoro ${1:input} = stream_readable_srishti();",
+      "dhoro ${2:output} = stream_writable_srishti();",
+      "",
+      "// Handle data chunks",
+      "stream_on(${2:output}, \"data\", kaj(chunk) {",
+      "\t// Process chunk",
+      "\t${3:// e.g., transform, filter, etc.}",
+      "});",
+      "",
+      "// Read file and write to stream",
+      "dhoro ${4:content} = poro(\"${5:input.txt}\");",
+      "stream_lekho(${2:output}, ${4:content});",
+      "",
+      "// End stream",
+      "stream_bondho(${2:output});",
+      "$0"
+    ],
+    "description": "Stream-based file processing pattern"
+  },
+  "URL Parse": {
+    "prefix": "url-parse",
+    "body": [
+      "dhoro ${1:url} = url_parse(\"${2:https://example.com/path?query=value}\");"
+    ],
+    "description": "Parse a URL string (ইউআরএল পার্স - parse URL)"
+  },
+  "URL Components": {
+    "prefix": "url-components",
+    "body": [
+      "dhoro url = url_parse(\"${1:https://example.com:8080/api?key=value#section}\");",
+      "dekho(\"Protocol:\", url.Protocol);",
+      "dekho(\"Hostname:\", url.Hostname);",
+      "dekho(\"Port:\", url.Port);",
+      "dekho(\"Pathname:\", url.Pathname);",
+      "dekho(\"Search:\", url.Search);",
+      "dekho(\"Hash:\", url.Hash);",
+      "$0"
+    ],
+    "description": "Extract all URL components"
+  },
+  "URL Query Params": {
+    "prefix": "url-query",
+    "body": [
+      "dhoro ${1:params} = url_query_params(\"${2:key1=value1&key2=value2}\");"
+    ],
+    "description": "Create URLSearchParams (ইউআরএল কোয়েরি - URL query)"
+  },
+  "URL Query Get": {
+    "prefix": "url-query-get",
+    "body": [
+      "dhoro ${1:value} = url_query_get(${2:params}, \"${3:key}\");"
+    ],
+    "description": "Get query parameter value (কোয়েরি পাও - get query param)"
+  },
+  "URL Query Set": {
+    "prefix": "url-query-set",
+    "body": [
+      "url_query_set(${1:params}, \"${2:key}\", \"${3:value}\");"
+    ],
+    "description": "Set query parameter (কোয়েরি সেট - set query param)"
+  },
+  "URL Query Has": {
+    "prefix": "url-query-has",
+    "body": [
+      "jodi (url_query_has(${1:params}, \"${2:key}\")) {",
+      "\t${3:// Parameter exists}",
+      "}",
+      "$0"
+    ],
+    "description": "Check if query parameter exists"
+  },
+  "URL Complete Example": {
+    "prefix": "url-example",
+    "body": [
+      "// Parse URL and work with query parameters",
+      "dhoro url = url_parse(\"${1:https://api.example.com/users?page=1&limit=10}\");",
+      "",
+      "// Get query parameters",
+      "dhoro params = url_query_params(url);",
+      "dhoro page = url_query_get(params, \"page\");",
+      "dhoro limit = url_query_get(params, \"limit\");",
+      "",
+      "dekho(\"API:\", url.Hostname + url.Pathname);",
+      "dekho(\"Page:\", page);",
+      "dekho(\"Limit:\", limit);",
+      "",
+      "// Modify parameters",
+      "url_query_set(params, \"page\", \"2\");",
+      "url_query_append(params, \"sort\", \"name\");",
+      "",
+      "// Build new query string",
+      "dhoro newQuery = url_query_toString(params);",
+      "dekho(\"New query:\", newQuery);",
+      "$0"
+    ],
+    "description": "Complete URL parsing and manipulation example"
+  },
+  "URL API Request": {
+    "prefix": "url-api",
+    "body": [
+      "// Build API URL with query parameters",
+      "dhoro baseUrl = \"${1:https://api.example.com/data}\";",
+      "dhoro params = url_query_params(\"\");",
+      "",
+      "// Add query parameters",
+      "url_query_set(params, \"page\", \"${2:1}\");",
+      "url_query_set(params, \"limit\", \"${3:20}\");",
+      "url_query_set(params, \"sort\", \"${4:desc}\");",
+      "",
+      "// Build final URL",
+      "dhoro queryString = url_query_toString(params);",
+      "dhoro finalUrl = baseUrl + \"?\" + queryString;",
+      "",
+      "dekho(\"Request URL:\", finalUrl);",
+      "// dhoro response = anun(finalUrl);",
+      "$0"
+    ],
+    "description": "Build API request URL with query parameters"
+  },
+  "set-create": {
+    "prefix": "set-create",
+    "body": [
+      "// Create a new Set",
+      "dhoro mySet = set_srishti();",
+      "set_add(mySet, ${1:value});",
+      "$0"
+    ],
+    "description": "Create a new Set"
+  },
+  "set-from-array": {
+    "prefix": "set-array",
+    "body": [
+      "// Create Set from array (removes duplicates)",
+      "dhoro mySet = set_srishti([${1:1, 2, 3, 2, 1}]);",
+      "dekho(\"Set size:\", set_akar(mySet)); // ${2:3}",
+      "$0"
+    ],
+    "description": "Create Set from array"
+  },
+  "set-operations": {
+    "prefix": "set-ops",
+    "body": [
+      "// Set operations",
+      "dhoro mySet = set_srishti();",
+      "",
+      "// Add elements",
+      "set_add(mySet, ${1:\"apple\"});",
+      "set_add(mySet, ${2:\"banana\"});",
+      "",
+      "// Check existence",
+      "jodi (set_has(mySet, ${3:\"apple\"})) {",
+      "  dekho(\"Found!\");",
+      "}",
+      "",
+      "// Remove element",
+      "set_delete(mySet, ${4:\"banana\"});",
+      "",
+      "// Get size",
+      "dekho(\"Size:\", set_akar(mySet));",
+      "$0"
+    ],
+    "description": "Common Set operations"
+  },
+  "set-iterate": {
+    "prefix": "set-foreach",
+    "body": [
+      "// Iterate over Set",
+      "dhoro mySet = set_srishti([${1:1, 2, 3}]);",
+      "",
+      "set_foreach(mySet, kaj(value) {",
+      "  dekho(value);",
+      "  $0",
+      "});"
+    ],
+    "description": "Iterate over Set with forEach"
+  },
+  "set-unique": {
+    "prefix": "set-unique",
+    "body": [
+      "// Remove duplicates from array using Set",
+      "dhoro arr = [${1:1, 2, 3, 2, 1, 4, 3}];",
+      "dhoro uniqueSet = set_srishti(arr);",
+      "dhoro uniqueArr = set_values(uniqueSet);",
+      "dekho(\"Unique values:\", uniqueArr);",
+      "$0"
+    ],
+    "description": "Remove duplicates using Set"
+  },
+  "map-create": {
+    "prefix": "map-create",
+    "body": [
+      "// Create a new Map",
+      "dhoro myMap = map_srishti();",
+      "map_set(myMap, ${1:\"key\"}, ${2:\"value\"});",
+      "$0"
+    ],
+    "description": "Create a new Map"
+  },
+  "map-from-entries": {
+    "prefix": "map-entries",
+    "body": [
+      "// Create Map from entries",
+      "dhoro myMap = map_srishti([",
+      "  [\"${1:name}\", \"${2:Ankan}\"],",
+      "  [\"${3:age}\", ${4:25}],",
+      "  [\"${5:city}\", \"${6:Kolkata}\"]",
+      "]);",
+      "dekho(\"Map size:\", map_akar(myMap));",
+      "$0"
+    ],
+    "description": "Create Map from entries"
+  },
+  "map-operations": {
+    "prefix": "map-ops",
+    "body": [
+      "// Map operations",
+      "dhoro myMap = map_srishti();",
+      "",
+      "// Set key-value pairs",
+      "map_set(myMap, ${1:\"name\"}, ${2:\"Ankan\"});",
+      "map_set(myMap, ${3:\"age\"}, ${4:25});",
+      "",
+      "// Get value",
+      "dhoro name = map_get(myMap, ${5:\"name\"});",
+      "dekho(\"Name:\", name);",
+      "",
+      "// Check if key exists",
+      "jodi (map_has(myMap, ${6:\"age\"})) {",
+      "  dekho(\"Age exists\");",
+      "}",
+      "",
+      "// Delete entry",
+      "map_delete(myMap, ${7:\"age\"});",
+      "",
+      "// Get size",
+      "dekho(\"Size:\", map_akar(myMap));",
+      "$0"
+    ],
+    "description": "Common Map operations"
+  },
+  "map-iterate": {
+    "prefix": "map-foreach",
+    "body": [
+      "// Iterate over Map",
+      "dhoro myMap = map_srishti([[\"a\", 1], [\"b\", 2], [\"c\", 3]]);",
+      "",
+      "map_foreach(myMap, kaj(value, key) {",
+      "  dekho(key, \"=>\", value);",
+      "  $0",
+      "});"
+    ],
+    "description": "Iterate over Map with forEach"
+  },
+  "map-keys-values": {
+    "prefix": "map-kv",
+    "body": [
+      "// Get Map keys and values",
+      "dhoro myMap = map_srishti([[\"${1:name}\", \"${2:Ankan}\"], [\"${3:age}\", ${4:25}]]);",
+      "",
+      "// Get all keys",
+      "dhoro keys = map_keys(myMap);",
+      "dekho(\"Keys:\", keys);",
+      "",
+      "// Get all values",
+      "dhoro values = map_values(myMap);",
+      "dekho(\"Values:\", values);",
+      "",
+      "// Get all entries",
+      "dhoro entries = map_entries(myMap);",
+      "dekho(\"Entries:\", entries);",
+      "$0"
+    ],
+    "description": "Get Map keys, values, and entries"
+  },
+  "map-object-keys": {
+    "prefix": "map-object",
+    "body": [
+      "// Map with object keys (not just strings)",
+      "dhoro myMap = map_srishti();",
+      "",
+      "// Use array as key",
+      "dhoro key1 = [${1:1, 2}];",
+      "map_set(myMap, key1, \"${2:first}\");",
+      "",
+      "// Use object as key",
+      "dhoro key2 = {naam: \"${3:Ankan}\"};",
+      "map_set(myMap, key2, \"${4:second}\");",
+      "",
+      "dekho(\"Map size:\", map_akar(myMap));",
+      "$0"
+    ],
+    "description": "Map with object keys"
+  },
+  "collections-example": {
+    "prefix": "collections-ex",
+    "body": [
+      "// Complete Set and Map example",
+      "",
+      "// Remove duplicates with Set",
+      "dhoro numbers = [1, 2, 3, 2, 1, 4, 3];",
+      "dhoro uniqueSet = set_srishti(numbers);",
+      "dekho(\"Unique numbers:\", set_values(uniqueSet));",
+      "",
+      "// Count occurrences with Map",
+      "dhoro countMap = map_srishti();",
+      "ghuriye (dhoro i = 0; i < dorghyo(numbers); i = i + 1) {",
+      "  dhoro num = numbers[i];",
+      "  dhoro count = map_get(countMap, num);",
+      "  jodi (count == khali) {",
+      "    map_set(countMap, num, 1);",
+      "  } nahole {",
+      "    map_set(countMap, num, count + 1);",
+      "  }",
+      "}",
+      "",
+      "dekho(\"\\nOccurrence count:\");",
+      "map_foreach(countMap, kaj(count, num) {",
+      "  dekho(num, \"appears\", count, \"times\");",
+      "});",
+      "$0"
+    ],
+    "description": "Complete Set and Map example"
+  },
+  "URL Search Params Build": {
+    "prefix": "url-params-build",
+    "body": [
+      "// Build query parameters from scratch",
+      "dhoro params = url_query_params(\"\");",
+      "",
+      "url_query_set(params, \"${1:search}\", \"${2:term}\");",
+      "url_query_set(params, \"${3:category}\", \"${4:all}\");",
+      "url_query_append(params, \"${5:filter}\", \"${6:active}\");",
+      "",
+      "dhoro queryString = url_query_toString(params);",
+      "dekho(\"Query string:\", queryString);",
+      "$0"
+    ],
+    "description": "Build URLSearchParams from scratch"
+  },
+  "Path Resolve": {
+    "prefix": "path-resolve",
+    "body": [
+      "dhoro absolutePath = path_resolve(${1:\".\", \"folder\", \"file.txt\"});",
+      "dekho(absolutePath);"
+    ],
+    "description": "Resolve paths to absolute path"
+  },
+  "Path Normalize": {
+    "prefix": "path-normalize",
+    "body": [
+      "dhoro cleanPath = path_normalize(${1:\"/foo/./bar/../baz\"});",
+      "dekho(cleanPath);"
+    ],
+    "description": "Normalize/clean path"
+  },
+  "Path Relative": {
+    "prefix": "path-relative",
+    "body": [
+      "dhoro relativePath = path_relative(${1:\"/home/user\"}, ${2:\"/home/user/docs/file.txt\"});",
+      "dekho(relativePath);"
+    ],
+    "description": "Get relative path between two paths"
+  },
+  "Path Constants": {
+    "prefix": "path-sep",
+    "body": [
+      "dhoro separator = PATH_SEP;",
+      "dhoro delimiter = PATH_DELIMITER;"
+    ],
+    "description": "Use path separator and delimiter constants"
+  },
+  "Path Operations": {
+    "prefix": "path-ops",
+    "body": [
+      "dhoro joined = path_joro(${1:\"folder\"}, ${2:\"file.txt\"});",
+      "dhoro normalized = path_normalize(joined);",
+      "dhoro absolute = path_resolve(normalized);",
+      "dekho(absolute);"
+    ],
+    "description": "Chain multiple path operations"
+  },
+  "Number Validation": {
+    "prefix": "number-validate",
+    "body": [
+      "jodi (!sonkhya_sesh(${1:value})) {",
+      "  dekho(\"Error: Not a finite number\");",
+      "}",
+      "jodi (!sonkhya_purno(${1:value})) {",
+      "  dekho(\"Error: Not an integer\");",
+      "}",
+      "jodi (!sonkhya_nirapod(${1:value})) {",
+      "  dekho(\"Error: Not a safe integer\");",
+      "}"
+    ],
+    "description": "Validate number with Number methods"
+  },
+  "Number Constants": {
+    "prefix": "number-const",
+    "body": [
+      "dhoro maxSafe = NUMBER_MAX_SAFE_INTEGER;",
+      "dhoro minSafe = NUMBER_MIN_SAFE_INTEGER;",
+      "dhoro epsilon = NUMBER_EPSILON;"
+    ],
+    "description": "Use Number constants"
+  },
+  "Getter Method": {
+    "prefix": "pao",
+    "body": [
+      "pao ${1:propertyName}() {",
+      "\tferao ei.${2:_field};",
+      "}"
+    ],
+    "description": "Define a getter method (পাও - get)"
+  },
+  "Setter Method": {
+    "prefix": "set",
+    "body": [
+      "set ${1:propertyName}(${2:value}) {",
+      "\tei.${3:_field} = ${2:value};",
+      "}"
+    ],
+    "description": "Define a setter method"
+  },
+  "Getter and Setter": {
+    "prefix": "pao-set",
+    "body": [
+      "pao ${1:propertyName}() {",
+      "\tferao ei.${2:_field};",
+      "}",
+      "",
+      "set ${1:propertyName}(${3:value}) {",
+      "\tei.${2:_field} = ${3:value};",
+      "}"
+    ],
+    "description": "Define getter and setter together"
+  },
+  "Static Property": {
+    "prefix": "sthir-prop",
+    "body": [
+      "sthir ${1:PROPERTY_NAME} = ${2:value};"
+    ],
+    "description": "Define static property (স্থির - static)"
+  },
+  "Class with Getters and Setters": {
+    "prefix": "sreni-getter-setter",
+    "body": [
+      "sreni ${1:ClassName} {",
+      "\tshuru(${2:param}) {",
+      "\t\tei._${3:field} = ${2:param};",
+      "\t}",
+      "",
+      "\tpao ${3:field}() {",
+      "\t\tferao ei._${3:field};",
+      "\t}",
+      "",
+      "\tset ${3:field}(${4:value}) {",
+      "\t\tei._${3:field} = ${4:value};",
+      "\t}",
+      "}"
+    ],
+    "description": "Create class with getter and setter"
+  },
+  "Class with Static Properties": {
+    "prefix": "sreni-static",
+    "body": [
+      "sreni ${1:ClassName} {",
+      "\tsthir ${2:CONSTANT} = ${3:value};",
+      "",
+      "\tshuru() {",
+      "\t\t${4:// constructor}",
+      "\t}",
+      "",
+      "\tkaj ${5:method}() {",
+      "\t\tferao ${1:ClassName}.${2:CONSTANT};",
+      "\t}",
+      "}"
+    ],
+    "description": "Create class with static properties"
+  },
+  "Append to File": {
+    "prefix": "file-jog",
+    "body": [
+      "file_jog(\"${1:path}\", \"${2:content}\");"
+    ],
+    "description": "Append content to file (ফাইল জোগ)"
+  },
+  "Delete File": {
+    "prefix": "file-mochho",
+    "body": [
+      "file_mochho(\"${1:path}\");"
+    ],
+    "description": "Delete file (ফাইল মোছো)"
+  },
+  "Copy File": {
+    "prefix": "file-nokol",
+    "body": [
+      "file_nokol(\"${1:source}\", \"${2:destination}\");"
+    ],
+    "description": "Copy file (ফাইল নকল)"
+  },
+  "Delete Folder": {
+    "prefix": "folder-mochho",
+    "body": [
+      "folder_mochho(\"${1:path}\", ${2:sotti});"
+    ],
+    "description": "Delete folder (recursive if sotti/true)"
+  },
+  "Watch File": {
+    "prefix": "file-dekhun",
+    "body": [
+      "dhoro ${1:watcher} = file_dekhun(\"${2:path}\", kaj(event, filename) {",
+      "\tdekho(\"File changed: \", event, filename);",
+      "\t${3:// handle change}",
+      "});"
+    ],
+    "description": "Watch file for changes (ফাইল দেখুন)"
+  },
+  "Stop Watching File": {
+    "prefix": "file-dekhun-bondho",
+    "body": [
+      "file_dekhun_bondho(${1:watcher});"
+    ],
+    "description": "Stop watching file (ফাইল দেখুন বন্ধ)"
+  },
+  "Throw Error": {
+    "prefix": "felo-error",
+    "body": [
+      "felo Error(\"${1:message}\");"
+    ],
+    "description": "Throw generic error"
+  },
+  "Throw TypeError": {
+    "prefix": "felo-type",
+    "body": [
+      "felo TypeError(\"${1:Expected ${2:type}, got ${3:actual}}\");"
+    ],
+    "description": "Throw TypeError"
+  },
+  "Throw ReferenceError": {
+    "prefix": "felo-reference",
+    "body": [
+      "felo ReferenceError(\"${1:Variable not defined}\");"
+    ],
+    "description": "Throw ReferenceError"
+  },
+  "Throw RangeError": {
+    "prefix": "felo-range",
+    "body": [
+      "felo RangeError(\"${1:Value out of range}\");"
+    ],
+    "description": "Throw RangeError"
+  },
+  "Try-Catch with Error Handling": {
+    "prefix": "chesta-error",
+    "body": [
+      "chesta {",
+      "\t${1:// code that might throw}",
+      "} dhoro_bhul(e) {",
+      "\tdekho(\"Error:\", bhul_naam(e), \"-\", bhul_message(e));",
+      "\t${2:// handle error}",
+      "}"
+    ],
+    "description": "Try-catch with error utilities"
+  },
+  "Check if Error": {
+    "prefix": "is-error",
+    "body": [
+      "jodi (is_error(${1:value})) {",
+      "\t${2:// handle error}",
+      "}"
+    ],
+    "description": "Check if value is an error"
+  },
+  "Validation Function with Errors": {
+    "prefix": "kaj-validate",
+    "body": [
+      "kaj validate${1:Value}(${2:value}) {",
+      "\tjodi (dhoron(${2:value}) != \"${3:NUMBER}\") {",
+      "\t\tfelo TypeError(\"Expected ${3:NUMBER}\");",
+      "\t}",
+      "\t",
+      "\tjodi (${2:value} < ${4:0}) {",
+      "\t\tfelo RangeError(\"Value must be >= ${4:0}\");",
+      "\t}",
+      "\t",
+      "\tferao sotti;",
+      "}"
+    ],
+    "description": "Create validation function with proper error types"
+  },
+  "Generator Function": {
+    "prefix": "kaj-generator",
+    "body": [
+      "kaj* ${1:counter}(${2:max}) {",
+      "\tdhoro i = 0;",
+      "\tjotokkhon (i < ${2:max}) {",
+      "\t\tutpadan i;",
+      "\t\ti = i + 1;",
+      "\t}",
+      "}"
+    ],
+    "description": "Generator function with utpadan (yield)"
+  },
+  "Generator Next Loop": {
+    "prefix": "generator-next",
+    "body": [
+      "dhoro gen = ${1:counter}(${2:5});",
+      "jotokkhon (sotti) {",
+      "\tdhoro step = gen.next();",
+      "\tjodi (step[\"done\"]) {",
+      "\t\tthamo;",
+      "\t}",
+      "\tdekho(step[\"value\"]);",
+      "}"
+    ],
+    "description": "Iterate a generator using next()"
+  },
+  "Generator Return": {
+    "prefix": "generator-return",
+    "body": [
+      "dhoro gen = ${1:makeGen}();",
+      "gen.next();",
+      "dhoro end = gen.return(${2:\"finished\"});",
+      "dekho(end[\"value\"], end[\"done\"]);"
+    ],
+    "description": "Early-complete generator with return()"
   }
 }

@@ -38,6 +38,190 @@ export default function ErrorHandling() {
 // Output: An error occurred: division by zero`}
       />
 
+      <h2>Custom Error Types (v7.0.16)</h2>
+
+      <p>
+        BanglaCode provides JavaScript-compatible error types for more specific error handling:
+      </p>
+
+      <div className="overflow-x-auto my-4">
+        <table>
+          <thead>
+            <tr>
+              <th>Error Type</th>
+              <th>Use Case</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Error</code></td>
+              <td>Generic errors</td>
+              <td>General failures</td>
+            </tr>
+            <tr>
+              <td><code>TypeError</code></td>
+              <td>Type mismatches</td>
+              <td>Expected number, got string</td>
+            </tr>
+            <tr>
+              <td><code>ReferenceError</code></td>
+              <td>Undefined variables</td>
+              <td>Variable not defined</td>
+            </tr>
+            <tr>
+              <td><code>RangeError</code></td>
+              <td>Out of range values</td>
+              <td>Index out of bounds</td>
+            </tr>
+            <tr>
+              <td><code>SyntaxError</code></td>
+              <td>Syntax issues</td>
+              <td>Invalid JSON format</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Creating Custom Errors</h3>
+
+      <CodeBlock
+        code={`// Create typed errors
+dhoro err1 = Error("Something went wrong");
+dhoro err2 = TypeError("Expected number, got string");
+dhoro err3 = ReferenceError("Variable 'x' is not defined");
+dhoro err4 = RangeError("Index out of bounds");
+dhoro err5 = SyntaxError("Invalid JSON");
+
+// Throw custom errors
+kaj validateInput(value) {
+    jodi (dhoron(value) != "NUMBER") {
+        felo TypeError("Input must be a number");
+    }
+    jodi (value < 0 ba value > 100) {
+        felo RangeError("Value must be between 0 and 100");
+    }
+    ferao sotti;
+}`}
+      />
+
+      <h3>Error Utility Functions</h3>
+
+      <div className="overflow-x-auto my-4">
+        <table>
+          <thead>
+            <tr>
+              <th>Function</th>
+              <th>Description</th>
+              <th>Returns</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>bhul_message(error)</code></td>
+              <td>Get error message</td>
+              <td>String</td>
+            </tr>
+            <tr>
+              <td><code>bhul_naam(error)</code></td>
+              <td>Get error type name</td>
+              <td>String</td>
+            </tr>
+            <tr>
+              <td><code>bhul_stack(error)</code></td>
+              <td>Get stack trace</td>
+              <td>String</td>
+            </tr>
+            <tr>
+              <td><code>is_error(value)</code></td>
+              <td>Check if value is error</td>
+              <td>Boolean</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <CodeBlock
+        code={`// Using error utilities
+chesta {
+    felo TypeError("Invalid type");
+} dhoro_bhul(e) {
+    dekho("Error name:", bhul_naam(e));       // "TypeError"
+    dekho("Error message:", bhul_message(e)); // "Invalid type"
+    dekho("Stack trace:", bhul_stack(e));     // Stack information
+}
+
+// Check if value is an error
+dhoro value = TypeError("test");
+jodi (is_error(value)) {
+    dekho("This is an error object");
+}`}
+      />
+
+      <h3>Real-World Validation Example</h3>
+
+      <CodeBlock
+        code={`// User input validation with proper error types
+kaj validateUser(user) {
+    // Type checking
+    jodi (dhoron(user) != "MAP") {
+        felo TypeError("User must be an object");
+    }
+    
+    // Required fields
+    dhoro keys = chabi(user);
+    dhoro hasName = mittha;
+    dhoro hasAge = mittha;
+    
+    ghuriye (dhoro i = 0; i < kato(keys); i = i + 1) {
+        jodi (keys[i] == "name") { hasName = sotti; }
+        jodi (keys[i] == "age") { hasAge = sotti; }
+    }
+    
+    jodi (!hasName) {
+        felo ReferenceError("User must have 'name' property");
+    }
+    jodi (!hasAge) {
+        felo ReferenceError("User must have 'age' property");
+    }
+    
+    // Value validation
+    dhoro age = user["age"];
+    jodi (dhoron(age) != "NUMBER") {
+        felo TypeError("Age must be a number");
+    }
+    jodi (age < 0 ba age > 150) {
+        felo RangeError("Age must be between 0 and 150");
+    }
+    
+    ferao sotti;
+}
+
+// Usage with detailed error handling
+dhoro user = {"name": "Rahim", "age": 25};
+
+chesta {
+    validateUser(user);
+    dekho("User is valid!");
+} dhoro_bhul(e) {
+    dhoro errorType = bhul_naam(e);
+    dhoro errorMsg = bhul_message(e);
+    
+    dekho("Validation failed:");
+    dekho("  Type:", errorType);
+    dekho("  Message:", errorMsg);
+    
+    // Handle different error types
+    jodi (errorType == "TypeError") {
+        dekho("  → Fix data types");
+    } nahole jodi (errorType == "ReferenceError") {
+        dekho("  → Add missing fields");
+    } nahole jodi (errorType == "RangeError") {
+        dekho("  → Check value ranges");
+    }
+}`}
+      />
+
       <h2>Finally Block (shesh)</h2>
 
       <p>

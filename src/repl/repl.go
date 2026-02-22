@@ -2,6 +2,7 @@ package repl
 
 import (
 	"BanglaCode/src/evaluator"
+	"BanglaCode/src/evaluator/builtins"
 	"BanglaCode/src/lexer"
 	"BanglaCode/src/object"
 	"BanglaCode/src/parser"
@@ -11,7 +12,7 @@ import (
 	"strings"
 )
 
-const Version = "8.1.1"
+const Version = "8.0.0"
 
 const PROMPT = "\033[1;33m>> \033[0m"
 
@@ -166,6 +167,7 @@ const HELP = `
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 	env := object.NewEnvironment()
+	builtins.InitializeEnvironmentWithConstants(env)
 
 	printBanner(out)
 

@@ -253,9 +253,30 @@ func (p *Parser) parseClassDeclaration() *ast.ClassDeclaration {
 	p.nextToken()
 
 	stmt.Methods = []*ast.FunctionLiteral{}
+	stmt.Getters = make(map[string]*ast.FunctionLiteral)
+	stmt.Setters = make(map[string]*ast.FunctionLiteral)
+	stmt.StaticProperties = make(map[string]ast.Expression)
 
 	for !p.curTokenIs(lexer.RBRACE) && !p.curTokenIs(lexer.EOF) {
-		if p.curTokenIs(lexer.KAJ) {
+		if p.curTokenIs(lexer.PAO) {
+			// Parse getter: pao propertyName() { ... }
+			getter := p.parseGetter()
+			if getter != nil && getter.Name != nil {
+				stmt.Getters[getter.Name.Value] = getter
+			}
+		} else if p.curTokenIs(lexer.SET) {
+			// Parse setter: set propertyName(value) { ... }
+			setter := p.parseSetter()
+			if setter != nil && setter.Name != nil {
+				stmt.Setters[setter.Name.Value] = setter
+			}
+		} else if p.curTokenIs(lexer.STHIR) {
+			// Parse static property: sthir propertyName = value
+			propName, propValue := p.parseStaticProperty()
+			if propName != "" && propValue != nil {
+				stmt.StaticProperties[propName] = propValue
+			}
+		} else if p.curTokenIs(lexer.KAJ) {
 			method := p.parseFunctionLiteral()
 			if fn, ok := method.(*ast.FunctionLiteral); ok {
 				stmt.Methods = append(stmt.Methods, fn)
@@ -271,6 +292,91 @@ func (p *Parser) parseClassDeclaration() *ast.ClassDeclaration {
 	}
 
 	return stmt
+}
+
+// parseGetter parses "pao propertyName() { ... }"
+func (p *Parser) parseGetter() *ast.FunctionLiteral {
+	lit := &ast.FunctionLiteral{Token: p.curToken}
+
+	if !p.expectPeek(lexer.IDENT) {
+		return nil
+	}
+
+	lit.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+
+	if !p.expectPeek(lexer.LPAREN) {
+		return nil
+	}
+
+	// Getters have no parameters
+	if !p.expectPeek(lexer.RPAREN) {
+		return nil
+	}
+
+	if !p.expectPeek(lexer.LBRACE) {
+		return nil
+	}
+
+	lit.Body = p.parseBlockStatement()
+	lit.Parameters = []*ast.Identifier{}
+
+	return lit
+}
+
+// parseSetter parses "set propertyName(value) { ... }"
+func (p *Parser) parseSetter() *ast.FunctionLiteral {
+	lit := &ast.FunctionLiteral{Token: p.curToken}
+
+	if !p.expectPeek(lexer.IDENT) {
+		return nil
+	}
+
+	lit.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+
+	if !p.expectPeek(lexer.LPAREN) {
+		return nil
+	}
+
+	// Setters have exactly one parameter
+	lit.Parameters = p.parseFunctionParameters()
+
+	if len(lit.Parameters) != 1 {
+		p.errors = append(p.errors, "setter must have exactly one parameter")
+		return nil
+	}
+
+	if !p.expectPeek(lexer.LBRACE) {
+		return nil
+	}
+
+	lit.Body = p.parseBlockStatement()
+
+	return lit
+}
+
+// parseStaticProperty parses "sthir propertyName = value"
+func (p *Parser) parseStaticProperty() (string, ast.Expression) {
+	p.nextToken() // move past STHIR
+
+	if !p.curTokenIs(lexer.IDENT) {
+		return "", nil
+	}
+
+	propName := p.curToken.Literal
+
+	if !p.expectPeek(lexer.ASSIGN) {
+		return "", nil
+	}
+
+	p.nextToken() // move to value expression
+
+	propValue := p.parseExpression(LOWEST)
+
+	if p.peekTokenIs(lexer.SEMICOLON) {
+		p.nextToken()
+	}
+
+	return propName, propValue
 }
 
 // parseConstructor parses "shuru(params) { }" constructor syntax

@@ -402,6 +402,42 @@ dekho(chabi(obj));  // ["naam", "boyosh"]`}
               <td><code>boolean</code></td>
               <td>Write content to file</td>
             </tr>
+            <tr>
+              <td><code>file_jog</code></td>
+              <td><code>path, content</code></td>
+              <td><code>boolean</code></td>
+              <td>Append content to file (জোগ = add)</td>
+            </tr>
+            <tr>
+              <td><code>file_mochho</code></td>
+              <td><code>path</code></td>
+              <td><code>boolean</code></td>
+              <td>Delete file (মোছো = erase)</td>
+            </tr>
+            <tr>
+              <td><code>file_nokol</code></td>
+              <td><code>source, destination</code></td>
+              <td><code>boolean</code></td>
+              <td>Copy file (নকল = duplicate)</td>
+            </tr>
+            <tr>
+              <td><code>folder_mochho</code></td>
+              <td><code>path, [recursive]</code></td>
+              <td><code>boolean</code></td>
+              <td>Delete folder (recursive if sotti/true)</td>
+            </tr>
+            <tr>
+              <td><code>file_dekhun</code></td>
+              <td><code>path, callback</code></td>
+              <td><code>watcher</code></td>
+              <td>Watch file for changes (দেখুন = watch)</td>
+            </tr>
+            <tr>
+              <td><code>file_dekhun_bondho</code></td>
+              <td><code>watcher</code></td>
+              <td><code>boolean</code></td>
+              <td>Stop watching file (বন্ধ = stop)</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -412,7 +448,31 @@ dhoro content = poro("data.txt");
 dekho(content);
 
 // Write file
-lekho("output.txt", "Hello World");`}
+lekho("output.txt", "Hello World");
+
+// Append to file
+file_jog("log.txt", "New log entry\\n");
+
+// Copy file
+file_nokol("source.txt", "backup.txt");
+
+// Delete file
+file_mochho("temp.txt");
+
+// Delete folder (recursive)
+folder_mochho("old_data", sotti);
+
+// Watch file for changes
+dhoro watcher = file_dekhun("config.json", kaj(event, filename) {
+  dekho("File changed:", event, filename);
+  // Reload configuration
+});
+
+// Stop watching after 10 seconds
+ghumaao(10000).tarpor(kaj() {
+  file_dekhun_bondho(watcher);
+  dekho("Stopped watching");
+});`}
       />
 
       <h2>JSON Functions</h2>
