@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import HeroSection from "@/components/home/HeroSection";
 import PositioningSection from "@/components/home/PositioningSection";
 import StorySection from "@/components/home/StorySection";
+import PatriotismSection from "@/components/home/PatriotismSection";
 import FeaturesSection from "@/components/home/FeaturesSection";
 import CodeShowcase from "@/components/home/CodeShowcase";
 import ContributeSection from "@/components/home/ContributeSection";
@@ -46,6 +47,7 @@ export default function Home() {
       <HeroSection version={packageJson.version} />
       <PositioningSection />
       <StorySection />
+      <PatriotismSection />
       <FeaturesSection />
       <CodeShowcase />
       <ContributeSection />
