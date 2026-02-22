@@ -653,13 +653,16 @@ jobs:
         run: npm ci --prefer-offline
 
       - name: Verify Open VSX token
+        id: check_token
         run: |
           if [ -z "${{ secrets.OPEN_VSX_PAT }}" ]; then
             echo "⚠️ Warning: OPEN_VSX_PAT not configured"
             echo "ℹ️ To publish to Open VSX, add OPEN_VSX_PAT secret to GitHub"
-            exit 0
+            echo "token_configured=false" >> $GITHUB_OUTPUT
+          else
+            echo "✅ OPEN_VSX_PAT is configured"
+            echo "token_configured=true" >> $GITHUB_OUTPUT
           fi
-          echo "✅ OPEN_VSX_PAT is configured"
 
       - name: Package extension
         working-directory: Extension
@@ -670,7 +673,7 @@ jobs:
           echo "📦 Created package: $VSIX_FILE"
 
       - name: Publish to Open VSX Registry
-        if: secrets.OPEN_VSX_PAT != ''
+        if: steps.check_token.outputs.token_configured == 'true'
         working-directory: Extension
         run: |
           npx ovsx publish *.vsix -p ${{ secrets.OPEN_VSX_PAT }}
