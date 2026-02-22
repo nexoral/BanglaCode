@@ -61,7 +61,7 @@ func evalThrowStatement(ts *ast.ThrowStatement, env *object.Environment) object.
 							stackTrace += " (line " + string(rune(ts.Token.Line)) + ")"
 						}
 						errorMap.Pairs["stack"] = &object.String{Value: stackTrace}
-						
+
 						// Convert to exception for throwing
 						var message string
 						if msg, exists := errorMap.Pairs["message"]; exists {

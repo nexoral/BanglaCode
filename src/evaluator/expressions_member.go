@@ -133,12 +133,12 @@ func assignInstanceMember(inst *object.Instance, member *ast.MemberExpression, o
 		// Execute setter with 'ei' bound to instance and value as parameter
 		boundEnv := object.NewEnclosedEnvironment(setter.Env)
 		boundEnv.Set("ei", inst)
-		
+
 		// Bind the value to the setter parameter
 		if len(setter.Parameters) > 0 {
 			boundEnv.Set(setter.Parameters[0].Value, val)
 		}
-		
+
 		result := Eval(setter.Body, boundEnv)
 		if isError(result) {
 			return result

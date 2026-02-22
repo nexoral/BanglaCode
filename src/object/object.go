@@ -12,39 +12,39 @@ import (
 type ObjectType string
 
 const (
-	NUMBER_OBJ        = "NUMBER"
-	STRING_OBJ        = "STRING"
-	BOOLEAN_OBJ       = "BOOLEAN"
-	NULL_OBJ          = "NULL"
-	RETURN_OBJ        = "RETURN"
-	ERROR_OBJ         = "ERROR"
-	TYPE_ERROR_OBJ    = "TYPE_ERROR"
+	NUMBER_OBJ          = "NUMBER"
+	STRING_OBJ          = "STRING"
+	BOOLEAN_OBJ         = "BOOLEAN"
+	NULL_OBJ            = "NULL"
+	RETURN_OBJ          = "RETURN"
+	ERROR_OBJ           = "ERROR"
+	TYPE_ERROR_OBJ      = "TYPE_ERROR"
 	REFERENCE_ERROR_OBJ = "REFERENCE_ERROR"
-	RANGE_ERROR_OBJ   = "RANGE_ERROR"
-	SYNTAX_ERROR_OBJ  = "SYNTAX_ERROR"
-	FUNCTION_OBJ      = "FUNCTION"
-	BUILTIN_OBJ       = "BUILTIN"
-	ARRAY_OBJ         = "ARRAY"
-	MAP_OBJ           = "MAP"
-	CLASS_OBJ         = "CLASS"
-	INSTANCE_OBJ      = "INSTANCE"
-	BREAK_OBJ         = "BREAK"
-	CONTINUE_OBJ      = "CONTINUE"
-	EXCEPTION_OBJ     = "EXCEPTION"
-	MODULE_OBJ        = "MODULE"
-	PROMISE_OBJ       = "PROMISE"
-	DB_CONNECTION_OBJ = "DB_CONNECTION"
-	DB_RESULT_OBJ     = "DB_RESULT"
-	DB_POOL_OBJ       = "DB_POOL"
-	EVENT_EMITTER_OBJ = "EVENT_EMITTER"
-	BUFFER_OBJ        = "BUFFER"
-	WORKER_OBJ        = "WORKER"
-	STREAM_OBJ        = "STREAM"
-	URL_OBJ           = "URL"
-	URL_PARAMS_OBJ    = "URL_PARAMS"
-	SET_OBJ           = "SET"
-	ES6MAP_OBJ        = "ES6MAP"
-	GENERATOR_OBJ     = "GENERATOR"
+	RANGE_ERROR_OBJ     = "RANGE_ERROR"
+	SYNTAX_ERROR_OBJ    = "SYNTAX_ERROR"
+	FUNCTION_OBJ        = "FUNCTION"
+	BUILTIN_OBJ         = "BUILTIN"
+	ARRAY_OBJ           = "ARRAY"
+	MAP_OBJ             = "MAP"
+	CLASS_OBJ           = "CLASS"
+	INSTANCE_OBJ        = "INSTANCE"
+	BREAK_OBJ           = "BREAK"
+	CONTINUE_OBJ        = "CONTINUE"
+	EXCEPTION_OBJ       = "EXCEPTION"
+	MODULE_OBJ          = "MODULE"
+	PROMISE_OBJ         = "PROMISE"
+	DB_CONNECTION_OBJ   = "DB_CONNECTION"
+	DB_RESULT_OBJ       = "DB_RESULT"
+	DB_POOL_OBJ         = "DB_POOL"
+	EVENT_EMITTER_OBJ   = "EVENT_EMITTER"
+	BUFFER_OBJ          = "BUFFER"
+	WORKER_OBJ          = "WORKER"
+	STREAM_OBJ          = "STREAM"
+	URL_OBJ             = "URL"
+	URL_PARAMS_OBJ      = "URL_PARAMS"
+	SET_OBJ             = "SET"
+	ES6MAP_OBJ          = "ES6MAP"
+	GENERATOR_OBJ       = "GENERATOR"
 )
 
 // Object represents any runtime value
@@ -305,9 +305,9 @@ func (m *Map) Inspect() string {
 type Class struct {
 	Name             string
 	Methods          map[string]*Function
-	Getters          map[string]*Function       // getter methods
-	Setters          map[string]*Function       // setter methods
-	StaticProperties map[string]Object          // static properties
+	Getters          map[string]*Function // getter methods
+	Setters          map[string]*Function // setter methods
+	StaticProperties map[string]Object    // static properties
 }
 
 func (c *Class) Type() ObjectType { return CLASS_OBJ }
@@ -315,9 +315,9 @@ func (c *Class) Inspect() string  { return "sreni " + c.Name }
 
 // Instance represents an instance of a class
 type Instance struct {
-	Class           *Class
-	Properties      map[string]Object
-	PrivateFields   map[string]Object // private fields (underscore prefix)
+	Class         *Class
+	Properties    map[string]Object
+	PrivateFields map[string]Object // private fields (underscore prefix)
 }
 
 func (i *Instance) Type() ObjectType { return INSTANCE_OBJ }
@@ -538,14 +538,14 @@ func CreateBufferFrom(data []byte) *Buffer {
 
 // Worker represents a worker thread
 type Worker struct {
-	ID            int                    // Unique worker ID
-	MessageChan   chan Object            // Channel for sending messages to worker
-	ResponseChan  chan Object            // Channel for receiving messages from worker
-	StopChan      chan struct{}          // Channel to signal worker termination
-	OnMessage     *Function              // Message handler function
-	IsRunning     bool                   // Worker running state
-	WorkerData    Object                 // Initial data passed to worker
-	Mu            sync.RWMutex           // Thread-safe access
+	ID           int           // Unique worker ID
+	MessageChan  chan Object   // Channel for sending messages to worker
+	ResponseChan chan Object   // Channel for receiving messages from worker
+	StopChan     chan struct{} // Channel to signal worker termination
+	OnMessage    *Function     // Message handler function
+	IsRunning    bool          // Worker running state
+	WorkerData   Object        // Initial data passed to worker
+	Mu           sync.RWMutex  // Thread-safe access
 }
 
 func (w *Worker) Type() ObjectType { return WORKER_OBJ }
@@ -561,15 +561,15 @@ func (w *Worker) Inspect() string {
 
 // Stream represents a data stream (Readable, Writable, or Transform)
 type Stream struct {
-	StreamType    string              // "readable", "writable", "transform"
-	Buffer        []byte              // Internal buffer
-	IsClosed      bool                // Stream closed state
-	IsEnded       bool                // Stream ended state (readable)
-	HighWaterMark int                 // Buffer size threshold
-	OnData        *Function           // Data event handler
-	OnEnd         *Function           // End event handler
-	OnError       *Function           // Error event handler
-	Mu            sync.RWMutex        // Thread-safe access
+	StreamType    string       // "readable", "writable", "transform"
+	Buffer        []byte       // Internal buffer
+	IsClosed      bool         // Stream closed state
+	IsEnded       bool         // Stream ended state (readable)
+	HighWaterMark int          // Buffer size threshold
+	OnData        *Function    // Data event handler
+	OnEnd         *Function    // End event handler
+	OnError       *Function    // Error event handler
+	Mu            sync.RWMutex // Thread-safe access
 }
 
 func (s *Stream) Type() ObjectType { return STREAM_OBJ }
@@ -664,12 +664,12 @@ func (m *ES6Map) Inspect() string {
 
 // Generator represents a generator object
 type Generator struct {
-	Function *Function       // The generator function
-	Env      *Environment    // Execution environment
-	State    string          // "suspended", "executing", "completed"
-	Value    Object          // Last yielded/returned value
-	Index    int             // Current execution position (statement index)
-	Done     bool            // Whether generator is exhausted
+	Function *Function    // The generator function
+	Env      *Environment // Execution environment
+	State    string       // "suspended", "executing", "completed"
+	Value    Object       // Last yielded/returned value
+	Index    int          // Current execution position (statement index)
+	Done     bool         // Whether generator is exhausted
 }
 
 func (g *Generator) Type() ObjectType { return GENERATOR_OBJ }

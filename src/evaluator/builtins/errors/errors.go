@@ -10,7 +10,7 @@ var Builtins = map[string]*object.Builtin{}
 
 func init() {
 	// Register error constructor built-in functions
-	
+
 	// Error() - Generic error constructor
 	Builtins["Error"] = &object.Builtin{
 		Fn: func(args ...object.Object) object.Object {

@@ -42,7 +42,8 @@ func createBuffer(args ...object.Object) object.Object {
 
 // createBufferFrom creates a buffer from string, array, or another buffer
 // Usage: dhoro buf = buffer_theke("Hello");      // From string
-//        dhoro buf = buffer_theke([72, 101]);     // From byte array
+//
+//	dhoro buf = buffer_theke([72, 101]);     // From byte array
 func createBufferFrom(args ...object.Object) object.Object {
 	if len(args) == 0 {
 		return &object.Error{Message: "buffer_theke() expects at least 1 argument"}
@@ -116,9 +117,10 @@ func concatBuffers(args ...object.Object) object.Object {
 
 // bufferToString converts buffer to string
 // Usage: dhoro text = buffer_text(buf);              // UTF-8 (default)
-//        dhoro text = buffer_text(buf, "utf8");      // UTF-8
-//        dhoro text = buffer_text(buf, "hex");       // Hexadecimal
-//        dhoro text = buffer_text(buf, "base64");    // Base64
+//
+//	dhoro text = buffer_text(buf, "utf8");      // UTF-8
+//	dhoro text = buffer_text(buf, "hex");       // Hexadecimal
+//	dhoro text = buffer_text(buf, "base64");    // Base64
 func bufferToString(args ...object.Object) object.Object {
 	if len(args) < 1 || len(args) > 2 {
 		return &object.Error{Message: "buffer_text() expects 1 or 2 arguments (buffer, [encoding])"}
@@ -161,7 +163,8 @@ func bufferToString(args ...object.Object) object.Object {
 
 // writeToBuffer writes string or data to buffer at specified offset
 // Usage: buffer_lekho(buf, "Hello", 0);     // Write at offset 0
-//        buffer_lekho(buf, "World", 6);     // Write at offset 6
+//
+//	buffer_lekho(buf, "World", 6);     // Write at offset 6
 func writeToBuffer(args ...object.Object) object.Object {
 	if len(args) < 2 || len(args) > 3 {
 		return &object.Error{Message: "buffer_lekho() expects 2 or 3 arguments (buffer, data, [offset])"}
@@ -220,7 +223,8 @@ func writeToBuffer(args ...object.Object) object.Object {
 
 // sliceBuffer returns a slice of the buffer
 // Usage: dhoro slice = buffer_angsho(buf, 0, 5);  // Bytes 0-4
-//        dhoro slice = buffer_angsho(buf, 5);     // From byte 5 to end
+//
+//	dhoro slice = buffer_angsho(buf, 5);     // From byte 5 to end
 func sliceBuffer(args ...object.Object) object.Object {
 	if len(args) < 2 || len(args) > 3 {
 		return &object.Error{Message: "buffer_angsho() expects 2 or 3 arguments (buffer, start, [end])"}

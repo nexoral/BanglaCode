@@ -131,7 +131,7 @@ func TestNumberIsInteger(t *testing.T) {
 		{"sonkhya_purno(0)", true},
 		{"sonkhya_purno(-100)", true},
 		{"sonkhya_purno(3.14)", false},
-		{"sonkhya_purno(3.0)", true},  // 3.0 is an integer
+		{"sonkhya_purno(3.0)", true}, // 3.0 is an integer
 		{"sonkhya_purno(NUMBER_POSITIVE_INFINITY)", false},
 		{"sonkhya_purno(NUMBER_NEGATIVE_INFINITY)", false},
 		{"sonkhya_purno(NUMBER_NAN)", false},
@@ -309,4 +309,3 @@ func TestNumberValidation(t *testing.T) {
 		t.Errorf("Expected 'Number exceeds safe integer range', got %s", arr.Elements[4].(*object.String).Value)
 	}
 }
-

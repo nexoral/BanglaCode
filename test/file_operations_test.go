@@ -48,7 +48,7 @@ func TestFileAppend(t *testing.T) {
 // Test file delete
 func TestFileDelete(t *testing.T) {
 	testFile := "/tmp/test_delete.txt"
-	
+
 	// Create file
 	os.WriteFile(testFile, []byte("test content"), 0644)
 

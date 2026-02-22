@@ -128,10 +128,10 @@ func runWorker(worker *object.Worker, workerFn *object.Function) {
 			Function:  &ast.Identifier{Value: "workerFn"},
 			Arguments: []ast.Expression{},
 		}
-		
+
 		// Set the function in environment
 		workerEnv.Set("workerFn", workerFn)
-		
+
 		// Execute the function
 		evalFunc(callExpr, workerEnv)
 	}
@@ -151,11 +151,11 @@ func runWorker(worker *object.Worker, workerFn *object.Function) {
 					Function:  &ast.Identifier{Value: "messageHandler"},
 					Arguments: []ast.Expression{&ast.Identifier{Value: "messageData"}},
 				}
-				
+
 				// Set handler and message in environment
 				workerEnv.Set("messageHandler", worker.OnMessage)
 				workerEnv.Set("messageData", msg)
-				
+
 				// Call handler
 				evalFunc(handlerCall, workerEnv)
 			}
@@ -254,17 +254,17 @@ func kajKormiShuno(args ...object.Object) object.Object {
 				if evalFunc != nil && callback != nil {
 					// Create temporary environment for callback
 					callbackEnv := object.NewEnvironment()
-					
+
 					// Create call expression
 					callExpr := &ast.CallExpression{
 						Function:  &ast.Identifier{Value: "responseCallback"},
 						Arguments: []ast.Expression{&ast.Identifier{Value: "responseData"}},
 					}
-					
+
 					// Set callback and message in environment
 					callbackEnv.Set("responseCallback", callback)
 					callbackEnv.Set("responseData", msg)
-					
+
 					// Execute callback
 					evalFunc(callExpr, callbackEnv)
 				}

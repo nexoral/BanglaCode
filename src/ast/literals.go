@@ -104,7 +104,7 @@ type FunctionLiteral struct {
 	Parameters    []*Identifier
 	RestParameter *Identifier // optional rest parameter (...args)
 	Body          *BlockStatement
-	IsGenerator   bool        // true if generator function (kaj* or has yield)
+	IsGenerator   bool // true if generator function (kaj* or has yield)
 }
 
 func (fl *FunctionLiteral) expressionNode()      {}

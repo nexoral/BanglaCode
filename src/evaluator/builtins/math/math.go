@@ -15,7 +15,7 @@ var Builtins = map[string]*object.Builtin{
 	"math_acos":  {Fn: mathAcos},
 	"math_atan":  {Fn: mathAtan},
 	"math_atan2": {Fn: mathAtan2},
-	
+
 	// Hyperbolic functions
 	"math_sinh":  {Fn: mathSinh},
 	"math_cosh":  {Fn: mathCosh},
@@ -23,15 +23,15 @@ var Builtins = map[string]*object.Builtin{
 	"math_asinh": {Fn: mathAsinh},
 	"math_acosh": {Fn: mathAcosh},
 	"math_atanh": {Fn: mathAtanh},
-	
+
 	// Logarithmic & exponential functions
-	"math_log":    {Fn: mathLog},
-	"math_log10":  {Fn: mathLog10},
-	"math_log2":   {Fn: mathLog2},
-	"math_log1p":  {Fn: mathLog1p},
-	"math_exp":    {Fn: mathExp},
-	"math_expm1":  {Fn: mathExpm1},
-	
+	"math_log":   {Fn: mathLog},
+	"math_log10": {Fn: mathLog10},
+	"math_log2":  {Fn: mathLog2},
+	"math_log1p": {Fn: mathLog1p},
+	"math_exp":   {Fn: mathExp},
+	"math_expm1": {Fn: mathExpm1},
+
 	// Utility functions
 	"math_imul":   {Fn: mathImul},
 	"math_clz32":  {Fn: mathClz32},
@@ -66,12 +66,12 @@ func mathSin(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_sin() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_sin() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Sin(num)}
 }
 
@@ -80,12 +80,12 @@ func mathCos(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_cos() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_cos() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Cos(num)}
 }
 
@@ -94,12 +94,12 @@ func mathTan(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_tan() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_tan() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Tan(num)}
 }
 
@@ -108,12 +108,12 @@ func mathAsin(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_asin() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_asin() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Asin(num)}
 }
 
@@ -122,12 +122,12 @@ func mathAcos(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_acos() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_acos() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Acos(num)}
 }
 
@@ -136,12 +136,12 @@ func mathAtan(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_atan() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_atan() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Atan(num)}
 }
 
@@ -150,17 +150,17 @@ func mathAtan2(args ...object.Object) object.Object {
 	if len(args) != 2 {
 		return &object.Error{Message: "math_atan2() expects 2 arguments: y, x"}
 	}
-	
+
 	y, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_atan2() first argument must be a number"}
 	}
-	
+
 	x, ok := getNumber(args[1])
 	if !ok {
 		return &object.Error{Message: "math_atan2() second argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Atan2(y, x)}
 }
 
@@ -171,12 +171,12 @@ func mathSinh(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_sinh() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_sinh() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Sinh(num)}
 }
 
@@ -185,12 +185,12 @@ func mathCosh(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_cosh() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_cosh() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Cosh(num)}
 }
 
@@ -199,12 +199,12 @@ func mathTanh(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_tanh() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_tanh() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Tanh(num)}
 }
 
@@ -213,12 +213,12 @@ func mathAsinh(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_asinh() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_asinh() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Asinh(num)}
 }
 
@@ -227,12 +227,12 @@ func mathAcosh(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_acosh() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_acosh() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Acosh(num)}
 }
 
@@ -241,12 +241,12 @@ func mathAtanh(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_atanh() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_atanh() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Atanh(num)}
 }
 
@@ -257,12 +257,12 @@ func mathLog(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_log() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_log() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Log(num)}
 }
 
@@ -271,12 +271,12 @@ func mathLog10(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_log10() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_log10() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Log10(num)}
 }
 
@@ -285,12 +285,12 @@ func mathLog2(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_log2() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_log2() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Log2(num)}
 }
 
@@ -299,12 +299,12 @@ func mathLog1p(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_log1p() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_log1p() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Log1p(num)}
 }
 
@@ -313,12 +313,12 @@ func mathExp(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_exp() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_exp() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Exp(num)}
 }
 
@@ -327,12 +327,12 @@ func mathExpm1(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_expm1() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_expm1() argument must be a number"}
 	}
-	
+
 	return &object.Number{Value: math.Expm1(num)}
 }
 
@@ -343,17 +343,17 @@ func mathImul(args ...object.Object) object.Object {
 	if len(args) != 2 {
 		return &object.Error{Message: "math_imul() expects 2 arguments"}
 	}
-	
+
 	a, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_imul() first argument must be a number"}
 	}
-	
+
 	b, ok := getNumber(args[1])
 	if !ok {
 		return &object.Error{Message: "math_imul() second argument must be a number"}
 	}
-	
+
 	// Convert to 32-bit integers and multiply
 	result := int32(a) * int32(b)
 	return &object.Number{Value: float64(result)}
@@ -364,20 +364,20 @@ func mathClz32(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_clz32() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_clz32() argument must be a number"}
 	}
-	
+
 	// Convert to 32-bit unsigned integer
 	val := uint32(num)
-	
+
 	// Count leading zeros
 	if val == 0 {
 		return &object.Number{Value: 32}
 	}
-	
+
 	count := 0
 	for i := 31; i >= 0; i-- {
 		if (val & (1 << uint(i))) != 0 {
@@ -385,7 +385,7 @@ func mathClz32(args ...object.Object) object.Object {
 		}
 		count++
 	}
-	
+
 	return &object.Number{Value: float64(count)}
 }
 
@@ -394,12 +394,12 @@ func mathFround(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return &object.Error{Message: "math_fround() expects 1 argument"}
 	}
-	
+
 	num, ok := getNumber(args[0])
 	if !ok {
 		return &object.Error{Message: "math_fround() argument must be a number"}
 	}
-	
+
 	// Convert to float32 and back to float64
 	return &object.Number{Value: float64(float32(num))}
 }
@@ -409,7 +409,7 @@ func mathHypot(args ...object.Object) object.Object {
 	if len(args) == 0 {
 		return &object.Number{Value: 0}
 	}
-	
+
 	var sum float64
 	for i, arg := range args {
 		num, ok := getNumber(arg)
@@ -418,6 +418,6 @@ func mathHypot(args ...object.Object) object.Object {
 		}
 		sum += num * num
 	}
-	
+
 	return &object.Number{Value: math.Sqrt(sum)}
 }

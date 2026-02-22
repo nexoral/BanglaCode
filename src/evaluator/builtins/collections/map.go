@@ -6,22 +6,23 @@ import (
 
 // MapBuiltins contains all ES6Map-related built-in functions
 var MapBuiltins = map[string]*object.Builtin{
-	"map_srishti":  {Fn: mapCreate},
-	"map_set":      {Fn: mapSet},
-	"map_get":      {Fn: mapGet},
-	"map_has":      {Fn: mapHas},
-	"map_delete":   {Fn: mapDelete},
-	"map_clear":    {Fn: mapClear},
-	"map_akar":     {Fn: mapSize},
-	"map_keys":     {Fn: mapKeys},
-	"map_values":   {Fn: mapValues},
-	"map_entries":  {Fn: mapEntries},
-	"map_foreach":  {Fn: mapForEach},
+	"map_srishti": {Fn: mapCreate},
+	"map_set":     {Fn: mapSet},
+	"map_get":     {Fn: mapGet},
+	"map_has":     {Fn: mapHas},
+	"map_delete":  {Fn: mapDelete},
+	"map_clear":   {Fn: mapClear},
+	"map_akar":    {Fn: mapSize},
+	"map_keys":    {Fn: mapKeys},
+	"map_values":  {Fn: mapValues},
+	"map_entries": {Fn: mapEntries},
+	"map_foreach": {Fn: mapForEach},
 }
 
 // mapCreate creates a new ES6 Map
 // Usage: dhoro myMap = map_srishti();
-//        dhoro myMap = map_srishti([[key1, value1], [key2, value2]]);
+//
+//	dhoro myMap = map_srishti([[key1, value1], [key2, value2]]);
 func mapCreate(args ...object.Object) object.Object {
 	if len(args) > 1 {
 		return &object.Error{Message: "map_srishti() expects 0 or 1 argument (optional array of [key, value] pairs)"}

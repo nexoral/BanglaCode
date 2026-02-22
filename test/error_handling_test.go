@@ -211,7 +211,7 @@ func TestIsError(t *testing.T) {
 
 	for _, tt := range tests {
 		result := evalErrorInput(tt.input)
-		
+
 		if tt.expected {
 			if result != object.TRUE {
 				t.Errorf("[%s] Expected TRUE, got %s", tt.input, result.Inspect())
@@ -239,7 +239,7 @@ func TestThrowCatchWithErrorTypes(t *testing.T) {
 	`
 
 	result := evalErrorInput(input)
-	
+
 	// The caught exception should contain the error information
 	if result == object.NULL {
 		t.Fatal("Expected error to be caught, got NULL")
@@ -267,7 +267,7 @@ func TestErrorInFunction(t *testing.T) {
 	`
 
 	result := evalErrorInput(input)
-	
+
 	// Should catch the RangeError
 	if result == object.NULL {
 		t.Fatal("Expected error to be caught")
@@ -430,13 +430,13 @@ func TestRealWorldValidation(t *testing.T) {
 	`
 
 	result := evalErrorInput(input)
-	
+
 	// Debug: print what we got
 	if _, ok := result.(*object.Error); ok {
 		t.Skip("Skipping due to error in code:", result.Inspect())
 		return
 	}
-	
+
 	arr, ok := result.(*object.Array)
 	if !ok {
 		t.Fatalf("Expected Array, got %T: %s", result, result.Inspect())
@@ -544,7 +544,7 @@ func TestIsErrorWithNonErrors(t *testing.T) {
 
 	for _, tt := range tests {
 		result := evalErrorInput(tt.input)
-		
+
 		if tt.expected {
 			if result != object.TRUE {
 				t.Errorf("[%s] Expected TRUE, got %s", tt.input, result.Inspect())

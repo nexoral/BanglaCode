@@ -32,14 +32,14 @@ func InitializeEnvironmentWithConstants(env *object.Environment) {
 		env.Set(name, numObj)
 		env.SetConstant(name, numObj) // Mark as constant
 	}
-	
+
 	// Add path constants
 	for name, value := range system.PathConstants {
 		strObj := &object.String{Value: value}
 		env.Set(name, strObj)
 		env.SetConstant(name, strObj) // Mark as constant
 	}
-	
+
 	// Add number constants
 	for name, value := range number.Constants {
 		numObj := &object.Number{Value: value}
@@ -98,12 +98,12 @@ func init() {
 	for name, fn := range mathpkg.Builtins {
 		Builtins[name] = fn
 	}
-	
+
 	// Number built-in functions
 	for name, fn := range number.Builtins {
 		Builtins[name] = fn
 	}
-	
+
 	// Crypto built-in functions
 	for name, fn := range crypto.Builtins {
 		Builtins[name] = fn

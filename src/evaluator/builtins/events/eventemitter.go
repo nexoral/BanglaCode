@@ -7,14 +7,14 @@ import (
 
 // Builtins exports all event-related built-in functions
 var Builtins = map[string]*object.Builtin{
-	"ghotona_srishti":     {Fn: createEventEmitter},
-	"ghotona_shuno":       {Fn: addEventListener},
-	"ghotona_ekbar":       {Fn: addEventListenerOnce},
-	"ghotona_prokash":     {Fn: emitEvent},
-	"ghotona_bondho":      {Fn: removeEventListener},
-	"ghotona_sob_bondho":  {Fn: removeAllListeners},
-	"ghotona_shrotara":    {Fn: getListeners},
-	"ghotona_naam_sob":    {Fn: getEventNames},
+	"ghotona_srishti":    {Fn: createEventEmitter},
+	"ghotona_shuno":      {Fn: addEventListener},
+	"ghotona_ekbar":      {Fn: addEventListenerOnce},
+	"ghotona_prokash":    {Fn: emitEvent},
+	"ghotona_bondho":     {Fn: removeEventListener},
+	"ghotona_sob_bondho": {Fn: removeAllListeners},
+	"ghotona_shrotara":   {Fn: getListeners},
+	"ghotona_naam_sob":   {Fn: getEventNames},
 }
 
 // createEventEmitter creates a new EventEmitter
@@ -235,7 +235,8 @@ func removeEventListener(args ...object.Object) object.Object {
 
 // removeAllListeners removes all listeners for an event or all events
 // Usage: ghotona_sob_bondho(emitter);        // Remove all listeners
-//        ghotona_sob_bondho(emitter, "event"); // Remove listeners for specific event
+//
+//	ghotona_sob_bondho(emitter, "event"); // Remove listeners for specific event
 func removeAllListeners(args ...object.Object) object.Object {
 	if len(args) < 1 || len(args) > 2 {
 		return &object.Error{Message: "ghotona_sob_bondho() expects 1 or 2 arguments (emitter, [event_name])"}

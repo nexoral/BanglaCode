@@ -182,15 +182,15 @@ func streamLekho(args ...object.Object) object.Object {
 	// Trigger data event if handler exists
 	if stream.OnData != nil && evalFunc != nil {
 		env := object.NewEnvironment()
-		
+
 		callExpr := &ast.CallExpression{
 			Function:  &ast.Identifier{Value: "dataHandler"},
 			Arguments: []ast.Expression{&ast.Identifier{Value: "chunk"}},
 		}
-		
+
 		env.Set("dataHandler", stream.OnData)
 		env.Set("chunk", &object.String{Value: string(data)})
-		
+
 		evalFunc(callExpr, env)
 	}
 
@@ -231,7 +231,7 @@ func streamShesh(args ...object.Object) object.Object {
 
 	stream.Mu.Lock()
 	stream.IsEnded = true
-	
+
 	// If buffer is empty, close immediately
 	if len(stream.Buffer) == 0 {
 		stream.IsClosed = true
@@ -241,14 +241,14 @@ func streamShesh(args ...object.Object) object.Object {
 	// Trigger end event if handler exists
 	if stream.OnEnd != nil && evalFunc != nil {
 		env := object.NewEnvironment()
-		
+
 		callExpr := &ast.CallExpression{
 			Function:  &ast.Identifier{Value: "endHandler"},
 			Arguments: []ast.Expression{},
 		}
-		
+
 		env.Set("endHandler", stream.OnEnd)
-		
+
 		evalFunc(callExpr, env)
 	}
 

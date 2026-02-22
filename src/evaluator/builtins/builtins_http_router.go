@@ -274,48 +274,47 @@ func init() {
 				},
 			}
 
+			// Add matha method (মাথা - HEAD - retrieve headers)
+			routerMap.Pairs["matha"] = &object.Builtin{
+				Fn: func(args ...object.Object) object.Object {
+					if len(args) != 2 {
+						return newError("wrong number of arguments to router.matha(). got=%d, want=2", len(args))
+					}
+					if args[0].Type() != object.STRING_OBJ {
+						return newError("first argument to router.matha() must be STRING (path), got %s", args[0].Type())
+					}
+					if args[1].Type() != object.FUNCTION_OBJ {
+						return newError("second argument to router.matha() must be FUNCTION (handler), got %s", args[1].Type())
+					}
 
-		// Add matha method (মাথা - HEAD - retrieve headers)
-		routerMap.Pairs["matha"] = &object.Builtin{
-			Fn: func(args ...object.Object) object.Object {
-				if len(args) != 2 {
-					return newError("wrong number of arguments to router.matha(). got=%d, want=2", len(args))
-				}
-				if args[0].Type() != object.STRING_OBJ {
-					return newError("first argument to router.matha() must be STRING (path), got %s", args[0].Type())
-				}
-				if args[1].Type() != object.FUNCTION_OBJ {
-					return newError("second argument to router.matha() must be FUNCTION (handler), got %s", args[1].Type())
-				}
+					path := args[0].(*object.String).Value
+					handler := args[1].(*object.Function)
+					router.AddRoute("HEAD", path, handler)
 
-				path := args[0].(*object.String).Value
-				handler := args[1].(*object.Function)
-				router.AddRoute("HEAD", path, handler)
+					return routerMap
+				},
+			}
 
-				return routerMap
-			},
-		}
+			// Add nirdharon method (নির্ধারণ - OPTIONS - determine options)
+			routerMap.Pairs["nirdharon"] = &object.Builtin{
+				Fn: func(args ...object.Object) object.Object {
+					if len(args) != 2 {
+						return newError("wrong number of arguments to router.nirdharon(). got=%d, want=2", len(args))
+					}
+					if args[0].Type() != object.STRING_OBJ {
+						return newError("first argument to router.nirdharon() must be STRING (path), got %s", args[0].Type())
+					}
+					if args[1].Type() != object.FUNCTION_OBJ {
+						return newError("second argument to router.nirdharon() must be FUNCTION (handler), got %s", args[1].Type())
+					}
 
-		// Add nirdharon method (নির্ধারণ - OPTIONS - determine options)
-		routerMap.Pairs["nirdharon"] = &object.Builtin{
-			Fn: func(args ...object.Object) object.Object {
-				if len(args) != 2 {
-					return newError("wrong number of arguments to router.nirdharon(). got=%d, want=2", len(args))
-				}
-				if args[0].Type() != object.STRING_OBJ {
-					return newError("first argument to router.nirdharon() must be STRING (path), got %s", args[0].Type())
-				}
-				if args[1].Type() != object.FUNCTION_OBJ {
-					return newError("second argument to router.nirdharon() must be FUNCTION (handler), got %s", args[1].Type())
-				}
+					path := args[0].(*object.String).Value
+					handler := args[1].(*object.Function)
+					router.AddRoute("OPTIONS", path, handler)
 
-				path := args[0].(*object.String).Value
-				handler := args[1].(*object.Function)
-				router.AddRoute("OPTIONS", path, handler)
-
-				return routerMap
-			},
-		}
+					return routerMap
+				},
+			}
 			// Add bebohār method (ব্যবহার - use/mount sub-router)
 			routerMap.Pairs["bebohar"] = &object.Builtin{
 				Fn: func(args ...object.Object) object.Object {

@@ -9,14 +9,14 @@ import (
 
 // SetBuiltins contains all Set-related built-in functions
 var SetBuiltins = map[string]*object.Builtin{
-	"set_srishti":  {Fn: setCreate},
-	"set_add":      {Fn: setAdd},
-	"set_has":      {Fn: setHas},
-	"set_delete":   {Fn: setDelete},
-	"set_clear":    {Fn: setClear},
-	"set_akar":     {Fn: setSize},
-	"set_values":   {Fn: setValues},
-	"set_foreach":  {Fn: setForEach},
+	"set_srishti": {Fn: setCreate},
+	"set_add":     {Fn: setAdd},
+	"set_has":     {Fn: setHas},
+	"set_delete":  {Fn: setDelete},
+	"set_clear":   {Fn: setClear},
+	"set_akar":    {Fn: setSize},
+	"set_values":  {Fn: setValues},
+	"set_foreach": {Fn: setForEach},
 }
 
 // hashObject creates a hash string for any object to use as set key
@@ -30,7 +30,8 @@ func hashObject(obj object.Object) string {
 
 // setCreate creates a new Set
 // Usage: dhoro mySet = set_srishti();
-//        dhoro mySet = set_srishti([1, 2, 3]);
+//
+//	dhoro mySet = set_srishti([1, 2, 3]);
 func setCreate(args ...object.Object) object.Object {
 	if len(args) > 1 {
 		return &object.Error{Message: "set_srishti() expects 0 or 1 argument (optional array)"}
