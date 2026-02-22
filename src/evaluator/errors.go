@@ -15,7 +15,13 @@ func evalTryCatchStatement(tcs *ast.TryCatchStatement, env *object.Environment) 
 		// Create catch block environment with error variable
 		catchEnv := object.NewEnclosedEnvironment(env)
 		if tcs.CatchParam != nil {
-			catchEnv.Set(tcs.CatchParam.Value, &object.String{Value: exception.Message})
+			// If exception has a Value (like an error Map), use that
+			// Otherwise use the exception message as a string
+			if exception.Value != nil {
+				catchEnv.Set(tcs.CatchParam.Value, exception.Value)
+			} else {
+				catchEnv.Set(tcs.CatchParam.Value, &object.String{Value: exception.Message})
+			}
 		}
 
 		// Execute catch block
@@ -41,6 +47,35 @@ func evalThrowStatement(ts *ast.ThrowStatement, env *object.Environment) object.
 		return value
 	}
 
+	// If it's an error Map (created by Error(), TypeError(), etc.), add stack trace
+	if errorMap, ok := value.(*object.Map); ok {
+		if name, exists := errorMap.Pairs["name"]; exists {
+			if nameStr, ok := name.(*object.String); ok {
+				// Check if it's an error type
+				errorTypes := []string{"Error", "TypeError", "ReferenceError", "RangeError", "SyntaxError"}
+				for _, errorType := range errorTypes {
+					if nameStr.Value == errorType {
+						// Add stack trace information
+						stackTrace := "Stack trace:\n  at <throw statement>"
+						if ts.Token.Line > 0 {
+							stackTrace += " (line " + string(rune(ts.Token.Line)) + ")"
+						}
+						errorMap.Pairs["stack"] = &object.String{Value: stackTrace}
+						
+						// Convert to exception for throwing
+						var message string
+						if msg, exists := errorMap.Pairs["message"]; exists {
+							if msgStr, ok := msg.(*object.String); ok {
+								message = nameStr.Value + ": " + msgStr.Value
+							}
+						}
+						return &object.Exception{Message: message, Value: errorMap}
+					}
+				}
+			}
+		}
+	}
+
 	// Convert to exception
 	var message string
 	switch v := value.(type) {
@@ -50,5 +85,5 @@ func evalThrowStatement(ts *ast.ThrowStatement, env *object.Environment) object.
 		message = v.Inspect()
 	}
 
-	return &object.Exception{Message: message}
+	return &object.Exception{Message: message, Value: value}
 }

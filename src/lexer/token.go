@@ -101,6 +101,9 @@ const (
 	INSTANCEOF = "INSTANCEOF" // instanceof
 	DELETE     = "DELETE"     // delete
 	OF         = "OF"         // of
+	PAO        = "PAO"        // get (পাও - obtain/get)
+	SET        = "SET"        // set (set - kept as-is for clarity)
+	UTPADAN    = "UTPADAN"    // yield (উৎপাদন - produce/generate)
 )
 
 // keywords maps Banglish keywords to their token types
@@ -142,6 +145,9 @@ var keywords = map[string]TokenType{
 	"instanceof": INSTANCEOF,
 	"delete":     DELETE,
 	"of":         OF,
+	"pao":        PAO,
+	"set":        SET,
+	"utpadan":    UTPADAN,
 }
 
 // LookupIdent checks if an identifier is a keyword

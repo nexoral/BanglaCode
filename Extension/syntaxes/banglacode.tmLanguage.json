@@ -109,11 +109,15 @@
         },
         {
           "name": "keyword.control.loop.js",
-          "match": "\\b(jotokkhon|ghuriye|thamo|chharo|do)\\b"
+          "match": "\\b(jotokkhon|ghuriye|thamo|chharo|do|utpadan)\\b"
         },
         {
           "name": "storage.type.function.js",
           "match": "\\b(kaj)\\b"
+        },
+        {
+          "name": "storage.type.accessor.js",
+          "match": "\\b(pao|set)\\b"
         },
         {
           "name": "storage.modifier.async.js",
@@ -160,6 +164,10 @@
           "match": "\\b(khali)\\b"
         },
         {
+          "name": "constant.language.js",
+          "match": "\\b(MATH_PI|MATH_E|MATH_LN2|MATH_LN10|MATH_LOG2E|MATH_LOG10E|MATH_SQRT1_2|MATH_SQRT2|PATH_SEP|PATH_DELIMITER|NUMBER_MAX_SAFE_INTEGER|NUMBER_MIN_SAFE_INTEGER|NUMBER_MAX_VALUE|NUMBER_MIN_VALUE|NUMBER_POSITIVE_INFINITY|NUMBER_NEGATIVE_INFINITY|NUMBER_EPSILON|NUMBER_NAN)\\b"
+        },
+        {
           "name": "keyword.operator.logical.js",
           "match": "\\b(ebong|ba|na)\\b"
         },
@@ -181,7 +189,7 @@
         },
         {
           "name": "keyword.control.loop.js",
-          "match": "\\b(jotokkhon|ghuriye|thamo|chharo|do)\\b"
+          "match": "\\b(jotokkhon|ghuriye|thamo|chharo|do|utpadan)\\b"
         },
         {
           "name": "keyword.control.trycatch.js",
@@ -229,7 +237,7 @@
         },
         {
           "name": "support.function.js",
-          "match": "\\b(purno_sonkhya|doshomik_sonkhya|sonkhya_na|sonkhya_shimito|uri_encode|uri_decode|uri_ongsho_encode|uri_ongsho_decode)\\b"
+          "match": "\\b(purno_sonkhya|doshomik_sonkhya|sonkhya_na|sonkhya_shimito|sonkhya_sesh|sonkhya_purno|sonkhya_na_check|sonkhya_nirapod|uri_encode|uri_decode|uri_ongsho_encode|uri_ongsho_decode)\\b"
         },
         {
           "name": "support.function.js",
@@ -268,6 +276,10 @@
           "match": "\\b(somoy|ghum|nao|bondho|poro|lekho|setTimeout|setInterval|clearTimeout|clearInterval)\\b"
         },
         {
+          "name": "support.function.builtin.file.js",
+          "match": "\\b(file_jog|file_mochho|file_nokol|folder_mochho|file_dekhun|file_dekhun_bondho)\\b"
+        },
+        {
           "name": "support.function.js",
           "match": "\\b(server_chalu|router_banao|anun|uttor|json_uttor)\\b"
         },
@@ -290,6 +302,42 @@
         {
           "name": "support.function.builtin.async.js",
           "match": "\\b(ghumaao|anun_async|poro_async|lekho_async|sob_proyash)\\b"
+        },
+        {
+          "name": "support.function.builtin.events.js",
+          "match": "\\b(ghotona_srishti|ghotona_shuno|ghotona_ekbar|ghotona_prokash|ghotona_bondho|ghotona_sob_bondho|ghotona_shrotara|ghotona_naam_sob)\\b"
+        },
+        {
+          "name": "support.class.error.js",
+          "match": "\\b(Error|TypeError|ReferenceError|RangeError|SyntaxError)\\b"
+        },
+        {
+          "name": "support.function.builtin.error.js",
+          "match": "\\b(bhul_message|bhul_stack|bhul_naam|is_error)\\b"
+        },
+        {
+          "name": "support.function.builtin.buffer.js",
+          "match": "\\b(buffer_banao|buffer_theke|buffer_joro|buffer_text|buffer_lekho|buffer_angsho|buffer_tulona|buffer_hex|buffer_copy)\\b"
+        },
+        {
+          "name": "support.function.builtin.worker.js",
+          "match": "\\b(kaj_kormi_srishti|kaj_kormi_pathao|kaj_kormi_bondho|kaj_kormi_shuno|kaj_kormi_tothya|pathao_message)\\b"
+        },
+        {
+          "name": "support.function.builtin.streams.js",
+          "match": "\\b(stream_readable_srishti|stream_writable_srishti|stream_poro|stream_lekho|stream_bondho|stream_shesh|stream_pipe|stream_on)\\b"
+        },
+        {
+          "name": "support.function.builtin.url.js",
+          "match": "\\b(url_parse|url_query_params|url_query_get|url_query_set|url_query_append|url_query_delete|url_query_has|url_query_keys|url_query_values|url_query_toString)\\b"
+        },
+        {
+          "name": "support.function.builtin.set.js",
+          "match": "\\b(set_srishti|set_add|set_has|set_delete|set_clear|set_akar|set_values|set_foreach)\\b"
+        },
+        {
+          "name": "support.function.builtin.map.js",
+          "match": "\\b(map_srishti|map_set|map_get|map_has|map_delete|map_clear|map_akar|map_keys|map_values|map_entries|map_foreach)\\b"
         },
         {
           "name": "support.function.builtin.system.js",
@@ -317,7 +365,7 @@
         },
         {
           "name": "support.function.builtin.system.js",
-          "match": "\\b(path_joro|sompurno_path|path_naam|directory_naam|file_ext|path_bichchhed|path_match)\\b"
+          "match": "\\b(path_joro|sompurno_path|path_naam|directory_naam|file_ext|path_bichchhed|path_match|path_resolve|path_normalize|path_relative)\\b"
         },
         {
           "name": "support.function.builtin.system.js",

@@ -32,6 +32,7 @@ export default function Syntax() {
               { k: "instanceof", m: "instance check", e: "instanceof" },
               { k: "delete", m: "delete key/index", e: "delete" },
               { k: "kaj", m: "work", e: "function" },
+              { k: "utpadan", m: "produce", e: "yield" },
               { k: "ferao", m: "return", e: "return" },
               { k: "dekho", m: "see/print", e: "print" },
             ].map((row, i) => (
@@ -61,6 +62,9 @@ export default function Syntax() {
         dhoro obj = {"{"}a: 1{"}"};<br />
         dekho("a" in obj);<br />
         delete obj.a;<br /><br />
+        kaj* count(max) {"{"}<br />
+        &nbsp;&nbsp;utpadan 1;<br />
+        {"}"}<br /><br />
         dhoro double = x =&gt; x * 2;<br />
         dhoro [a, b] = [10, 20];
       </div>

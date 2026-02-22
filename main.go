@@ -1,15 +1,17 @@
 package main
 
 import (
-	"BanglaCode/src/evaluator"
-	"BanglaCode/src/lexer"
-	"BanglaCode/src/object"
-	"BanglaCode/src/parser"
-	"BanglaCode/src/repl"
 	"fmt"
 	"os"
 	"os/user"
 	"path/filepath"
+
+	"BanglaCode/src/evaluator"
+	"BanglaCode/src/evaluator/builtins"
+	"BanglaCode/src/lexer"
+	"BanglaCode/src/object"
+	"BanglaCode/src/parser"
+	"BanglaCode/src/repl"
 )
 
 func main() {
@@ -103,6 +105,7 @@ func runFile(filename string) {
 
 	// Create environment
 	env := object.NewEnvironment()
+	builtins.InitializeEnvironmentWithConstants(env)
 
 	// Lex
 	l := lexer.New(string(content))

@@ -1,6 +1,6 @@
 {
   "name": "documentation",
-  "version": "8.1.1",
+  "version": "7.0.16",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",

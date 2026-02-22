@@ -2,6 +2,7 @@ package repl
 
 import (
 	"BanglaCode/src/evaluator"
+	"BanglaCode/src/evaluator/builtins"
 	"BanglaCode/src/lexer"
 	"BanglaCode/src/object"
 	"BanglaCode/src/parser"
@@ -166,6 +167,7 @@ const HELP = `
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 	env := object.NewEnvironment()
+	builtins.InitializeEnvironmentWithConstants(env)
 
 	printBanner(out)
 

@@ -8,8 +8,11 @@ import (
 // evalClassDeclaration evaluates class declarations
 func evalClassDeclaration(cd *ast.ClassDeclaration, env *object.Environment) object.Object {
 	class := &object.Class{
-		Name:    cd.Name.Value,
-		Methods: make(map[string]*object.Function),
+		Name:             cd.Name.Value,
+		Methods:          make(map[string]*object.Function),
+		Getters:          make(map[string]*object.Function),
+		Setters:          make(map[string]*object.Function),
+		StaticProperties: make(map[string]object.Object),
 	}
 
 	// Create class environment for methods
@@ -28,6 +31,37 @@ func evalClassDeclaration(cd *ast.ClassDeclaration, env *object.Environment) obj
 			Name:       methodName,
 		}
 		class.Methods[methodName] = fn
+	}
+
+	// Evaluate getters
+	for name, getter := range cd.Getters {
+		fn := &object.Function{
+			Parameters: []*ast.Identifier{}, // getters have no params
+			Body:       getter.Body,
+			Env:        classEnv,
+			Name:       name,
+		}
+		class.Getters[name] = fn
+	}
+
+	// Evaluate setters
+	for name, setter := range cd.Setters {
+		fn := &object.Function{
+			Parameters: setter.Parameters,
+			Body:       setter.Body,
+			Env:        classEnv,
+			Name:       name,
+		}
+		class.Setters[name] = fn
+	}
+
+	// Evaluate static properties
+	for name, expr := range cd.StaticProperties {
+		val := Eval(expr, env)
+		if isError(val) {
+			return val
+		}
+		class.StaticProperties[name] = val
 	}
 
 	env.Set(cd.Name.Value, class)
@@ -49,8 +83,9 @@ func evalNewExpression(ne *ast.NewExpression, env *object.Environment) object.Ob
 
 	// Create instance
 	instance := &object.Instance{
-		Class:      class,
-		Properties: make(map[string]object.Object),
+		Class:         class,
+		Properties:    make(map[string]object.Object),
+		PrivateFields: make(map[string]object.Object),
 	}
 
 	// Evaluate constructor arguments
@@ -125,6 +160,11 @@ func applyFunctionWithPosition(fn object.Object, args []object.Object, env *obje
 		// Check if function is async - if so, execute in goroutine and return promise
 		if fn.IsAsync {
 			return evalAsyncFunctionCall(fn, args, env)
+		}
+
+		// Generator functions return a generator object on call
+		if fn.IsGenerator {
+			return evalGeneratorFunction(fn, args, env)
 		}
 
 		// Regular synchronous function execution

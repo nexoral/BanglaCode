@@ -67,8 +67,8 @@ Items marked with v7.0.5 were verified and implemented in the latest batch.
 |---------|---------|-----------|---------|
 | **Date object** | ✅ | ✅ (core via `tarikh_*`) | Implemented v7.0.7 | Date/time handling - **HIGH PRIORITY** |
 | **RegExp (full)** | ✅ | ⚠️ Partial (`regex_*`) | Core implemented v7.0.7 | Regular expressions - **HIGH PRIORITY** |
-| **Map (ES6)** | ✅ | ❌ | Key-value with non-string keys - **HIGH PRIORITY** |
-| **Set** | ✅ | ❌ | Unique values collection - **MEDIUM PRIORITY** |
+| **Map (ES6)** | ✅ | ✅ Implemented v7.0.10 | Key-value with any type keys (11 functions) |
+| **Set** | ✅ | ✅ Implemented v7.0.10 | Unique values collection (8 functions) |
 | **WeakMap** | ✅ | ❌ | Weak reference keys - Low priority |
 | **WeakSet** | ✅ | ❌ | Weak reference values - Low priority |
 | **TypedArray** | ✅ | ❌ | Float32Array, Int8Array, etc. - Low priority |
@@ -271,23 +271,23 @@ Items marked with v7.0.5 were verified and implemented in the latest batch.
 
 ## Error Handling
 
-### Missing 15+ Error Features
+### Missing 10+ Error Features
 
 | Feature | JS/Node | BanglaCode | Impact |
 |---------|---------|-----------|--------|
 | **Custom error classes** | ✅ | ❌ | `class MyError extends Error {}` - **MEDIUM** |
-| **Error.captureStackTrace()** | ✅ | ❌ | Capture stack - Low |
-| **Error.stack** | ✅ | ❌ | Stack trace access - **MEDIUM** |
-| **TypeError** | ✅ | ❌ | Type error type - **MEDIUM** |
-| **ReferenceError** | ✅ | ❌ | Undefined var error - **MEDIUM** |
-| **RangeError** | ✅ | ❌ | Out of range error - **MEDIUM** |
-| **SyntaxError** | ✅ | ❌ | Parse error - Low |
+| **Error.captureStackTrace()** | ✅ | Has partial stack support | Stack capture - v7.0.16 ✅ |
+| **Error.stack** | ✅ | Has `bhul_stack()` | Stack trace access - v7.0.16 ✅ |
+| **TypeError** | ✅ | Has `TypeError()` constructor | v7.0.16 ✅ |
+| **ReferenceError** | ✅ | Has `ReferenceError()` constructor | v7.0.16 ✅ |
+| **RangeError** | ✅ | Has `RangeError()` constructor | v7.0.16 ✅ |
+| **SyntaxError** | ✅ | Has `SyntaxError()` constructor | v7.0.16 ✅ |
 | **URIError** | ✅ | ❌ | Invalid URI error - Low |
 | **AggregateError** | ✅ | ❌ | Multiple errors - Low |
 | **EvalError** (deprecated) | ✅ | ❌ | Not used - Very low |
 | **Error cause** | ✅ | ❌ | `new Error('msg', { cause: err })` - **MEDIUM** |
-| **Stack trace parsing** | ✅ | ❌ | Parse error stacks - Low |
-| **Error context** | ✅ | ❌ | Provide error context - Low |
+| **Stack trace parsing** | ✅ | Has basic support | v7.0.16 ✅ |
+| **Error context** | ✅ | Has `bhul_message()`, `bhul_naam()` | v7.0.16 ✅ |
 
 ---
 
@@ -311,10 +311,10 @@ Items marked with v7.0.5 were verified and implemented in the latest batch.
 | **extends keyword** | ✅ | ✅ (as `theke`) | Class inheritance - **Implemented v7.0.4** |
 | **super keyword** | ✅ | ✅ (as `upor`) | Call parent - **Implemented v7.0.4** |
 | **static methods** | ✅ | ✅ (as `sthir kaj`) | `static method() {}` - **Implemented v7.0.4** |
-| **static properties** | ✅ | ❌ | `static prop = value` - **HIGH** |
-| **getters** | ✅ | ❌ | `get prop() {}` - **MEDIUM** |
-| **setters** | ✅ | ❌ | `set prop(val) {}` - **MEDIUM** |
-| **private fields** | ✅ | ❌ | `#field` - **MEDIUM** |
+| **static properties** | ✅ | ✅ (as `sthir prop = value`) | Static properties - **Implemented v7.0.14** |
+| **getters** | ✅ | ✅ (as `pao prop()`) | `get prop() {}` - **Implemented v7.0.14** |
+| **setters** | ✅ | ✅ (as `set prop(val)`) | `set prop(val) {}` - **Implemented v7.0.14** |
+| **private fields** | ✅ | ✅ (as `_field` convention) | `_field` - **Implemented v7.0.14** |
 | **private methods** | ✅ | ❌ | `#method()` - **MEDIUM** |
 | **protected fields** | ✅ (TypeScript) | ❌ | Protected access - Low |
 | **Abstract classes** | ✅ (TypeScript) | ❌ | Abstract methods - Low |
@@ -359,22 +359,26 @@ Items marked with v7.0.5 were verified and implemented in the latest batch.
 | **clearTimeout()** | Clear timeout | ✅ Implemented v7.0.8 |
 | **clearInterval()** | Clear interval | ✅ Implemented v7.0.8 |
 
-#### Streams (Missing - CRITICAL)
+#### Streams (Implemented v7.0.9 ✅)
 
-| Feature | Purpose | Impact |
+| Feature | Purpose | Status |
 |---------|---------|--------|
-| **ReadableStream** | Read data efficiently | **CRITICAL** |
-| **WritableStream** | Write data efficiently | **CRITICAL** |
-| **TransformStream** | Transform stream | **HIGH** |
-| **DuplexStream** | Read and write | **HIGH** |
-| **stream.pipe()** | Connect streams | **CRITICAL** |
-| **stream.unpipe()** | Disconnect | High |
-| **Backpressure handling** | Flow control | **CRITICAL** |
-| **Stream events** | on('data'), on('end') | Partial |
-| **fs.createReadStream()** | File streaming | ❌ |
-| **fs.createWriteStream()** | File streaming | ❌ |
+| **ReadableStream** | Read data efficiently | ✅ Implemented v7.0.9 (`stream_readable_srishti`) |
+| **WritableStream** | Write data efficiently | ✅ Implemented v7.0.9 (`stream_writable_srishti`) |
+| **stream.pipe()** | Connect streams | ✅ Implemented v7.0.9 (`stream_pipe`) |
+| **Backpressure handling** | Flow control | ✅ Implemented v7.0.9 (high water mark) |
+| **Stream events** | on('data'), on('end') | ✅ Implemented v7.0.9 (`stream_on`) |
+| **stream.write()** | Write to stream | ✅ Implemented v7.0.9 (`stream_lekho`) |
+| **stream.read()** | Read from stream | ✅ Implemented v7.0.9 (`stream_poro`) |
+| **stream.close()** | Close stream | ✅ Implemented v7.0.9 (`stream_bondho`) |
+| **stream.end()** | Signal end | ✅ Implemented v7.0.9 (`stream_shesh`) |
+| **TransformStream** | Transform stream | ❌ Not yet (can be built with readable+writable) |
+| **DuplexStream** | Read and write | ❌ Not yet (can be built with readable+writable) |
+| **stream.unpipe()** | Disconnect | ❌ Not yet |
+| **fs.createReadStream()** | File streaming | ❌ Not yet |
+| **fs.createWriteStream()** | File streaming | ❌ Not yet |
 
-#### EventEmitter (Missing - CRITICAL)
+#### EventEmitter (Implemented v7.0.8 ✅)
 
 | Feature | Purpose | Impact |
 |---------|---------|--------|
@@ -425,34 +429,44 @@ Items marked with v7.0.5 were verified and implemented in the latest batch.
 | Feature | JS Path | BanglaCode | Status |
 |---------|---------|-----------|--------|
 | **path.join()** | Yes | Has `path_joro()` | ✅ |
-| **path.resolve()** | Yes | ❌ | Missing |
-| **path.dirname()** | Yes | ❌ | Missing |
+| **path.resolve()** | Yes | `path_resolve()` (v7.0.11) | ✅ |
+| **path.dirname()** | Yes | Has `directory_naam()` (v7.0.11) | ✅ |
 | **path.basename()** | Yes | Has `path_naam()` | ✅ |
 | **path.extname()** | Yes | Has `file_ext()` | ✅ |
-| **path.normalize()** | Yes | ❌ | Missing |
-| **path.relative()** | Yes | ❌ | Missing |
-| **path.sep** | Yes | ❌ | Missing |
-| **path.delimiter** | Yes | ❌ | Missing |
+| **path.normalize()** | Yes | `path_normalize()` (v7.0.11) | ✅ |
+| **path.relative()** | Yes | `path_relative()` (v7.0.11) | ✅ |
+| **path.sep** | Yes | `PATH_SEP` constant (v7.0.11) | ✅ |
+| **path.delimiter** | Yes | `PATH_DELIMITER` constant (v7.0.11) | ✅ |
 | **path.win32** | Yes | ❌ | Missing |
 | **path.posix** | Yes | ❌ | Missing |
 
-#### URL Module (Missing - IMPORTANT)
+#### URL Module (Implemented v7.0.9 ✅)
 
-| Feature | Purpose | Impact |
+| Feature | Purpose | Status |
 |---------|---------|--------|
-| **new URL()** | Parse URL | **CRITICAL** |
-| **url.href** | Full URL | **CRITICAL** |
-| **url.protocol** | Protocol | High |
-| **url.hostname** | Hostname | High |
-| **url.port** | Port | High |
-| **url.pathname** | Path | High |
-| **url.search** | Query string | High |
-| **url.hash** | Fragment | Medium |
-| **url.username** | Username | Medium |
-| **url.password** | Password | Medium |
-| **URLSearchParams** | Query params | **CRITICAL** |
-| **url.parse()** (legacy) | Parse URL | High |
-| **url.format()** (legacy) | Format URL | High |
+| **new URL() / url_parse()** | Parse URL | ✅ Implemented v7.0.9 |
+| **url.href** | Full URL | ✅ Implemented v7.0.9 |
+| **url.protocol** | Protocol | ✅ Implemented v7.0.9 |
+| **url.hostname** | Hostname | ✅ Implemented v7.0.9 |
+| **url.port** | Port | ✅ Implemented v7.0.9 |
+| **url.pathname** | Path | ✅ Implemented v7.0.9 |
+| **url.search** | Query string | ✅ Implemented v7.0.9 |
+| **url.hash** | Fragment | ✅ Implemented v7.0.9 |
+| **url.username** | Username | ✅ Implemented v7.0.9 |
+| **url.password** | Password | ✅ Implemented v7.0.9 |
+| **url.host** | Hostname:port | ✅ Implemented v7.0.9 |
+| **url.origin** | Origin | ✅ Implemented v7.0.9 |
+| **URLSearchParams** | Query params | ✅ Implemented v7.0.9 (`url_query_params`) |
+| **searchParams.get()** | Get param | ✅ Implemented v7.0.9 (`url_query_get`) |
+| **searchParams.set()** | Set param | ✅ Implemented v7.0.9 (`url_query_set`) |
+| **searchParams.append()** | Append param | ✅ Implemented v7.0.9 (`url_query_append`) |
+| **searchParams.delete()** | Delete param | ✅ Implemented v7.0.9 (`url_query_delete`) |
+| **searchParams.has()** | Check param | ✅ Implemented v7.0.9 (`url_query_has`) |
+| **searchParams.keys()** | Get keys | ✅ Implemented v7.0.9 (`url_query_keys`) |
+| **searchParams.values()** | Get values | ✅ Implemented v7.0.9 (`url_query_values`) |
+| **searchParams.toString()** | To string | ✅ Implemented v7.0.9 (`url_query_toString`) |
+| **url.parse()** (legacy) | Parse URL | ❌ Not needed (modern API implemented) |
+| **url.format()** (legacy) | Format URL | ❌ Not needed (modern API implemented) |
 
 #### Crypto Module (CRITICAL - MISSING)
 
@@ -689,16 +703,16 @@ Items marked with v7.0.5 were verified and implemented in the latest batch.
 | **fs.promises.readFile()** | Yes | Has `poro_async()` | ✅ |
 | **fs.writeFileSync()** | Yes | Has `lekho()` | ✅ |
 | **fs.writeFile()** | Yes | Has `lekho_async()` | ✅ |
-| **fs.appendFile()** | Yes | ❌ | Missing |
-| **fs.unlink()** | Yes | ❌ | Missing |
+| **fs.appendFile()** | Yes | Has `file_jog()` | ✅ v7.0.15 |
+| **fs.unlink()** | Yes | Has `file_mochho()` | ✅ v7.0.15 |
 | **fs.mkdir()** | Yes | Has `folder_banao()` | ✅ |
-| **fs.rmdir()** | Yes | ❌ | Missing |
+| **fs.rmdir()** | Yes | Has `folder_mochho()` | ✅ v7.0.15 |
 | **fs.readdir()** | Yes | Has `directory_taliika()` | ✅ |
 | **fs.stat()** | Yes | Has `file_akar()` etc. | Partial ✅ |
-| **fs.copyFile()** | Yes | ❌ | Missing |
+| **fs.copyFile()** | Yes | Has `file_nokol()` | ✅ v7.0.15 |
 | **fs.rename()** | Yes | Has `file_rename()` | ✅ |
-| **fs.watch()** | Yes | ❌ | Missing |
-| **fs.watchFile()** | Yes | ❌ | Missing |
+| **fs.watch()** | Yes | Has `file_dekhun()` | ✅ v7.0.15 |
+| **fs.watchFile()** | Yes | Has `file_dekhun()` | ✅ v7.0.15 |
 | **fs.createReadStream()** | Yes | ❌ | Missing - **CRITICAL** |
 | **fs.createWriteStream()** | Yes | ❌ | Missing - **CRITICAL** |
 | **fs.chmod()** | Yes | Has `file_permission_set()` | ✅ |

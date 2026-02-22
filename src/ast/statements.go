@@ -158,9 +158,12 @@ func (rs *ReturnStatement) String() string {
 
 // ClassDeclaration represents: sreni Manush { ... }
 type ClassDeclaration struct {
-	Token   lexer.Token // the SRENI token
-	Name    *Identifier
-	Methods []*FunctionLiteral
+	Token            lexer.Token // the SRENI token
+	Name             *Identifier
+	Methods          []*FunctionLiteral
+	Getters          map[string]*FunctionLiteral // getters: pao prop() { }
+	Setters          map[string]*FunctionLiteral // setters: set prop(val) { }
+	StaticProperties map[string]Expression       // static properties: sthir prop = value
 }
 
 func (cd *ClassDeclaration) statementNode()       {}
