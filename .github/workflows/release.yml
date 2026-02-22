@@ -607,6 +607,8 @@ jobs:
       needs.version-check.outputs.extension_changed == 'true' &&
       needs.release.outputs.release_created == 'true'
     runs-on: ubuntu-latest
+    outputs:
+      vsix_path: ${{ steps.build.outputs.vsix_path }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -620,9 +622,77 @@ jobs:
           cache: "npm"
           cache-dependency-path: Extension/package-lock.json
 
-      - name: Build and publish extension
+      - name: Build and publish to VS Marketplace
         working-directory: Extension
         run: |
           npm ci --prefer-offline
           npx vsce package
           npx vsce publish -p ${{ secrets.AZURE_DEVOPS_VS_CODE_EXTENSION_PUBLISH_TOKEN }}
+
+  publish-open-vsx-extension:
+    needs: [version-check, publish-vscode-extension]
+    if: |
+      needs.version-check.outputs.version_changed == 'true' &&
+      needs.version-check.outputs.extension_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: Extension
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: Extension/package-lock.json
+
+      - name: Install dependencies
+        working-directory: Extension
+        run: npm ci --prefer-offline
+
+      - name: Verify Open VSX token
+        id: check_token
+        run: |
+          if [ -z "${{ secrets.OPEN_VSX_PAT }}" ]; then
+            echo "⚠️ Warning: OPEN_VSX_PAT not configured"
+            echo "ℹ️ To publish to Open VSX, add OPEN_VSX_PAT secret to GitHub"
+            echo "token_configured=false" >> $GITHUB_OUTPUT
+          else
+            echo "✅ OPEN_VSX_PAT is configured"
+            echo "token_configured=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Package extension
+        working-directory: Extension
+        run: |
+          npx vsce package
+          VSIX_FILE=$(ls *.vsix | head -1)
+          echo "VSIX_FILE=$VSIX_FILE" >> $GITHUB_ENV
+          echo "📦 Created package: $VSIX_FILE"
+
+      - name: Publish to Open VSX Registry
+        if: steps.check_token.outputs.token_configured == 'true'
+        working-directory: Extension
+        run: |
+          npx ovsx publish *.vsix -p ${{ secrets.OPEN_VSX_PAT }}
+        env:
+          OVSX_REGISTRY_URL: https://open-vsx.org
+
+      - name: Summary
+        run: |
+          echo "## Open VSX Extension Publishing" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -z "${{ secrets.OPEN_VSX_PAT }}" ]; then
+            echo "⚠️ **Skipped** - OPEN_VSX_PAT not configured" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "To enable Open VSX publishing:" >> $GITHUB_STEP_SUMMARY
+            echo "1. Generate token at https://open-vsx.org → Settings → Access Tokens" >> $GITHUB_STEP_SUMMARY
+            echo "2. Add \`OPEN_VSX_PAT\` secret to GitHub repository" >> $GITHUB_STEP_SUMMARY
+            echo "3. Ensure namespace 'AnkanSaha' is created on Open VSX" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **Published** to Open VSX Registry v${{ needs.version-check.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Extension available at: https://open-vsx.org/extension/AnkanSaha/banglacode" >> $GITHUB_STEP_SUMMARY
+          fi
