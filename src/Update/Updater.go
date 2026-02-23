@@ -11,19 +11,19 @@ import (
 // Update commands for each operating system
 var updateCommands = map[string]updateCommand{
 	"linux": {
-		shell:   "bash",
+		shell:    "bash",
 		shellArg: "-c",
-		script:  "curl -fsSL https://raw.githubusercontent.com/nexoral/BanglaCode/main/Scripts/install.sh | bash",
+		script:   "curl -fsSL https://raw.githubusercontent.com/nexoral/BanglaCode/main/Scripts/install.sh | bash",
 	},
 	"darwin": {
-		shell:   "bash",
+		shell:    "bash",
 		shellArg: "-c",
-		script:  "curl -fsSL https://raw.githubusercontent.com/nexoral/BanglaCode/main/Scripts/install.sh | bash",
+		script:   "curl -fsSL https://raw.githubusercontent.com/nexoral/BanglaCode/main/Scripts/install.sh | bash",
 	},
 	"windows": {
-		shell:   "powershell",
+		shell:    "powershell",
 		shellArg: "-Command",
-		script:  "irm https://raw.githubusercontent.com/nexoral/BanglaCode/main/Scripts/install.ps1 | iex",
+		script:   "irm https://raw.githubusercontent.com/nexoral/BanglaCode/main/Scripts/install.ps1 | iex",
 	},
 }
 
