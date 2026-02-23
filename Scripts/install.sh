@@ -79,18 +79,47 @@ else
 fi
 
 DOWNLOAD_URL="https://github.com/$REPO/releases/download/v$VERSION/$DOWNLOAD_FILE"
+CHECKSUM_URL="https://github.com/$REPO/releases/download/v$VERSION/checksums.txt"
 
 echo -e "${YELLOW}⬇${NC}  Downloading $DOWNLOAD_FILE..."
 
 TMP_DIR=$(mktemp -d)
 cd "$TMP_DIR"
 
+# Download the binary/package
 if ! curl -fsSL -o "$DOWNLOAD_FILE" "$DOWNLOAD_URL"; then
     echo -e "${RED}❌ Download failed${NC}"
     rm -rf "$TMP_DIR"
     exit 1
 fi
 
+# Download checksums
+echo -e "${YELLOW}🔐${NC} Verifying checksum..."
+if ! curl -fsSL -o "checksums.txt" "$CHECKSUM_URL"; then
+    echo -e "${RED}❌ Failed to download checksums${NC}"
+    rm -rf "$TMP_DIR"
+    exit 1
+fi
+
+# Verify checksum
+EXPECTED_CHECKSUM=$(grep "$DOWNLOAD_FILE" checksums.txt | awk '{print $1}')
+if [ -z "$EXPECTED_CHECKSUM" ]; then
+    echo -e "${RED}❌ Checksum not found for $DOWNLOAD_FILE${NC}"
+    rm -rf "$TMP_DIR"
+    exit 1
+fi
+
+ACTUAL_CHECKSUM=$(sha256sum "$DOWNLOAD_FILE" | awk '{print $1}')
+if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]; then
+    echo -e "${RED}❌ Checksum verification failed!${NC}"
+    echo -e "${RED}   Expected: $EXPECTED_CHECKSUM${NC}"
+    echo -e "${RED}   Got:      $ACTUAL_CHECKSUM${NC}"
+    echo -e "${RED}   This may indicate a compromised download.${NC}"
+    rm -rf "$TMP_DIR"
+    exit 1
+fi
+
+echo -e "${GREEN}✓${NC} Checksum verified"
 echo -e "${YELLOW}📦${NC} Installing..."
 
 if [ "$INSTALL_CMD" = "tar" ]; then

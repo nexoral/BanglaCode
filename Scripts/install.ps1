@@ -234,7 +234,9 @@ Write-ColorOutput "[+] Latest Version: v$VERSION" "Green"
 # Prepare download
 $DOWNLOAD_FILE = "banglacode-windows-$ARCH.zip"
 $DOWNLOAD_URL = "https://github.com/$REPO/releases/download/v$VERSION/$DOWNLOAD_FILE"
+$CHECKSUM_URL = "https://github.com/$REPO/releases/download/v$VERSION/checksums.txt"
 $TMP_FILE = Join-Path $env:TEMP $DOWNLOAD_FILE
+$CHECKSUM_FILE = Join-Path $env:TEMP "checksums.txt"
 
 Write-ColorOutput "[*] Downloading $DOWNLOAD_FILE..." "White"
 
@@ -248,6 +250,42 @@ if (-not (Download-File -Url $DOWNLOAD_URL -Destination $TMP_FILE)) {
 }
 
 Write-ColorOutput "[+] Download complete" "Green"
+
+# Download checksums
+Write-ColorOutput "[*] Verifying checksum..." "White"
+if (-not (Download-File -Url $CHECKSUM_URL -Destination $CHECKSUM_FILE)) {
+    Write-ColorOutput "[X] Failed to download checksums" "Red"
+    Remove-Item $TMP_FILE -Force -ErrorAction SilentlyContinue
+    exit 1
+}
+
+# Parse expected checksum
+$checksumContent = Get-Content $CHECKSUM_FILE
+$expectedChecksum = ($checksumContent | Select-String -Pattern "$DOWNLOAD_FILE").Line -split '\s+' | Select-Object -First 1
+
+if (-not $expectedChecksum) {
+    Write-ColorOutput "[X] Checksum not found for $DOWNLOAD_FILE" "Red"
+    Remove-Item $TMP_FILE, $CHECKSUM_FILE -Force -ErrorAction SilentlyContinue
+    exit 1
+}
+
+# Calculate actual checksum
+$actualChecksum = (Get-FileHash -Path $TMP_FILE -Algorithm SHA256).Hash.ToLower()
+$expectedChecksum = $expectedChecksum.ToLower()
+
+if ($actualChecksum -ne $expectedChecksum) {
+    Write-ColorOutput "[X] Checksum verification failed!" "Red"
+    Write-ColorOutput "    Expected: $expectedChecksum" "Red"
+    Write-ColorOutput "    Got:      $actualChecksum" "Red"
+    Write-ColorOutput "    This may indicate a compromised download." "Red"
+    Remove-Item $TMP_FILE, $CHECKSUM_FILE -Force -ErrorAction SilentlyContinue
+    exit 1
+}
+
+Write-ColorOutput "[+] Checksum verified" "Green"
+
+# Cleanup checksum file
+Remove-Item $CHECKSUM_FILE -Force -ErrorAction SilentlyContinue
 
 # Create install directory
 Write-ColorOutput "[*] Installing to $INSTALL_DIR..." "White"
