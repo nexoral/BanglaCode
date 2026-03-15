@@ -1,0 +1,85 @@
+# BanglaCode Core Rules for Cursor IDE
+
+## Project Context
+
+**BanglaCode** - Educational Programming Language in Bengali (Go interpreter)
+
+## Mandatory Workflows
+
+```bash
+go build -o banglacode main.go
+go test ./...
+go fmt ./...
+go vet ./...
+```
+
+## Definition of "Done"
+
+- ✅ `go build` passes
+- ✅ Tests pass
+- ✅ Existing programs work
+- ✅ SYNTAX.md updated
+- ✅ Bengali error messages
+- ✅ Docs updated
+
+## Architecture
+
+```
+Source → Lexer → Parser → AST → Evaluator → Result
+```
+
+## Components
+
+```
+src/ (lexer, parser, ast, object, evaluator, repl)
+examples/ (BanglaCode programs)
+Extension/ (VS Code extension)
+```
+
+## Go Standards
+
+### Errors (Bengali)
+```go
+// ✅ Bengali messages
+if err != nil {
+    return newError("ভুল: %s", err.Error())
+}
+```
+
+### Type Safety
+```go
+// ✅ Safe assertions
+intObj, ok := obj.(*object.Integer)
+if !ok {
+    return newError("সংখ্যা প্রত্যাশিত")
+}
+```
+
+## Key Patterns
+
+### Bengali Keywords
+29 keywords: `dhoro` (let), `jodi` (if), `kaj` (function), `proyash` (async), `dol` (class), `ano` (import), `chesta` (try)
+
+### Built-ins
+135+ functions: `dekho` (print), `dorghyo` (length), `http_server`, `postgres_connect`, `ghumaao` (sleep)
+
+## Testing
+
+- Unit: Lexer, parser, evaluator
+- Integration: Full programs
+- Examples: `examples/` directory
+
+## Anti-Patterns
+
+❌ English keywords
+❌ Breaking programs
+❌ Non-Bengali errors
+❌ Missing docs
+
+## Success
+
+- ✅ Builds
+- ✅ Tests pass
+- ✅ Programs work
+- ✅ Docs updated
+- ✅ Bengali-friendly

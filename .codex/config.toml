@@ -1,0 +1,50 @@
+# OpenAI Codex CLI Configuration for BanglaCode
+
+[project]
+name = "BanglaCode"
+description = "Educational Programming Language in Bengali"
+language = "Go"
+runtime = "Go ≥1.20"
+
+[model]
+default = "gpt-4-turbo"
+temperature = 0.2
+
+[build]
+command = "go build -o banglacode main.go"
+required = true
+
+[test]
+command = "go test ./..."
+required = true
+
+[rules]
+bengali_keywords = true
+bengali_errors = true
+compatibility = true
+educational_focus = true
+
+[rules.naming]
+keywords = "Bengali/Banglish"
+builtins = "Bengali verbs"
+errors = "Bengali messages"
+
+[documentation]
+update_syntax = true
+update_architecture = true
+update_website = true
+update_vscode_extension = true
+
+[antipatterns]
+no_english_keywords = true
+no_english_errors = true
+no_breaking_changes = true
+
+[completion]
+required = [
+  "go build passes",
+  "go test passes",
+  "Existing programs work",
+  "SYNTAX.md updated",
+  "Bengali error messages"
+]
