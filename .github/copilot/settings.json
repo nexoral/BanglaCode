@@ -1,0 +1,58 @@
+{
+  "version": "1.0",
+  "project": {
+    "name": "BanglaCode",
+    "type": "Programming Language Interpreter",
+    "language": "Go",
+    "runtime": "Go ≥1.20"
+  },
+  "build": {
+    "command": "go build -o banglacode main.go",
+    "required": true
+  },
+  "test": {
+    "command": "go test ./...",
+    "required": true
+  },
+  "instructions": [
+    "CRITICAL: All keywords must be Bengali/Banglish",
+    "CRITICAL: Error messages must be in Bengali",
+    "CRITICAL: Don't break existing BanglaCode programs",
+    "Use Bengali-friendly variable names in error contexts",
+    "Update SYNTAX.md for language changes",
+    "Update Documentation/ for user-facing changes",
+    "Update Extension/ for VS Code features",
+    "Safe type assertions with ok check",
+    "Test on Linux, macOS, Windows"
+  ],
+  "patterns": {
+    "bengaliKeywords": {
+      "description": "29 keywords in Banglish",
+      "examples": ["dhoro", "jodi", "kaj", "proyash", "dol", "ano"]
+    },
+    "builtinFunctions": {
+      "description": "135+ built-in functions",
+      "naming": "Bengali verbs (dekho, dhokao, ghumaao)"
+    },
+    "errorMessages": {
+      "description": "Error messages in Bengali",
+      "required": true
+    }
+  },
+  "antiPatterns": [
+    "Never use English keywords",
+    "Never use English-only error messages",
+    "Never break existing programs",
+    "Never skip Bengali documentation"
+  ],
+  "completionCriteria": {
+    "required": [
+      "go build passes",
+      "go test passes",
+      "Existing programs work",
+      "SYNTAX.md updated",
+      "Bengali error messages",
+      "Cross-platform tested"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "project": {
+    "name": "BanglaCode",
+    "type": "Programming Language Interpreter",
+    "language": "Go",
+    "runtime": "Go ≥1.20"
+  },
+  "context": {
+    "fileName": ["GEMINI.md", "SYNTAX.md"],
+    "hierarchical": true
+  },
+  "tools": {
+    "enabled": ["codeSearch", "fileOperations", "shellCommands"]
+  }
+}
