@@ -281,7 +281,7 @@
         },
         {
           "name": "support.function.js",
-          "match": "\\b(server_chalu|router_banao|anun|uttor|json_uttor)\\b"
+          "match": "\\b(server_chalu|router_banao|anun|anun_async|uttor|json_uttor|cors_chharpao|file_dao|ghurao|kuki_rakho|html_uttor|log_chalu|goti_shima|sankochon_chalu|somoy_shima|akaar_shima|bhul_sambhalo)\\b"
         },
         {
           "name": "support.function.builtin.network.js",

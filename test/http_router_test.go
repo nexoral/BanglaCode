@@ -269,3 +269,323 @@ router.mujhe_felo("/delete", kaj(req, res) { uttor(res, "deleted"); });
 		testEval(input)
 	}
 }
+
+// ─── New feature tests ────────────────────────────────────────────────────────
+
+// TestRouterPathParams verifies single-segment path parameter registration.
+func TestRouterPathParams(t *testing.T) {
+	input := `
+dhoro app = router_banao();
+app.ana("/users/:id", kaj(req, res) {
+    dhoro id = req["params"]["id"];
+    json_uttor(res, {"id": id});
+});
+app
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("path param route registration failed: %v", result.Inspect())
+	}
+	if result.Type() != object.MAP_OBJ {
+		t.Fatalf("expected MAP (router), got %s", result.Type())
+	}
+}
+
+// TestRouterPathParamsMultiple verifies multi-segment path parameters.
+func TestRouterPathParamsMultiple(t *testing.T) {
+	input := `
+dhoro app = router_banao();
+app.ana("/posts/:pid/comments/:cid", kaj(req, res) {
+    dhoro pid = req["params"]["pid"];
+    dhoro cid = req["params"]["cid"];
+    json_uttor(res, {"pid": pid, "cid": cid});
+});
+app
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("multi-param route failed: %v", result.Inspect())
+	}
+}
+
+// TestQueryParamsParsedAsMap verifies that routes can access req["query"]["key"].
+func TestQueryParamsParsedAsMap(t *testing.T) {
+	input := `
+dhoro app = router_banao();
+app.ana("/search", kaj(req, res) {
+    dhoro term = req["query"]["q"];
+    dhoro page = req["query"]["page"];
+    json_uttor(res, {"term": term, "page": page});
+});
+app
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("query param route failed: %v", result.Inspect())
+	}
+}
+
+// TestRouterMiddleware verifies app.majhe() accepts a 3-arg handler.
+func TestRouterMiddleware(t *testing.T) {
+	input := `
+dhoro app = router_banao();
+app.majhe(kaj(req, res, agorao) {
+    dekho("middleware hit");
+    agorao();
+});
+app.ana("/", kaj(req, res) {
+    uttor(res, "OK");
+});
+app
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("middleware registration failed: %v", result.Inspect())
+	}
+}
+
+// TestRouterMiddlewareChaining verifies multiple middleware layers.
+func TestRouterMiddlewareChaining(t *testing.T) {
+	input := `
+dhoro app = router_banao();
+app.majhe(kaj(req, res, agorao) { agorao(); });
+app.majhe(kaj(req, res, agorao) { agorao(); });
+app.majhe(kaj(req, res, agorao) { agorao(); });
+app
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("chained middleware failed: %v", result.Inspect())
+	}
+}
+
+// TestSubRouterMountingFixed verifies bebohar() correctly mounts a sub-router.
+func TestSubRouterMountingFixed(t *testing.T) {
+	input := `
+dhoro api = router_banao();
+api.ana("/users", kaj(req, res) { json_uttor(res, {"users": []}); });
+api.pathano("/users", kaj(req, res) { json_uttor(res, {"created": sotti}, 201); });
+
+dhoro app = router_banao();
+app.bebohar("/api", api);
+app
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("bebohar sub-router mounting failed: %v", result.Inspect())
+	}
+}
+
+// TestCORSHelper verifies cors_chharpao() accepts default and custom options.
+func TestCORSHelper(t *testing.T) {
+	cases := []string{
+		`dhoro app = router_banao(); cors_chharpao(app); app`,
+		`dhoro app = router_banao(); cors_chharpao(app, {"origin": "https://example.com"}); app`,
+		`dhoro app = router_banao(); cors_chharpao(app, {"origin": "*", "methods": "GET,POST"}); app`,
+	}
+	for _, input := range cases {
+		result := testEval(input)
+		if isError(result) {
+			t.Fatalf("cors_chharpao failed: %v", result.Inspect())
+		}
+	}
+}
+
+// TestStaticFilesHelper verifies file_dao() registers without error.
+func TestStaticFilesHelper(t *testing.T) {
+	input := `
+dhoro app = router_banao();
+file_dao(app, "/public", ".");
+app
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("file_dao failed: %v", result.Inspect())
+	}
+}
+
+// TestGhurao verifies redirect sets 302 status.
+func TestGhurao(t *testing.T) {
+	input := `
+dhoro res = {"status": 200, "body": "", "headers": {}};
+ghurao(res, "/login");
+res["status"]
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("ghurao failed: %v", result.Inspect())
+	}
+	if result.Type() != object.NUMBER_OBJ {
+		t.Fatalf("expected NUMBER status, got %s", result.Type())
+	}
+	if result.(*object.Number).Value != 302 {
+		t.Fatalf("expected status 302, got %v", result.(*object.Number).Value)
+	}
+}
+
+// TestGhuraoCustomStatus verifies redirect with explicit 301.
+func TestGhuraoCustomStatus(t *testing.T) {
+	input := `
+dhoro res = {"status": 200, "body": "", "headers": {}};
+ghurao(res, "/new-page", 301);
+res["status"]
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("ghurao 301 failed: %v", result.Inspect())
+	}
+	if result.(*object.Number).Value != 301 {
+		t.Fatalf("expected status 301, got %v", result.(*object.Number).Value)
+	}
+}
+
+// TestKukiRakho verifies kuki_rakho() sets a Set-Cookie header.
+func TestKukiRakho(t *testing.T) {
+	input := `
+dhoro res = {"status": 200, "body": "", "headers": {}};
+kuki_rakho(res, "token", "abc123");
+res["headers"]["Set-Cookie"]
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("kuki_rakho failed: %v", result.Inspect())
+	}
+	if result.Type() != object.STRING_OBJ {
+		t.Fatalf("expected STRING Set-Cookie, got %s", result.Type())
+	}
+	if result.(*object.String).Value == "" {
+		t.Fatal("Set-Cookie header should not be empty")
+	}
+}
+
+// TestKukiRakhoWithOptions verifies kuki_rakho() with all cookie attributes.
+func TestKukiRakhoWithOptions(t *testing.T) {
+	input := `
+dhoro res = {"status": 200, "body": "", "headers": {}};
+kuki_rakho(res, "session", "xyz789", {"httpOnly": sotti, "maxAge": 3600, "path": "/app", "sameSite": "Lax"});
+res["headers"]["Set-Cookie"]
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("kuki_rakho with options failed: %v", result.Inspect())
+	}
+	if result.Type() != object.STRING_OBJ {
+		t.Fatalf("expected STRING Set-Cookie, got %s", result.Type())
+	}
+}
+
+// TestGotiShima verifies goti_shima() configures the rate limiter without error.
+func TestGotiShima(t *testing.T) {
+	input := `
+dhoro app = router_banao();
+goti_shima(app, 100, 60);
+app
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("goti_shima failed: %v", result.Inspect())
+	}
+}
+
+// TestSankochonChalu verifies sankochon_chalu() enables gzip without error.
+func TestSankochonChalu(t *testing.T) {
+	input := `
+dhoro app = router_banao();
+sankochon_chalu(app);
+app
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("sankochon_chalu failed: %v", result.Inspect())
+	}
+}
+
+// TestSomoyShima verifies somoy_shima() sets the timeout without error.
+func TestSomoyShima(t *testing.T) {
+	input := `
+dhoro app = router_banao();
+somoy_shima(app, 30);
+app
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("somoy_shima failed: %v", result.Inspect())
+	}
+}
+
+// TestAkaarShima verifies akaar_shima() sets the body limit without error.
+func TestAkaarShima(t *testing.T) {
+	input := `
+dhoro app = router_banao();
+akaar_shima(app, 1048576);
+app
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("akaar_shima failed: %v", result.Inspect())
+	}
+}
+
+// TestBhulSambhalo verifies bhul_sambhalo() registers an error handler without error.
+func TestBhulSambhalo(t *testing.T) {
+	input := `
+dhoro app = router_banao();
+bhul_sambhalo(app, kaj(err, req, res) {
+    json_uttor(res, {"error": "something went wrong"}, 500);
+});
+app
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("bhul_sambhalo failed: %v", result.Inspect())
+	}
+}
+
+// TestLogChalu verifies log_chalu() enables logging without error.
+func TestLogChalu(t *testing.T) {
+	input := `
+dhoro app = router_banao();
+log_chalu(app);
+app
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("log_chalu failed: %v", result.Inspect())
+	}
+}
+
+// TestFullProductionStack verifies all middleware helpers chain without error.
+func TestFullProductionStack(t *testing.T) {
+	input := `
+dhoro app = router_banao();
+cors_chharpao(app);
+log_chalu(app);
+sankochon_chalu(app);
+somoy_shima(app, 30);
+akaar_shima(app, 1048576);
+goti_shima(app, 100, 60);
+app.majhe(kaj(req, res, agorao) { agorao(); });
+file_dao(app, "/public", ".");
+app.ana("/users/:id", kaj(req, res) {
+    json_uttor(res, {"id": req["params"]["id"]});
+});
+app.pathano("/users", kaj(req, res) {
+    dhoro body = req["json"];
+    json_uttor(res, {"created": sotti}, 201);
+});
+app.ana("/search", kaj(req, res) {
+    json_uttor(res, {"q": req["query"]["q"]});
+});
+bhul_sambhalo(app, kaj(err, req, res) {
+    json_uttor(res, {"error": "internal"}, 500);
+});
+app
+`
+	result := testEval(input)
+	if isError(result) {
+		t.Fatalf("full production stack failed: %v", result.Inspect())
+	}
+	if result.Type() != object.MAP_OBJ {
+		t.Fatalf("expected MAP (router), got %s", result.Type())
+	}
+}
