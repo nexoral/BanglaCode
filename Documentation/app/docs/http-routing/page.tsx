@@ -426,6 +426,229 @@ pathao authRouter;  // Always export your router`}</code></pre>
 
       <hr />
 
+      <h2>Path Parameters</h2>
+      <p>Use <code>:name</code> segments in route paths. Values are available in <code>req[&quot;params&quot;]</code> as a MAP.</p>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm whitespace-pre">
+{`dhoro app = router_banao();
+
+// Single param: /users/123
+app.ana("/users/:id", kaj(req, res) {
+    dhoro id = req["params"]["id"];
+    json_uttor(res, {"user_id": id});
+});
+
+// Multiple params: /posts/42/comments/7
+app.ana("/posts/:pid/comments/:cid", kaj(req, res) {
+    dhoro pid = req["params"]["pid"];
+    dhoro cid = req["params"]["cid"];
+    json_uttor(res, {"post": pid, "comment": cid});
+});`}
+      </div>
+
+      <hr />
+
+      <h2>Query String Parsing</h2>
+      <p><code>req[&quot;query&quot;]</code> is a parsed MAP. Use <code>req[&quot;query_raw&quot;]</code> for the raw string.</p>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm whitespace-pre">
+{`// GET /search?q=hello&page=2
+app.ana("/search", kaj(req, res) {
+    dhoro term = req["query"]["q"];    // "hello"
+    dhoro page = req["query"]["page"]; // "2"
+    json_uttor(res, {"term": term, "page": page});
+});`}
+      </div>
+
+      <hr />
+
+      <h2>Auto JSON Body Parsing</h2>
+      <p>When the request has <code>Content-Type: application/json</code>, <code>req[&quot;json&quot;]</code> is auto-parsed. Otherwise it is <code>khali</code>.</p>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm whitespace-pre">
+{`app.pathano("/users", kaj(req, res) {
+    dhoro user = req["json"];   // auto-parsed MAP — no json_poro() needed
+    dekho("Name:", user["name"]);
+    json_uttor(res, {"created": sotti}, 201);
+});`}
+      </div>
+
+      <hr />
+
+      <h2>Middleware (majhe - মাঝে)</h2>
+      <p>Runs before every route handler. Call <code>agorao()</code> (আগাও = go forward) to pass to the next layer.</p>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm whitespace-pre">
+{`dhoro app = router_banao();
+
+// Logging middleware
+app.majhe(kaj(req, res, agorao) {
+    dekho(req["method"], req["path"]);
+    agorao();   // must call to continue!
+});
+
+// Auth middleware
+app.majhe(kaj(req, res, agorao) {
+    jodi (req["headers"]["Authorization"] == khali) {
+        json_uttor(res, {"error": "Unauthorized"}, 401);
+        ferao;   // stop here — don't call agorao()
+    }
+    agorao();
+});
+
+app.ana("/", kaj(req, res) {
+    uttor(res, "Protected page");
+});`}
+      </div>
+
+      <hr />
+
+      <h2>CORS (cors_chharpao - ছাড়পাও)</h2>
+      <p>Enables Cross-Origin Resource Sharing. Call before defining routes.</p>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm whitespace-pre">
+{`dhoro app = router_banao();
+
+cors_chharpao(app);   // allow all origins (default)
+
+// Custom options
+cors_chharpao(app, {
+    "origin": "https://myapp.com",
+    "methods": "GET,POST,PUT,DELETE"
+});`}
+      </div>
+
+      <hr />
+
+      <h2>Static File Serving (file_dao - ফাইল দাও)</h2>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm whitespace-pre">
+{`dhoro app = router_banao();
+file_dao(app, "/public", "./static_files");
+// GET /public/style.css → serves ./static_files/style.css`}
+      </div>
+
+      <hr />
+
+      <h2>Cookie Handling</h2>
+      <p>Read cookies from <code>req[&quot;kukis&quot;]</code>. Set cookies with <code>kuki_rakho()</code> (কুকি রাখো).</p>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm whitespace-pre">
+{`app.ana("/profile", kaj(req, res) {
+    dhoro sessionToken = req["kukis"]["session"];
+    json_uttor(res, {"token": sessionToken});
+});
+
+app.pathano("/login", kaj(req, res) {
+    // Basic cookie
+    kuki_rakho(res, "session", "token123");
+
+    // With options
+    kuki_rakho(res, "session", "token123", {
+        "httpOnly": sotti,
+        "maxAge": 86400,
+        "sameSite": "Lax",
+        "secure": sotti
+    });
+    json_uttor(res, {"ok": sotti});
+});`}
+      </div>
+
+      <hr />
+
+      <h2>Redirect (ghurao - ঘোরাও)</h2>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm whitespace-pre">
+{`app.ana("/old-page", kaj(req, res) {
+    ghurao(res, "/new-page");        // 302 Found
+});
+
+app.ana("/moved", kaj(req, res) {
+    ghurao(res, "/permanent", 301);  // 301 Moved Permanently
+});`}
+      </div>
+
+      <hr />
+
+      <h2>HTML File Response (html_uttor - HTML উত্তর)</h2>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm whitespace-pre">
+{`app.ana("/", kaj(req, res) {
+    html_uttor(res, "./views/index.html");
+});`}
+      </div>
+
+      <hr />
+
+      <h2>Error Middleware (bhul_sambhalo - ভুল সামলাও)</h2>
+      <p>Catches errors returned by route handlers. Register after all routes.</p>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm whitespace-pre">
+{`bhul_sambhalo(app, kaj(err, req, res) {
+    json_uttor(res, {"error": err["message"]}, 500);
+});`}
+      </div>
+
+      <hr />
+
+      <h2>Performance Features</h2>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm whitespace-pre">
+{`dhoro app = router_banao();
+
+goti_shima(app, 100, 60);      // rate limit: 100 req/min per IP (গতি সীমা)
+sankochon_chalu(app);          // gzip compression (সংকোচন চালু)
+somoy_shima(app, 30);          // 30-second timeout (সময় সীমা)
+akaar_shima(app, 1048576);     // 1 MB body limit (আকার সীমা)
+log_chalu(app);                // request logging (লগ চালু)`}
+      </div>
+
+      <hr />
+
+      <h2>Sub-router Mounting (bebohar - ব্যবহার)</h2>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm whitespace-pre">
+{`dhoro userRoutes = router_banao();
+userRoutes.ana("/users", kaj(req, res) { json_uttor(res, {"users": []}); });
+userRoutes.pathano("/users", kaj(req, res) { json_uttor(res, {}, 201); });
+
+dhoro app = router_banao();
+app.bebohar("/api", userRoutes);
+// Now: GET /api/users, POST /api/users`}
+      </div>
+
+      <hr />
+
+      <h2>Full Production Example</h2>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm whitespace-pre">
+{`dhoro app = router_banao();
+
+cors_chharpao(app);
+log_chalu(app);
+sankochon_chalu(app);
+somoy_shima(app, 30);
+akaar_shima(app, 1048576);
+goti_shima(app, 100, 60);
+
+app.majhe(kaj(req, res, agorao) {
+    dekho(req["method"], req["path"]);
+    agorao();
+});
+
+file_dao(app, "/public", "./static");
+
+app.ana("/users/:id", kaj(req, res) {
+    dhoro id = req["params"]["id"];
+    json_uttor(res, {"id": id});
+});
+
+app.pathano("/users", kaj(req, res) {
+    dhoro user = req["json"];
+    json_uttor(res, {"created": sotti}, 201);
+});
+
+app.ana("/search", kaj(req, res) {
+    dhoro q = req["query"]["q"];
+    json_uttor(res, {"results": []});
+});
+
+bhul_sambhalo(app, kaj(err, req, res) {
+    json_uttor(res, {"error": err["message"]}, 500);
+});
+
+server_chalu(3000, app);`}
+      </div>
+
+      <hr />
+
       <h2>Related Topics</h2>
       <ul>
         <li><a href="/docs/http-server">HTTP Server Basics</a></li>

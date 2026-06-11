@@ -314,14 +314,127 @@ dhoro data = json_poro(response.body);
 dekho(data);`}
       />
 
+      <h2>Enhanced HTTP Client (anun)</h2>
+      <p><code>anun()</code> now supports all HTTP methods via an optional options map. Backward-compatible: one-argument GET still works.</p>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm whitespace-pre">
+{`// GET (unchanged)
+dhoro res = anun("https://api.example.com/users");
+
+// POST with JSON body
+dhoro res = anun("https://api.example.com/users", {
+    "method": "POST",
+    "body": json_banao({"name": "Ankan", "email": "a@b.com"}),
+    "headers": {"Content-Type": "application/json"}
+});
+
+// PUT
+dhoro res = anun("https://api.example.com/users/1", {
+    "method": "PUT",
+    "body": json_banao({"name": "Updated"})
+});
+
+// DELETE
+dhoro res = anun("https://api.example.com/users/1", {
+    "method": "DELETE"
+});
+
+dekho("Status:", res["status"]);
+dhoro data = json_poro(res["body"]);`}
+      </div>
+
+      <h2>Async HTTP Client (anun_async)</h2>
+      <div className="bg-secondary/50 p-4 rounded-lg font-mono text-sm whitespace-pre">
+{`proyash kaj createUser(userData) {
+    dhoro res = opekha anun_async("https://api.example.com/users", {
+        "method": "POST",
+        "body": json_banao(userData),
+        "headers": {"Content-Type": "application/json"}
+    });
+    ferao json_poro(res["body"]);
+}
+
+dhoro user = opekha createUser({"name": "Ankan"});
+dekho("Created:", user);`}
+      </div>
+
+      <h2>Request Object Reference</h2>
+      <p>All fields available on <code>req</code> inside route handlers:</p>
+      <div className="overflow-x-auto border border-border rounded-lg">
+        <table className="min-w-full divide-y divide-border text-sm">
+          <thead>
+            <tr className="bg-secondary/30">
+              <th className="px-4 py-2 text-left">Field</th>
+              <th className="px-4 py-2 text-left">Type</th>
+              <th className="px-4 py-2 text-left">Description</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {[
+              ["req[\"method\"]", "STRING", "HTTP method: GET, POST, PUT, ..."],
+              ["req[\"path\"]", "STRING", "Request path: /users/123"],
+              ["req[\"ip\"]", "STRING", "Client IP address"],
+              ["req[\"headers\"]", "MAP", "All request headers"],
+              ["req[\"body\"]", "STRING", "Raw request body"],
+              ["req[\"json\"]", "MAP/NULL", "Auto-parsed JSON body (when Content-Type: application/json)"],
+              ["req[\"form\"]", "MAP/NULL", "URL-encoded form data (when Content-Type: application/x-www-form-urlencoded)"],
+              ["req[\"params\"]", "MAP", "Path params: route /users/:id → req[\"params\"][\"id\"]"],
+              ["req[\"query\"]", "MAP", "Parsed query string: ?q=hi → req[\"query\"][\"q\"]"],
+              ["req[\"query_raw\"]", "STRING", "Raw query string: \"q=hi&page=2\""],
+              ["req[\"kukis\"]", "MAP", "Parsed cookies: req[\"kukis\"][\"session\"]"],
+            ].map(([field, type, desc]) => (
+              <tr key={field}>
+                <td className="px-4 py-2 font-mono">{field}</td>
+                <td className="px-4 py-2">{type}</td>
+                <td className="px-4 py-2 text-muted-foreground">{desc}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Performance Helpers Reference</h2>
+      <div className="overflow-x-auto border border-border rounded-lg mt-4">
+        <table className="min-w-full divide-y divide-border text-sm">
+          <thead>
+            <tr className="bg-secondary/30">
+              <th className="px-4 py-2 text-left">Function</th>
+              <th className="px-4 py-2 text-left">Bengali</th>
+              <th className="px-4 py-2 text-left">Description</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {[
+              ["goti_shima(app, max, window)", "গতি সীমা", "Rate limit: max requests per window seconds per IP"],
+              ["sankochon_chalu(app)", "সংকোচন চালু", "Enable gzip compression"],
+              ["somoy_shima(app, secs)", "সময় সীমা", "Request timeout in seconds"],
+              ["akaar_shima(app, bytes)", "আকার সীমা", "Max request body size in bytes"],
+              ["log_chalu(app)", "লগ চালু", "Enable request logging"],
+              ["cors_chharpao(app, opts?)", "ছাড়পাও", "Enable CORS"],
+              ["file_dao(app, url, dir)", "ফাইল দাও", "Serve static files"],
+              ["ghurao(res, url, status?)", "ঘোরাও", "HTTP redirect (default 302)"],
+              ["kuki_rakho(res, name, val, opts?)", "কুকি রাখো", "Set response cookie"],
+              ["html_uttor(res, filepath)", "HTML উত্তর", "Serve HTML file"],
+              ["bhul_sambhalo(app, handler)", "ভুল সামলাও", "Global error middleware"],
+            ].map(([fn, bn, desc]) => (
+              <tr key={fn}>
+                <td className="px-4 py-2 font-mono text-xs">{fn}</td>
+                <td className="px-4 py-2">{bn}</td>
+                <td className="px-4 py-2 text-muted-foreground">{desc}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
       <h2>Best Practices</h2>
 
       <ul>
         <li><strong>Always validate input</strong> - Never trust client data</li>
         <li><strong>Use appropriate status codes</strong> - 200 for success, 404 for not found, etc.</li>
         <li><strong>Set correct content types</strong> - Especially for JSON and HTML</li>
-        <li><strong>Handle errors gracefully</strong> - Wrap handlers in try-catch</li>
+        <li><strong>Handle errors gracefully</strong> - Use <code>bhul_sambhalo()</code> for centralized error handling</li>
         <li><strong>Use JSON for APIs</strong> - It&apos;s the standard for data exchange</li>
+        <li><strong>Enable production features</strong> - <code>cors_chharpao</code>, <code>goti_shima</code>, <code>sankochon_chalu</code>, <code>somoy_shima</code> for production deployments</li>
       </ul>
 
       <DocNavigation currentPath="/docs/http-server" />

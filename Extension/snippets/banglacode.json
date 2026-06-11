@@ -1591,6 +1591,173 @@
     ],
     "description": "Mount sub-router at path (রাউটার ব্যবহার)"
   },
+  "Middleware (majhe)": {
+    "prefix": "majhe",
+    "body": [
+      "${1:app}.majhe(kaj(req, res, agorao) {",
+      "\t$2",
+      "\tagorao();",
+      "});"
+    ],
+    "description": "Add middleware to router - agorao() calls next (মাঝে)"
+  },
+  "Route with Path Params": {
+    "prefix": "route-params",
+    "body": [
+      "${1:app}.ana(\"/${2:resource}/:${3:id}\", kaj(req, res) {",
+      "\tdhoro ${3:id} = req[\"params\"][\"${3:id}\"];",
+      "\t$4",
+      "});"
+    ],
+    "description": "Route with path parameter (:id)"
+  },
+  "CORS Enable": {
+    "prefix": "cors",
+    "body": [
+      "cors_chharpao(${1:app});"
+    ],
+    "description": "Enable CORS with defaults (ছাড়পাও)"
+  },
+  "CORS with Options": {
+    "prefix": "cors-opts",
+    "body": [
+      "cors_chharpao(${1:app}, {",
+      "\t\"origin\": \"${2:*}\",",
+      "\t\"methods\": \"${3:GET,POST,PUT,DELETE,PATCH}\"",
+      "});"
+    ],
+    "description": "Enable CORS with custom options"
+  },
+  "Static Files": {
+    "prefix": "file-dao",
+    "body": [
+      "file_dao(${1:app}, \"${2:/public}\", \"${3:./static}\");"
+    ],
+    "description": "Serve static files from directory (ফাইল দাও)"
+  },
+  "Redirect": {
+    "prefix": "ghurao",
+    "body": [
+      "ghurao(res, \"${1:/new-url}\");"
+    ],
+    "description": "HTTP redirect (ঘোরাও)"
+  },
+  "Set Cookie": {
+    "prefix": "kuki-rakho",
+    "body": [
+      "kuki_rakho(res, \"${1:name}\", ${2:value});"
+    ],
+    "description": "Set cookie on response (কুকি রাখো)"
+  },
+  "Set Cookie with Options": {
+    "prefix": "kuki-opts",
+    "body": [
+      "kuki_rakho(res, \"${1:name}\", ${2:value}, {",
+      "\t\"httpOnly\": sotti,",
+      "\t\"maxAge\": ${3:3600},",
+      "\t\"sameSite\": \"Lax\"",
+      "});"
+    ],
+    "description": "Set cookie with security options"
+  },
+  "HTML Response": {
+    "prefix": "html-uttor",
+    "body": [
+      "html_uttor(res, \"${1:./views/index.html}\");"
+    ],
+    "description": "Serve HTML file as response (HTML উত্তর)"
+  },
+  "Rate Limit": {
+    "prefix": "goti-shima",
+    "body": [
+      "goti_shima(${1:app}, ${2:100}, ${3:60});"
+    ],
+    "description": "Per-IP rate limit: max requests per window seconds (গতি সীমা)"
+  },
+  "Gzip Compression": {
+    "prefix": "sankochon",
+    "body": [
+      "sankochon_chalu(${1:app});"
+    ],
+    "description": "Enable gzip compression (সংকোচন চালু)"
+  },
+  "Request Timeout": {
+    "prefix": "somoy-shima",
+    "body": [
+      "somoy_shima(${1:app}, ${2:30});"
+    ],
+    "description": "Set request handler timeout in seconds (সময় সীমা)"
+  },
+  "Body Size Limit": {
+    "prefix": "akaar-shima",
+    "body": [
+      "akaar_shima(${1:app}, ${2:1048576});"
+    ],
+    "description": "Set max request body size in bytes (আকার সীমা)"
+  },
+  "Error Handler": {
+    "prefix": "bhul-sambhalo",
+    "body": [
+      "bhul_sambhalo(${1:app}, kaj(err, req, res) {",
+      "\tjson_uttor(res, {\"error\": err[\"message\"]}, 500);",
+      "});"
+    ],
+    "description": "Register global error handler (ভুল সামলাও)"
+  },
+  "HTTP POST Client": {
+    "prefix": "anun-post",
+    "body": [
+      "dhoro ${1:res} = anun(\"${2:https://api.example.com/endpoint}\", {",
+      "\t\"method\": \"POST\",",
+      "\t\"body\": json_banao($3),",
+      "\t\"headers\": {\"Content-Type\": \"application/json\"}",
+      "});",
+      "dhoro ${4:data} = json_poro(${1:res}[\"body\"]);"
+    ],
+    "description": "HTTP POST request with JSON body"
+  },
+  "Production Server Template": {
+    "prefix": "server-production",
+    "body": [
+      "dhoro app = router_banao();",
+      "",
+      "// Production middleware",
+      "cors_chharpao(app);",
+      "log_chalu(app);",
+      "sankochon_chalu(app);",
+      "somoy_shima(app, 30);",
+      "akaar_shima(app, 1048576);",
+      "goti_shima(app, ${1:100}, 60);",
+      "",
+      "// Auth middleware",
+      "app.majhe(kaj(req, res, agorao) {",
+      "\t// dhoro token = req[\"headers\"][\"Authorization\"];",
+      "\tagorao();",
+      "});",
+      "",
+      "// Static files",
+      "file_dao(app, \"/public\", \"./static\");",
+      "",
+      "// Routes",
+      "app.ana(\"/${2:resource}/:id\", kaj(req, res) {",
+      "\tdhoro id = req[\"params\"][\"id\"];",
+      "\tjson_uttor(res, {\"id\": id});",
+      "});",
+      "",
+      "app.pathano(\"/${2:resource}\", kaj(req, res) {",
+      "\tdhoro body = req[\"json\"];",
+      "\tjson_uttor(res, {\"created\": sotti}, 201);",
+      "});",
+      "",
+      "// Error handler",
+      "bhul_sambhalo(app, kaj(err, req, res) {",
+      "\tjson_uttor(res, {\"error\": err[\"message\"]}, 500);",
+      "});",
+      "",
+      "server_chalu(${3:3000}, app);"
+    ],
+    "description": "Full production-ready Express.js-style server template"
+  },
   "Router Full App": {
     "prefix": "router-app",
     "body": [

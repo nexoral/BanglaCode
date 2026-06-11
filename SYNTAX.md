@@ -700,19 +700,62 @@ kaj handleRequest(req, res) {
 server_chalu(3000, handleRequest);
 ```
 
-### HTTP Client
+### HTTP Client (anun - আনুন)
 
-Make HTTP requests:
+`anun()` supports GET (1 argument) and any method via options map (2 arguments):
 
 ```banglacode
+// GET (backward compatible)
 dhoro response = anun("https://api.example.com/data");
 dekho("Status:", response["status"]);
-dekho("Body:", response["body"]);
-
-// Parse JSON response
 dhoro data = json_poro(response["body"]);
-dekho("Parsed data:", data);
+
+// POST with JSON body
+dhoro response = anun("https://api.example.com/users", {
+    "method": "POST",
+    "body": json_banao({"name": "Ankan"}),
+    "headers": {"Content-Type": "application/json"}
+});
+
+// PUT / DELETE
+dhoro r2 = anun("https://api.example.com/users/1", {"method": "PUT", "body": json_banao({})});
+dhoro r3 = anun("https://api.example.com/users/1", {"method": "DELETE"});
+
+// Async client (anun_async - returns Promise)
+proyash kaj fetchUser(id) {
+    dhoro res = opekha anun_async("https://api.example.com/users/" + id);
+    ferao json_poro(res["body"]);
+}
 ```
+
+### New Middleware & Utility Functions
+
+| Function | Bengali | Description |
+|----------|---------|-------------|
+| `app.majhe(handler)` | মাঝে | Add middleware (handler: `kaj(req, res, agorao)`) |
+| `cors_chharpao(app, opts?)` | ছাড়পাও | Enable CORS |
+| `file_dao(app, url, dir)` | ফাইল দাও | Serve static files |
+| `ghurao(res, url, status?)` | ঘোরাও | HTTP redirect (default 302) |
+| `kuki_rakho(res, name, val, opts?)` | কুকি রাখো | Set response cookie |
+| `html_uttor(res, filepath)` | HTML উত্তর | Serve HTML file |
+| `log_chalu(app)` | লগ চালু | Enable request logging |
+| `goti_shima(app, max, sec)` | গতি সীমা | Per-IP rate limiting |
+| `sankochon_chalu(app)` | সংকোচন চালু | Enable gzip compression |
+| `somoy_shima(app, secs)` | সময় সীমা | Request timeout |
+| `akaar_shima(app, bytes)` | আকার সীমা | Body size limit |
+| `bhul_sambhalo(app, handler)` | ভুল সামলাও | Error middleware |
+
+### New Request Object Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `req["params"]` | MAP | Path params from `:name` segments |
+| `req["query"]` | MAP | Parsed query string (`?key=val`) |
+| `req["query_raw"]` | STRING | Raw query string |
+| `req["json"]` | MAP/NULL | Auto-parsed JSON body |
+| `req["form"]` | MAP/NULL | URL-encoded form data |
+| `req["kukis"]` | MAP | Parsed cookies |
+| `req["ip"]` | STRING | Client IP address |
 
 ## JSON Functions
 
