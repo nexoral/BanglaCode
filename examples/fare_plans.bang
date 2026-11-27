@@ -1,0 +1,20 @@
+// প্রতি যাত্রার ভাড়া আর এককালীন পাসের দাম তুলনা করি।
+// Classroom prices in rupees, not an actual bus fare table.
+// Each ride is part of the same week. A pass is bought once for that week.
+kaj motBhara(prothomDam, protiJatra, jatra) {
+    ferao prothomDam + protiJatra * jatra;
+}
+
+// Before running: which option costs less for 5, 6 and 7 rides?
+ghuriye (dhoro jatra = 0; jatra <= 8; jatra = jatra + 1) {
+    dhoro ticket = motBhara(0, 12, jatra);
+    dhoro pass = motBhara(30, 7, jatra);
+    dhoro sastay = "টিকিট";
+    jodi (ticket == pass) {
+        sastay = "সমান";
+    } nahole jodi (ticket > pass) {
+        sastay = "পাস";
+    }
+    dekho(jatra, ticket, pass, sastay);
+}
+// Try raising the pass price to 32. Is there still an exact tie?
